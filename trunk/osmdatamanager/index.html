@@ -126,10 +126,10 @@
 	    <!-- TOP Menu (general map options)  -->
 		<div dojoType="dijit.layout.ContentPane" region="top" class="topmenu">
 				<button dojoType="dijit.form.Button" onclick="DijitClient.AboutDialog.show()">.:About:.</button>
-				<button dojoType="dijit.form.Button">.:Wiki:.</button>	
-				<button dojoType="dijit.form.Button">.:Simple Map:.</button>
+				<button dojoType="dijit.form.Button" onclick="window.open('http://openfacts2.berlios.de/wikien/index.php/BerliosProject:OSM_Data_Manager')" >.:Wiki:.</button>	
+				<button dojoType="dijit.form.Button" onclick="window.open('SimpleMap.html')">.:Simple Map:.</button>
 				<button dojoType="dijit.form.Button">.:Screenshots:.</button>								
-				<button dojoType="dijit.form.Button">.:Download:.</button>
+				<button dojoType="dijit.form.Button" onclick="window.open('http://developer.berlios.de/projects/osmdatamanager/')">.:Download:.</button>
 		</div>	
 		
 		<!-- MAIN MAP -->
@@ -522,7 +522,7 @@
 				
 		<div dojoType="dijit.MenuSeparator"></div>
 		<div dojoType="dijit.MenuItem" id="itm_createpoi" onClick="DijitClient.PoiDialog.show()">Poi erstellen</div>
-		<div dojoType="dijit.MenuItem" id="itm_doupload" onClick="doupload">Datei hochladen</div>				
+		<div dojoType="dijit.MenuItem" id="itm_doupload" onClick="alert('disabled')">Datei hochladen</div>				
   </div>
         
 </body>

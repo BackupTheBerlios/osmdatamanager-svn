@@ -1,0 +1,87 @@
+<html>
+<head>
+	<title>OSM map with data from MySQL</title>
+	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:true, isDebug: false"></script>
+	<script src="lib/openlayers/OpenLayers.js"></script>
+	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+	
+	<script src="lib/trm/openlayers_extensions.js"></script>
+	<script src="lib/trm/Application.js"></script>	
+	<script src="lib/trm/MarkerManager.js"></script>	
+	<script type="text/javascript">
+				
+		var gl_map; 
+		var gl_markers;
+		
+		//callback after login	
+		function loggedIn(response,ioArgs) {
+				gl_application.clearMap();
+				
+				if ((response != null) && (response != "msg.loginfailed")) { //you don't have to check this, it's already checked before
+					gl_application.getGroupItems("Example Group",gl_application.showData);
+				}
+				gl_map.updateSize();
+		}
+		
+		//login as guest
+		function loadData(){
+		  var cb = {
+		  	func: loggedIn,
+			target: this
+		  }
+		  gl_application.loginUser("guest","guest",cb);
+		}	
+						
+		function init() {
+			//Main Map
+			gl_map = new OpenLayers.Map("map", {
+			controls: [
+				//new OpenLayers.Control.KeyboardDefaults(),
+				new OpenLayers.Control.MouseDefaults(),
+				new OpenLayers.Control.LayerSwitcher(),
+				new OpenLayers.Control.PanZoomBar()],
+			maxExtent:
+                new OpenLayers.Bounds(-20037508.34,-20037508.34,
+                                       20037508.34, 20037508.34),
+			numZoomLevels: 18,
+            maxResolution: 156543,
+            units: 'meters',
+            projection: "EPSG:4326"} );
+			
+			layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+			gl_map.addLayer(layerMapnik);
+									
+			layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
+			gl_map.addLayer(layerCycleMap);
+			gl_map.addControl(new OpenLayers.Control.MousePosition());
+				
+		
+			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
+    		gl_map.addLayer(gl_markers);
+									
+			//Client Application
+			gl_application = new TRM.ClientApplication();
+			gl_application.initialize(gl_map,new Markermanager())							
+			loadData();
+		}
+		
+
+	</script>
+	
+</head>
+
+<body onload="init()" style="background-color: #dbdbdb;">  
+		<!-- MAIN MAP -->
+		
+		<div style="border:solid 1px black;width: 792px;padding:4px;">
+			This is a simple example shows how to use and display your data 
+			   on another website.
+			   You just have to create a ClientApplication object and load data from a group.
+			   You can update this data in OsmDatamanager and it's just up to date on this page.<br>
+			   Here you can see the guest user "Example Group"
+			
+		</div>
+		<div  id="map" style="width:800px; height:800px;border:solid 1px Black;background-color:#dbdbdb;">
+		</div>
+</body>
+</html>

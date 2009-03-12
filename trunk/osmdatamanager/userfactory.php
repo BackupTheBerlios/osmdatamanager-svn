@@ -45,10 +45,7 @@
 		$this->abouthtml = $abouthtml;
 		$this->picture = $picture;
 		$this->parseLocation($latlon);
-		$this->isadmin = false;
-		
-		if ($this->username == "dirk") //TODO
-			$this->isadmin = true;
+		$this->isadmin = false;		
 	}
 	
 	function parseLocation($latlon)
