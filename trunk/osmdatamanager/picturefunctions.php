@@ -21,6 +21,9 @@
 	
 	
 	if (application_userisvalid()) {
+   		global $gl_usepicturedir;
+   		global $gl_picturedir;
+   		
    		$usr = application_gevaliduser();
 		if ($usr != null) {
 			$df = new DirectoryFactory();
@@ -28,16 +31,24 @@
 			
 			//$piclist->addPicture(new Picture("images/test1.jpg","images/test1.jpg","I'm wide, me","http://www.heise.de"));
 			
-			$df->login();
-			$lst1 = $df->listPictures($usr->getUid());
-			if ($lst1 != null) {
+			if ($gl_usepicturedir) {
+				$lst1 = $df->listPictures_Dir($usr->getUid(),$gl_picturedir);
 				for ($i=0;$i<count($lst1);$i++) {
-					$fn = $lst1[$i];
-					$pic = "traces/".$fn;
+					$pic = $lst1[$i];
 					$piclist->addPicture(new Picture($pic,$pic,"I'm wide, me","http://www.heise.de"));
 				}
+			} else {
+				$df->login();
+				$lst1 = $df->listPictures($usr->getUid());
+				if ($lst1 != null) {
+					for ($i=0;$i<count($lst1);$i++) {
+						$fn = $lst1[$i];
+						$pic = "traces/".$fn;
+						$piclist->addPicture(new Picture($pic,$pic,"I'm wide, me","http://www.heise.de"));
+					}
+				}
+				$df->logout();
 			}
-			$df->logout();
 			
 			echo application_getMessage($piclist);
 		}

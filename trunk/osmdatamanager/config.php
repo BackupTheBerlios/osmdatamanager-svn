@@ -30,7 +30,7 @@
 	$gl_ftpuser = "ftpuser";
 	$gl_ftppwd = "ftppassword";			
 	$gl_useftp = false;
-	
+	$gl_ftpprefix = "";
 	
 	/* DEBUG
 	 * 
@@ -40,8 +40,11 @@
 	 * 
 	*/
 	
+	$gl_usepicturedir = true;
+	$gl_picturedir = "pictures/";
+	
 	$gl_loglevel = 0;
-	$gl_readonly = true;   //if this is true, no insert, update and delete statements are executed
+	$gl_readonly = false;   //if this is true, no insert, update and delete statements are executed
 		
 	/****************************************************
 	 * END CONFIG SECTION

@@ -27,6 +27,7 @@
 		var $conn_id;
 		var $connected;
 		var $useftp;
+		var $ftpprefix;
 						
 		function DirectoryFactory() {
 			
@@ -34,6 +35,7 @@
 			global $gl_ftppwd;
 			global $gl_ftpserver;
 			global $gl_useftp;
+			global $gl_ftpprefix;
 						
 			$this->ftpuser = $gl_ftpuser;
 			$this->ftppwd  = $gl_ftppwd;
@@ -41,6 +43,7 @@
 			$this->useftp = $gl_useftp;
 			$this->conn_id = NULL;
 			$this->connected = false;
+			$this->ftpprefix = $gl_ftpprefix;
 		}
 		
 		function login() {
@@ -70,7 +73,7 @@
 		
 		function createDirectory($aDirname) {
 			if ($this->connected) {
-				$dir = ftp_mkdir($this->conn_id  , $aDirname);
+				$dir = ftp_mkdir($this->conn_id  , $this->ftpprefix.$aDirname);
 				if ($dir == "FALSE ") {
 					return false;
 				} else {
@@ -82,7 +85,7 @@
 		function listFiles($aUserId) {
 			if ($this->connected)
 			{
-				$path = "trf_".$aUserId;
+				$path = $this->ftpprefix."trf_".$aUserId;
 				$list = ftp_nlist( $this->conn_id, $path );
 			   	$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
 				$result = array();
@@ -109,7 +112,7 @@
 		function listGpxFiles($aUserId) {
 			if ($this->connected)
 			{
-				$path = "trf_".$aUserId;
+				$path = $this->ftpprefix."trf_".$aUserId;
 				$list = ftp_nlist( $this->conn_id, $path );
 				
 			   	$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
@@ -145,7 +148,7 @@
 		function listPictures($aUserId) {
 			if ($this->connected)
 			{
-				$path = "trf_".$aUserId;
+				$path = $this->ftpprefix."trf_".$aUserId;
 				$list = ftp_nlist( $this->conn_id, $path );
 				
 			   	$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
@@ -178,10 +181,32 @@
 			}
 		}
 		
+		function listPictures_Dir($aUserId, $aPath) {
+			$files = scandir($aPath."trf_".$aUserId);
+			$result = array();
+			$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
+			foreach($files as $file) {					
+				if (! in_array($file, $fold_no)) {	
+				  $ext = $this->getFileExtension($file);
+						switch ($ext) {
+							case "jpg";
+							case "jpeg";
+							case "JPG";
+							case "JPEG";
+							case "Jpeg";
+							case "Jpg";
+								array_push($result, $aPath."trf_".$aUserId."/".$file);		
+							break;
+						}
+				}
+			}
+			return $result;
+		}
+		
 		function listPicturesFromPath($aPath) {
 			if ($this->connected)
 			{
-				$path = $aPath;
+				$path = $this->ftpprefix.$aPath;
 				$list = ftp_nlist( $this->conn_id, $path );
 				
 			   	$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
@@ -221,7 +246,7 @@
 			    
 				   $local_file = $_FILES['txt_file']['tmp_name']; // Defines Name of Local File to be Uploaded
 				
-				   $destination_file = "/trf_".$aUser->getUid()."/".basename($_FILES['txt_file']['name']);  // Path for File Upload (relative to your login dir)
+				   $destination_file = $this->ftpprefix."/trf_".$aUser->getUid()."/".basename($_FILES['txt_file']['name']);  // Path for File Upload (relative to your login dir)
 								   
 					if ($this->connected) {
 				   		$upload = ftp_put($this->conn_id, $destination_file, $local_file, FTP_BINARY);  // Upload the File
@@ -253,7 +278,7 @@
 			if ($aUserId != null) {
 				if ($this->connected)
 				{
-					$dir = "trf_".$aUserId."";
+					$dir = $this->ftpprefix."trf_".$aUserId."";
 					$this->deleteFiles($aUserId,$dir);
 					return ftp_rmdir($this->conn_id,$dir);
 				}
