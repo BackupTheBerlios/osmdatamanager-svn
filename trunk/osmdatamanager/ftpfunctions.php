@@ -36,7 +36,7 @@
 		//msg_getftpfiles
 		if ($action == msg_getftpfiles) {
 			$df = new DirectoryFactory();
-			$geslist = $df->listFiles($usr);		
+			$geslist = $df->listFiles_Ftp($usr);		
 			if ($geslist != null) {
 				echo application_getMessage($geslist);
 			} else {

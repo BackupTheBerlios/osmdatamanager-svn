@@ -293,7 +293,7 @@ function Groupmanager(app){
 			if ((desc == null) ||(desc == ""))
 				desc = fl1.filename;
 			
-			application.showGpxFile(desc,"traces/" + fl1.filename);			
+			application.showGpxFile(desc, fl1.filename);			
 			}	
 		}catch (e)
 		{alert(e);}

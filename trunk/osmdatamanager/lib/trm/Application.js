@@ -654,7 +654,7 @@ TRM.ClientApplication = function(openlayersMap)
 					itm1 = response[i];
 										
 					if (itm1.itemtype == "Tracefile") {
-					  var fn = "traces/" + itm1.filename;
+					  var fn = itm1.filename;
 					  					  				  
 					  var l1 = _showGpxFile(desc,fn);
 					  if (lyr == null) 

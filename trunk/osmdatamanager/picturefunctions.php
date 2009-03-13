@@ -32,19 +32,18 @@
 			//$piclist->addPicture(new Picture("images/test1.jpg","images/test1.jpg","I'm wide, me","http://www.heise.de"));
 			
 			if ($gl_usepicturedir) {
-				$lst1 = $df->listPictures_Dir($usr->getUid(),$gl_picturedir);
+				$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_picturedir,array("jpg","jpeg","gif","png"));
 				for ($i=0;$i<count($lst1);$i++) {
 					$pic = $lst1[$i];
-					$piclist->addPicture(new Picture($pic,$pic,"I'm wide, me","http://www.heise.de"));
+					$piclist->addPicture(new Picture($pic,$pic,"",""));
 				}
 			} else {
 				$df->login();
-				$lst1 = $df->listPictures($usr->getUid());
+				$lst1 = $df->listFiles_Ftp($usr->getUid(),array("jpg","jpeg","gif","png"));
 				if ($lst1 != null) {
 					for ($i=0;$i<count($lst1);$i++) {
 						$fn = $lst1[$i];
-						$pic = "traces/".$fn;
-						$piclist->addPicture(new Picture($pic,$pic,"I'm wide, me","http://www.heise.de"));
+						$piclist->addPicture(new Picture($fn,$fn,"",""));
 					}
 				}
 				$df->logout();

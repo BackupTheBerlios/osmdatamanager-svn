@@ -46,6 +46,10 @@
 			$this->ftpprefix = $gl_ftpprefix;
 		}
 		
+		/**
+		 * ftp server login
+		 * @return true if successful, false otherwise
+		 */
 		function login() {
 					   		   
 		   if (! $this->useftp)
@@ -63,6 +67,9 @@
 		   }
 		}
 		
+		/**
+		 * ftp logout
+		 */
 		function logout() {
 			if ($this->conn_id != null) {
 				ftp_close($this->conn_id); // Close the FTP Connection	
@@ -71,6 +78,11 @@
 			}
 		}
 		
+		/**
+		 * create new ftp directory
+		 * @return true if successful, false otherwise
+		 * @param $aDirname Object
+		 */
 		function createDirectory($aDirname) {
 			if ($this->connected) {
 				$dir = ftp_mkdir($this->conn_id  , $this->ftpprefix.$aDirname);
@@ -81,7 +93,13 @@
 				}
 			}
 		}
-						
+		
+		/**
+		 * list files from ftp directory
+		 * @return array of filenames
+		 * @param $aUserId Object
+		 */			
+		/*
 		function listFiles($aUserId) {
 			if ($this->connected)
 			{
@@ -103,23 +121,41 @@
 				return $result;
 			}
 		}
+		*/
 		
+		/**
+		 * returns extension from a filename
+		 * @return file extension
+		 * @param $filename Object
+		 */
 		function getFileExtension($filename)
 		{
 			return end(explode(".", $filename));
 		}
 		
-		function listGpxFiles($aUserId) {
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aExtensions array of fileextensions which will be returned
+		 */
+		function listFiles_Ftp($aUserId,$aExtensions) {
 			if ($this->connected)
 			{
 				$path = $this->ftpprefix."trf_".$aUserId;
 				$list = ftp_nlist( $this->conn_id, $path );
 				
 			   	$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
-				
+								
 				$result = array();
 				foreach($list as $file){
-			    
+					if (! in_array($file, $fold_no)) {
+			    		$ext = strtolower($this->getFileExtension($file));
+			    		if (in_array($ext, $aExtensions)) {
+			    			array_push($result, $path."/".$file);
+						}
+					}
+				  /*
 			      if (ftp_size($this->conn_id, $file)== -1){
 			           if (in_array($file, $fold_no)) {
 			               print $file ." Ueberspringe ausgeschlossenes Verzeichnis.<br>";
@@ -127,7 +163,36 @@
 			              
 			           }
 			       }else{
-						$ext = $this->getFileExtension($file);
+						$ext = strtolower($this->getFileExtension($file));
+						if (in_array($file, $ext_ok))) {
+							
+						}
+			       }
+			       */
+			    }
+				return $result;
+			}
+		}
+		
+		/**
+		 * list files from directory
+		 * @return a list of filenames from given directory
+		 * @param $aUserId Object
+		 * @param $aPath Object
+		 * @param $aExtensions array of fileextensions which will be returned
+		 */
+		function listFiles_Dir($aUserId, $aPath, $aExtensions) {
+			$path = $aPath."trf_".$aUserId;
+			$files = scandir($path);
+			$result = array();
+			$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
+			foreach($files as $file) {					
+				if (! in_array($file, $fold_no)) {	
+					$ext = $this->getFileExtension($file);
+					if (in_array($ext, $aExtensions)) {
+		    			array_push($result, $path."/".$file);
+					}	
+					/*
 						switch ($ext) {
 							case "gpx";
 							case "Gpx";
@@ -138,13 +203,13 @@
 								array_push($result, $file);		
 							break;
 						}
-						
-			       }
-			    }
-				return $result;
+				   */
+				}
 			}
+			return $result;
 		}
 		
+		/*
 		function listPictures($aUserId) {
 			if ($this->connected)
 			{
@@ -180,7 +245,9 @@
 				return $result;
 			}
 		}
+		*/
 		
+		/*
 		function listPictures_Dir($aUserId, $aPath) {
 			$files = scandir($aPath."trf_".$aUserId);
 			$result = array();
@@ -202,7 +269,9 @@
 			}
 			return $result;
 		}
+		*/
 		
+		/*
 		function listPicturesFromPath($aPath) {
 			if ($this->connected)
 			{
@@ -237,7 +306,7 @@
 				return $result;
 			}
 		}
-		
+		*/
 				
 		function uploadFiles($aUser) {
 			if ($aUser != null) {	
@@ -264,6 +333,11 @@
 			}
 		}
 		
+		/**
+		 * deletes all ftp files from given user
+		 * @return 
+		 * @param $aUserId Object
+		 */
 		function deleteFiles($aUserId) {
 			$lst1 = $this->listFiles($aUserId);
 			if ($lst1 != null) {
@@ -274,6 +348,11 @@
 			}
 		}
 		
+		/**
+		 * deletes ftp directory from given user
+		 * @return 
+		 * @param $aUserId Object
+		 */
 		function deleteUserDir($aUserId) {
 			if ($aUserId != null) {
 				if ($this->connected)

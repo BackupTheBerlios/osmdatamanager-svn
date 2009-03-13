@@ -45,10 +45,20 @@
 	  		$df = new DirectoryFactory();
 			$ff = new FileFactory();
 			
+			global $gl_usefiledir;
+			global $gl_filedir;
+			
 			//msg_updatefilelist
+			//TODO delete file from db if the file does not exist in directory
 			if ($action == msg_updatefilelist) {
-	  			$df->login();
-				$lst1 = $df->listGpxFiles($usr->getUid());
+				if ($gl_usefiledir) {
+					$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_filedir,array("gpx","xml"));
+				} else {
+					$df->login();
+					$lst1 = $df->listFiles_Ftp($usr->getUid(),array("gpx","xml"));
+					$df->logout();
+				}
+				
 				if ($lst1 != null) {
 					for ($i=0;$i<count($lst1);$i++) {
 						$fn = $lst1[$i];
@@ -57,7 +67,6 @@
 						}
 					}
 				}
-				$df->logout();
 			}
 			
 			//msg_getfiles
@@ -71,8 +80,7 @@
 			}
 			
 			//msg_updatefile
-			if ($action == msg_updatefile) {
-				//updateFile($aUsrId, $aFilename, $aDescription) {
+			if ($action == msg_updatefile) {				
 				if ($ff->updateFile($usr->getUid(), $filename, $description)) {
 					echo application_getMessage(msg_updateok);
 				} else {

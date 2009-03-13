@@ -75,9 +75,7 @@
 	}
 	
 	function isAdmin() {
-		if ($this->username == "dirk") { //TODO
-			return true;
-		}
+		//TODO
 		return false;
 	}
 	

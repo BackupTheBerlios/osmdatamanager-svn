@@ -29,8 +29,8 @@
 	$gl_ftpserver = "ftpserver";
 	$gl_ftpuser = "ftpuser";
 	$gl_ftppwd = "ftppassword";			
-	$gl_useftp = false;
-	$gl_ftpprefix = "";
+	$gl_useftp = false;  //you can use a ftp account to store pictures and files, it must be a subdirectory of osmdatamanager, use picturedir and filedir otherwise
+	$gl_ftpprefix = "";  
 	
 	/* DEBUG
 	 * 
@@ -40,8 +40,13 @@
 	 * 
 	*/
 	
+	//if you don't want to use ftp, you can use picturedir and filedir it's the relativ location to pictures and gpx files
+	//files have to be stored under a subdirectory with userid (trf_+userid) e.g.  pictures/trf_1
 	$gl_usepicturedir = true;
 	$gl_picturedir = "pictures/";
+	
+	$gl_usefiledir = false;
+	$gl_filedir = "files/";
 	
 	$gl_loglevel = 0;
 	$gl_readonly = false;   //if this is true, no insert, update and delete statements are executed
