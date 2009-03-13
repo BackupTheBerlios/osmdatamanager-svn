@@ -299,6 +299,7 @@ TRM.ClientApplication = function(openlayersMap)
 	}
 	
 	/**
+	 * test
 	 * _drawNode (not used at the moment)
 	 * @param {Object} xmlNode
 	 */
@@ -316,7 +317,7 @@ TRM.ClientApplication = function(openlayersMap)
 						var lat = xmlNode.getAttribute('lat');
 						var lon = xmlNode.getAttribute('lon');
 						var layer = _getLastLayer();
-						var contentHtml = "<img src=\"http://dirk-lehmeier.de/gpxtracer/"+p1.filename+"\"/><br>";
+						var contentHtml = "<br>";
 						contentHtml += "<b>" + p1.originaldate + "</b><br>";
 						//contentHtml += OpenLayers.Util.getXmlNodeValue(n1) + "<br>";
 						_createPoi(lat,lon,contentHtml,layer);	
