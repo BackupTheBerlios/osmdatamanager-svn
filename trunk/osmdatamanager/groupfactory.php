@@ -65,11 +65,10 @@
 		var $description;
 		
 		function Tracefile($aGroupId, $aUserId, $aFilename) {
-			parent::GroupItem("Tracefile");
+			parent::GroupItem("Tracefile");			
 			$this->groupid = $aGroupId;
 			$this->userid = $aUserId;
 			$this->filename = $aFilename;				
-			
 		}
 		
 		function setCustomData($aDescription) {
@@ -78,6 +77,10 @@
 		
 		function getFilename() {
 			return $this->filename;
+		}
+		
+		function setFilename($aFilename) {
+			$this->filename = $aFilename;
 		}
 		
 		function getDescription() {
@@ -117,10 +120,13 @@
 		
 		function setCustomData(&$aFilellist,&$aNewFiles, $aFilename, &$aRow) {
 												
+			global $gl_ftpprefix;
+			
 			for ($i=0;$i<count($aFilellist);$i++) {
 				$fl1 = $aFilellist[$i];
 				if ($fl1->getFilename() == $aFilename) {
 					$fl1->setCustomData($aRow[2]);
+					$fl1->setFilename($gl_ftpprefix.$fl1->getFilename());
 					array_push($aNewFiles, $fl1);
 					return;
 				}
@@ -169,7 +175,7 @@
 			
 			$qry = "SELECT * FROM `tab_grp_file` WHERE (grpid = $aGroupId)";
 			$result = $this->executeQuery($qry);
-			
+						
 			if ($result != NULL) 
 			{   
 				while ($row = mysql_fetch_row($result))

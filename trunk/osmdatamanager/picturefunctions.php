@@ -28,9 +28,7 @@
 		if ($usr != null) {
 			$df = new DirectoryFactory();
 			$piclist = new Picturelist();
-			
 			//$piclist->addPicture(new Picture("images/test1.jpg","images/test1.jpg","I'm wide, me","http://www.heise.de"));
-			
 			if ($gl_usepicturedir) {
 				$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_picturedir,array("jpg","jpeg","gif","png"));
 				for ($i=0;$i<count($lst1);$i++) {

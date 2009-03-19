@@ -17,6 +17,23 @@
 */
 	include_once("application.php");
 	
+	
+	if( !function_exists('scandir') ) {
+	    function scandir($directory, $sorting_order = 0) {
+	        $dh  = opendir($directory);
+	        while( false !== ($filename = readdir($dh)) ) {
+	            $files[] = $filename;
+	        }
+	        if( $sorting_order == 0 ) {
+	            sort($files);
+	        } else {
+	            rsort($files);
+	        }
+	        return($files);
+	    }
+	}
+	
+	
 	/**
 	 * DirectoryFactory
 	 */
@@ -142,17 +159,15 @@
 		function listFiles_Ftp($aUserId,$aExtensions) {
 			if ($this->connected)
 			{
-				$path = $this->ftpprefix."trf_".$aUserId;
-				$list = ftp_nlist( $this->conn_id, $path );
-				
+				$path = "trf_".$aUserId;
+				$list = ftp_nlist($this->conn_id, $path);
 			   	$fold_no = array(".", "..", "cgi-data", "comp", "zuern", "counter");
-								
 				$result = array();
 				foreach($list as $file){
 					if (! in_array($file, $fold_no)) {
 			    		$ext = strtolower($this->getFileExtension($file));
 			    		if (in_array($ext, $aExtensions)) {
-			    			array_push($result, $path."/".$file);
+			    			array_push($result, $this->ftpprefix.$file);
 						}
 					}
 				  /*
