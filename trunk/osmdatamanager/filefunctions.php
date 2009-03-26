@@ -47,10 +47,13 @@
 			
 			global $gl_usefiledir;
 			global $gl_filedir;
+			global $gl_ftpprefix;
 			
 			//msg_updatefilelist
 			//TODO delete file from db if the file does not exist in directory
 			if ($action == msg_updatefilelist) {
+				//$ff->updateFiles($usr->getUid());
+								
 				if ($gl_usefiledir) {
 					$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_filedir,array("gpx","xml"));
 				} else {
@@ -63,10 +66,13 @@
 					for ($i=0;$i<count($lst1);$i++) {
 						$fn = $lst1[$i];
 						if (! $ff->fileExists($usr->getUid(), $fn)) {
-							$ff->createFile($usr->getUid(),$fn,NULL);
+							$path = $gl_ftpprefix.dirname($fn)."/";
+							$filename = basename($fn);																						
+							$ff->createFile($usr->getUid(),$path,$filename,NULL);
 						}
 					}
 				}
+				
 			}
 			
 			//msg_getfiles
@@ -81,7 +87,7 @@
 			
 			//msg_updatefile
 			if ($action == msg_updatefile) {				
-				if ($ff->updateFile($usr->getUid(), $filename, $description)) {
+				if ($ff->updateFile($usr->getUid(), basename($filename), $description)) {
 					echo application_getMessage(msg_updateok);
 				} else {
 					echo application_getMessage(msg_failed);

@@ -118,15 +118,12 @@
 			return null;
 		}
 		
-		function setCustomData(&$aFilellist,&$aNewFiles, $aFilename, &$aRow) {
-												
-			global $gl_ftpprefix;
-			
+		function setCustomData(&$aFilellist,&$aNewFiles, $aFile) {
 			for ($i=0;$i<count($aFilellist);$i++) {
 				$fl1 = $aFilellist[$i];
-				if ($fl1->getFilename() == $aFilename) {
-					$fl1->setCustomData($aRow[2]);
-					$fl1->setFilename($gl_ftpprefix.$fl1->getFilename());
+				if ($fl1->getFilename() == $aFile->getFilename()) {
+					$fl1->setCustomData($aFile->getDescription());
+					$fl1->setFilename($aFile->getFullFilename());
 					array_push($aNewFiles, $fl1);
 					return;
 				}
@@ -149,13 +146,14 @@
 			}
 			$qry1=$qry1."))";
 			$result = $this->executeQuery($qry1);
-			
+						
 			if ($result != NULL) 
 			{   
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$this->setCustomData($aFilellist,$newfiles,$row[1],$row);
+						$gpxfile = new File($row[0],$row[1],$row[2],$row[3]);
+						$this->setCustomData($aFilellist,$newfiles,$gpxfile);
 					}
 				}
 			}
@@ -169,13 +167,48 @@
 		}
 		
 		
+		/**
+		 * only for a custom update
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aGroupId Object
+		 * @param $aOldFilename Object
+		 * @param $aNewFilename Object
+		 */
+		/*
+		function updateGroupFile($aUsrId,$aGroupId,$aOldFilename,$aNewFilename) {
+			return;
+									
+			$qry1   =  "UPDATE `tab_grp_file` SET ";
+		 	//$qry1 = $qry1."`description`='".$aDescription."' ";
+			$qry1 = $qry1."`filename`='".$aNewFilename."' ";
+			//$qry1 = $qry1."`filename`='".$aNewFilename."' ";
+			$qry1 = $qry1." WHERE   (`usrid` = ".$aUsrId.")";
+			$qry1 = $qry1." AND   (`filename` = '".$aOldFilename."')";
+			//$qry1 = $qry1." AND   (`grpid` = ".$aGroupId.")";
+			
+			//echo $qry1;			
+			if ($this->executeQuery($qry1) == null)
+			{
+				return false;
+			}
+			return true;
+	
+		}
+		*/
+		
+		/**
+		 * getGroupFiles
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupId Object
+		 */
 		function getGroupFiles($aUserId, $aGroupId) {
 									
 			$files = array();
 			
 			$qry = "SELECT * FROM `tab_grp_file` WHERE (grpid = $aGroupId)";
 			$result = $this->executeQuery($qry);
-						
 			if ($result != NULL) 
 			{   
 				while ($row = mysql_fetch_row($result))
@@ -189,7 +222,7 @@
 					$newlst = $this->fillFiledata($aUserId, $files);
 					if ($newlst != null);
 						return $newlst;
-						
+					
 					return $files;
 				} else {
 					return null;

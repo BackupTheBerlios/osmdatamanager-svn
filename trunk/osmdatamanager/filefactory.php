@@ -25,13 +25,32 @@
 		var $usrid;
 		var $filename;
 		var $description;
+		var $path;
+		var $fullfilename;
 				
-		function File($aUsrId, $aFilename, $aDescription) {
+		function File($aUsrId, $aPath, $aFilename, $aDescription) {
 			$this->usrid = $aUsrId;
+			$this->path = $aPath;
 			$this->filename = $aFilename;
 			$this->description = $aDescription;
+			$this->fullfilename = $aPath.$aFilename;
 		}
-	
+		
+		function getFilename() {
+			return $this->filename;
+		}
+		
+		function getDescription() {
+			return $this->description;
+		}
+		
+		function getPath() {
+			return $this->path;
+		}
+		
+		function getFullFilename() {
+			return $this->fullfilename;
+		}
 	}
 	
 	/**
@@ -97,7 +116,7 @@
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$fl = new File($row[0],$row[1],$row[2]);
+						$fl = new File($row[0],$row[1],$row[2],$row[3]);
 						array_push($files, $fl);
 					}
 				}
@@ -106,9 +125,17 @@
 			return null;
 		}
 		
+		/**
+		 * updates only the file description
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aFilename Object
+		 * @param $aDescription Object
+		 */
 		function updateFile($aUsrId, $aFilename, $aDescription) {
 			$qry1   =  "UPDATE `tab_file` SET ";
 		 	$qry1 = $qry1."`description`='".$aDescription."' ";
+			//$qry1 = $qry1."`path`='".$aPath."' ";
 			$qry1 = $qry1." WHERE   (`usrid` = ".$aUsrId.")";
 			$qry1 = $qry1." AND   (`filename` = '".$aFilename."')";
 			
@@ -120,11 +147,19 @@
 			return true;
 		}
 		
-		function createFile($aUserId, $aFilename, $aDescription) {
+		/**
+		 * inserts a new file in the file table
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aPath Object
+		 * @param $aFilename Object
+		 * @param $aDescription Object
+		 */
+		function createFile($aUserId, $aPath, $aFilename, $aDescription) {
 			if ($aFilename == "")
 				return false;
 			
-			$insquery = "INSERT INTO `tab_file` (`usrid`,`filename`,`description`) VALUES ($aUserId, '$aFilename','$aDescription')";
+			$insquery = "INSERT INTO `tab_file` (`usrid`,`path`,`filename`,`description`) VALUES ($aUserId, '$aPath', '$aFilename','$aDescription')";
 			
 			if ($this->executeQuery($insquery) == null)
 			{
@@ -132,6 +167,79 @@
 			}
 			return true;
 		}
+		
+		/**
+		 * deletes a file entry from the database
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aFilename Object
+		 */
+		function deleteFile($aUsrId,$aFilename) {
+			$delquery = "DELETE FROM `tab_file` WHERE (usrid = $aUsrId) AND (filename = '$aFilename')";
+			if ($this->executeQuery($delquery) == null)
+			{
+				return false;
+			}
+			return true;
+		}
+		
+		/**
+		 * 
+		 * @return 
+		 */
+		function updatePath($aUsrId,$aOldFilename,$aNewFilename,$aPath) {
+						
+			$qry1   =  "UPDATE `tab_file` SET ";
+		 	//$qry1 = $qry1."`description`='".$aDescription."' ";
+			$qry1 = $qry1."`path`='".$aPath."' ";
+			//$qry1 = $qry1."`filename`='".$aNewFilename."' ";
+			$qry1 = $qry1." WHERE   (`usrid` = ".$aUsrId.")";
+			$qry1 = $qry1." AND   (`filename` = '".$aOldFilename."')";
+			
+			echo $qry1;			
+			if ($this->executeQuery($qry1) == null)
+			{
+				return false;
+			}
+			return true;
+		}
+		
+		/**
+		 * only for a custom db update
+		 */
+		function updateFiles($aUserId) {
+			echo "a";
+			return;
+			$lst1 = $this->getFiles($aUserId);
+			foreach ($lst1 as $fl1) {
+				$full = $fl1->getFilename();
+				$fn = basename($full);
+				$path = "traces/trf_2/";
+				echo $full;
+				
+				/*
+				if ($fl1->getDescription() == "") {
+					$this->deleteFile($aUserId,$full);
+				}
+				*/
+				
+				if ($fl1->getPath() == "traces/traces/trf_2/") {
+					$this->deleteFile($aUserId,$full);
+				}
+				
+				//$this->updatePath($aUserId,$full,$fn,$path);
+				
+				/*
+				if (($path == "") || ($fl1->getPath() == "./")) {
+					$this->deleteFile($aUserId,$full);
+				} else {
+					$this->updatePath($aUserId,$full,$fn,$path);
+				}
+				*/
+				
+			}
+		}
+		
 	}
 	
 	

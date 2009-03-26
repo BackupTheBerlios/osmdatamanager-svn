@@ -44,15 +44,13 @@
 		var $conn_id;
 		var $connected;
 		var $useftp;
-		var $ftpprefix;
-						
+								
 		function DirectoryFactory() {
 			
 			global $gl_ftpuser;
 			global $gl_ftppwd;
 			global $gl_ftpserver;
 			global $gl_useftp;
-			global $gl_ftpprefix;
 						
 			$this->ftpuser = $gl_ftpuser;
 			$this->ftppwd  = $gl_ftppwd;
@@ -60,7 +58,6 @@
 			$this->useftp = $gl_useftp;
 			$this->conn_id = NULL;
 			$this->connected = false;
-			$this->ftpprefix = $gl_ftpprefix;
 		}
 		
 		/**
@@ -102,7 +99,7 @@
 		 */
 		function createDirectory($aDirname) {
 			if ($this->connected) {
-				$dir = ftp_mkdir($this->conn_id  , $this->ftpprefix.$aDirname);
+				$dir = ftp_mkdir($this->conn_id, $aDirname);
 				if ($dir == "FALSE ") {
 					return false;
 				} else {
@@ -167,7 +164,7 @@
 					if (! in_array($file, $fold_no)) {
 			    		$ext = strtolower($this->getFileExtension($file));
 			    		if (in_array($ext, $aExtensions)) {
-			    			array_push($result, $this->ftpprefix.$file);
+			    			array_push($result, $file);
 						}
 					}
 				  /*
@@ -330,7 +327,7 @@
 			    
 				   $local_file = $_FILES['txt_file']['tmp_name']; // Defines Name of Local File to be Uploaded
 				
-				   $destination_file = $this->ftpprefix."/trf_".$aUser->getUid()."/".basename($_FILES['txt_file']['name']);  // Path for File Upload (relative to your login dir)
+				   $destination_file = "/trf_".$aUser->getUid()."/".basename($_FILES['txt_file']['name']);  // Path for File Upload (relative to your login dir)
 								   
 					if ($this->connected) {
 				   		$upload = ftp_put($this->conn_id, $destination_file, $local_file, FTP_BINARY);  // Upload the File
@@ -372,7 +369,7 @@
 			if ($aUserId != null) {
 				if ($this->connected)
 				{
-					$dir = $this->ftpprefix."trf_".$aUserId."";
+					$dir = "trf_".$aUserId."";
 					$this->deleteFiles($aUserId,$dir);
 					return ftp_rmdir($this->conn_id,$dir);
 				}
