@@ -23,7 +23,8 @@
 	if (application_userisvalid()) {
    		global $gl_usepicturedir;
    		global $gl_picturedir;
-   		
+   		global $gl_ftpprefix;
+		
    		$usr = application_gevaliduser();
 		if ($usr != null) {
 			$df = new DirectoryFactory();
@@ -40,7 +41,7 @@
 				$lst1 = $df->listFiles_Ftp($usr->getUid(),array("jpg","jpeg","gif","png"));
 				if ($lst1 != null) {
 					for ($i=0;$i<count($lst1);$i++) {
-						$fn = $lst1[$i];
+						$fn =  $gl_ftpprefix.$lst1[$i];
 						$piclist->addPicture(new Picture($fn,$fn,"",""));
 					}
 				}
