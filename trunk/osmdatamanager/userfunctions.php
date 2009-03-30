@@ -99,7 +99,7 @@
 				  $userfactory->createExampleGroup($usr);
 				  $userfactory->createExamplePoi($usr);
 				  
-				  echo application_getMessage($usr);
+				  echo application_getMessage($usr);				  
 				  return;
 			} 
 		} else {

@@ -45,7 +45,7 @@
 	$gl_usepicturedir = true;
 	$gl_picturedir = "pictures/";
 	
-	$gl_usefiledir = false;
+	$gl_usefiledir = true;
 	$gl_filedir = "files/";
 	
 	$gl_loglevel = 0;

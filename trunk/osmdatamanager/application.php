@@ -223,6 +223,63 @@
 				$this->addLogMessage($aMessage,"");
 			}
 			
+			/**
+			 * check if the global db settings will work
+			 * @return 
+			 */
+			function checkDbConnection() {
+				$result = true;
+				
+				$con1 = mysql_connect($this->dbhost,$this->dbuser,$this->dbpwd);
+				if ($con1)
+			    {
+			    	echo "database connection successful... <br/>";
+				} else {
+					$result = false;
+					echo "could not connect with database<br/>";
+				}
+				
+				if (!(mysql_select_db($this->dbname))) 
+			    {
+			    	echo "could not open database: ".$this->dbname."<br/>";
+					$result = false;
+				}
+				
+				if ($con1)
+					mysql_close($con1);
+					
+				return $result;
+			}
+			
+			/**
+			 * creates the table structure
+			 * @return 
+			 */
+			function createTableStructure() {
+				 $sqlFileToExecute = "osmdatamanager.sql";
+				 $f = fopen($sqlFileToExecute,"r");
+			     $sqlFile = fread($f,filesize($sqlFileToExecute));
+			     $sqlArray = explode(';',$sqlFile);	
+					
+				if ($sqlArray != null) {
+				   foreach ($sqlArray as $stmt) {
+				       if (strlen($stmt)>3){
+				       	  	$this->executeQuery($stmt);
+							/*				
+				              if (!) {
+				              //if (!$result){
+				                 $sqlErrorCode = mysql_errno();
+				                 $sqlErrorText = mysql_error();
+				                 $sqlStmt      = $stmt;
+				                 echo "error executiong sql: ".$stmt."<br/>";
+								 break;
+				              }    
+				            */
+				       }
+					}
+				}
+			}
+			
 			function executeQuery($aQuery)
 			{  
 				//check if read only mode (no insert, update and delete allowed)

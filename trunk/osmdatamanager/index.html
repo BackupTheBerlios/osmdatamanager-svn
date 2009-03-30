@@ -12,8 +12,7 @@
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>			
 	<script type="text/javascript">	
 		  dojo.require("dojo.parser");
-          /*dojo.require("dijit.layout.BorderContainer");*/
-          
+                    
 		  
 		  dojo.addOnLoad(function(){
 				dojo.require("dojox.widget.SortList");
@@ -190,9 +189,6 @@
 	<div class="nihilo" dojoType="dijit.Dialog" id="dlg_login" title="Login"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
-	    <tr colspan="2">
-	    	<td colspan="2"><i>you can login with username: guest, password guest</i></td>
-		</tr>
 		<tr>
 	      <td><label for="name">Benutzername:</label></td>
 	      <td><input dojoType="dijit.form.TextBox" type="text" name="username" id="username"></td>

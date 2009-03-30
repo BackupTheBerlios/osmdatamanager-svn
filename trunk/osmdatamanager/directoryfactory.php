@@ -44,6 +44,7 @@
 		var $conn_id;
 		var $connected;
 		var $useftp;
+		var $filedir;
 								
 		function DirectoryFactory() {
 			
@@ -51,6 +52,7 @@
 			global $gl_ftppwd;
 			global $gl_ftpserver;
 			global $gl_useftp;
+			global $gl_filedir;
 						
 			$this->ftpuser = $gl_ftpuser;
 			$this->ftppwd  = $gl_ftppwd;
@@ -58,6 +60,7 @@
 			$this->useftp = $gl_useftp;
 			$this->conn_id = NULL;
 			$this->connected = false;
+			$this->filedir = $gl_filedir; 
 		}
 		
 		/**
@@ -98,13 +101,20 @@
 		 * @param $aDirname Object
 		 */
 		function createDirectory($aDirname) {
-			if ($this->connected) {
-				$dir = ftp_mkdir($this->conn_id, $aDirname);
-				if ($dir == "FALSE ") {
-					return false;
-				} else {
-					return true;
+			if ($this->useftp) {
+				if ($this->connected) {
+					$dir = ftp_mkdir($this->conn_id, $aDirname);
+					if ($dir == "FALSE ") {
+						return false;
+					} else {
+						return true;
+					}
 				}
+			} else {
+				if (mkdir($this->filedir.$aDirname))
+					return true;
+				else
+					return false;
 			}
 		}
 		
