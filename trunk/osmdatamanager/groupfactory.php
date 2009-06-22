@@ -29,13 +29,9 @@
 		var $parentgroup;
 		var $files;
 		var $haschildren;	
-		var $protection;
-		var $zoomlevel;
-		var $lat;
-		var $lon;
-		
-		function Group($aGroupId, $aUsrId, $aParentGroup, $aGroupname, $aHasChildren,$aProtection, $aZoomlevel, $aLat, $aLon) {
-			parent::GroupItem("Group");
+				
+		function Group($aGroupId,$aUsrId,$aParentGroup,$aGroupname,$aHasChildren,$aProtection,$aZoomlevel,$aLat,$aLon,$aIconExpanded,$aIconCollapsed) {
+			parent::GroupItem("Group",$aIconExpanded,$aIconCollapsed);
 			
 			$this->groupid = $aGroupId;
 			$this->usrid = $aUsrId;
@@ -65,7 +61,13 @@
 		var $description;
 		
 		function Tracefile($aGroupId, $aUserId, $aFilename) {
-			parent::GroupItem("Tracefile");			
+			parent::GroupItem("Tracefile",$aIconExpanded,$aIconCollapsed);			
+			
+			global $gl_icon_file;
+			
+			if (($aIcon2 == null) || ($aIcon2 == ""))
+				$this->setIcon_Collapsed($gl_icon_file);
+			
 			$this->groupid = $aGroupId;
 			$this->userid = $aUserId;
 			$this->filename = $aFilename;				
@@ -118,18 +120,35 @@
 			return null;
 		}
 		
-		function setCustomData(&$aFilellist,&$aNewFiles, $aFile) {
+		/**
+		 * 
+		 * @return 
+		 * @param $aFilellist Object
+		 * @param $aNewFiles Object
+		 * @param $aFile Object
+		 * @param $aIcon1 Object
+		 * @param $aIcon2 Object
+		 */
+		function setCustomData(&$aFilellist,&$aNewFiles, $aFile, $aIcon1, $aIcon2) {
 			for ($i=0;$i<count($aFilellist);$i++) {
 				$fl1 = $aFilellist[$i];
 				if ($fl1->getFilename() == $aFile->getFilename()) {
 					$fl1->setCustomData($aFile->getDescription());
 					$fl1->setFilename($aFile->getFullFilename());
+					$fl1->setIcon_Expanded($aIcon1);
+					$fl1->setIcon_Collapsed($aIcon2);
 					array_push($aNewFiles, $fl1);
 					return;
 				}
 			}
 		}
 		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aFilellist Object
+		 */		
 		function fillFiledata($aUserId, &$aFilellist) {
 			$newfiles = array();
 			$ff = new FileFactory();
@@ -153,7 +172,7 @@
 				{
 					if ($row != null){
 						$gpxfile = new File($row[0],$row[1],$row[2],$row[3]);
-						$this->setCustomData($aFilellist,$newfiles,$gpxfile);
+						$this->setCustomData($aFilellist,$newfiles,$gpxfile,$row[4],$row[5]);
 					}
 				}
 			}
@@ -391,7 +410,7 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){
-					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8]);
+					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
 					return $grp;
 				}
 			}
@@ -405,7 +424,7 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){
-					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8]);
+					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
 					return $grp;
 				}
 			}
@@ -421,13 +440,18 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){
-					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8]);
+					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
 					return $grp;
 				}
 			}
 			return null;
 		}
 		
+		/**
+		 * returns all root groups from user with given userid
+		 * @return array of Groups
+		 * @param $aUserid Object
+		 */
 		function getRootGroups($aUserid) {
 			$groups = array();
 			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) AND (prntgrp IS NULL)) ORDER BY grpname";
@@ -437,8 +461,9 @@
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserid, $row[0]),$row[5],$row[6],$row[7],$row[8]);
+						$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserid, $row[0]),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
 						array_push($groups, $grp);
+						
 					}
 				}
 				return $groups;
@@ -446,6 +471,11 @@
 			return null;
 		}
 		
+		/**
+		 * returns all child groups from user with given userid and given parentgroupid
+		 * @return array of Groups
+		 * @param $aUserid Object
+		 */
 		function getChildGroups($aUserid,$aParentGroupId) {
 			if ($aParentGroupId == "")
 				return null;
@@ -459,7 +489,7 @@
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$grp = new Group($row[0],$row[1],$row[2],$row[3],$this->hasChildren($aUserid, $row[0]),$row[5],$row[6],$row[7],$row[8]);
+						$grp = new Group($row[0],$row[1],$row[2],$row[3],$this->hasChildren($aUserid, $row[0]),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
 						array_push($groups, $grp);
 					}
 				}
@@ -537,8 +567,20 @@
 			return true;
 		}
 		
-		
-		function updateGroup($aUserId, $aGroupId, $aGroupname, $aProtection, $aZoomlevel, $aLat, $aLon) {
+		/**
+		 * updates group data
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupId Object
+		 * @param $aGroupname Object
+		 * @param $aProtection Object
+		 * @param $aZoomlevel Object
+		 * @param $aLat Object
+		 * @param $aLon Object
+		 * @param $aIcon1 Object
+		 * @param $aIcon2 Object
+		 */
+		function updateGroup($aUserId,$aGroupId,$aGroupname,$aProtection,$aZoomlevel,$aLat,$aLon,$aIcon1,$aIcon2) {
 			$qry1   =  "UPDATE `tab_grp` SET ";
 			 //$qry1 = $qry1 + "`username`='".$aVal1."' ";
 			 $qry1 = $qry1."`grpname`='".$aGroupname."' ";
@@ -546,6 +588,8 @@
 			 $qry1 = $qry1.", `zoomlevel`= ".$aZoomlevel." ";
 			 $qry1 = $qry1.", `lat`='".$aLat."' ";
 			 $qry1 = $qry1.", `lon`='".$aLon."' ";
+			 $qry1 = $qry1.", `icon1`='".$aIcon1."' ";
+			 $qry1 = $qry1.", `icon2`='".$aIcon2."' ";
 			 $qry1 = $qry1." WHERE  (`grpid` = ".$aGroupId.")";
 			 $qry1 = $qry1." AND (`usrid` = ".$aUserId.")";
 			 			 

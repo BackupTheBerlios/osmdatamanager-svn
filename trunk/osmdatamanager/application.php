@@ -79,7 +79,12 @@
 	 //define ("msg_updateuserok","msg.updateuserok");
 	 //define ("msg_updateuserfailed","msg.updateuserfailed");
 	 define ("msg_updateok","msg.updateok");
-		 
+	 
+	 //db types
+	 define ("protection_private","private");
+	 define ("protection_protected","protected");
+	 define ("protection_public,","public");
+	 		 
 	 /****************************************************
 	 * END KONSTANTS
 	 ****************************************************/ 
@@ -343,17 +348,75 @@
 			}
 		}
 		
+		/**
+		 * base class for items wich can be displayed on the map
+		 * -> has protection, zoomlevel and lat lon 
+		 */
+		class MapItem {
+			var $protection;
+			var $zoomlevel;
+			var $lat;
+			var $lon;	
+			
+			function MapItem() {
+				global $gl_baselat;
+				global $gl_baselon;
+				global $gl_basezoomlevel;
+								
+				$this->protection = protection_private;
+				$this->zoomlevel  = $gl_basezoomlevel;
+				$this->lat = $gl_baselat;
+				$this->lon = $gl_baselon;
+			}
+		}
+		
 		
 		/**
 		 * base class for all "group" items
 		 */
-		class GroupItem {
+		class GroupItem extends MapItem {
 			var $itemtype;
+			var $icon_expanded;
+			var $icon_collapsed;
 			
-			function GroupItem($aItemtype)
+			function GroupItem($aItemtype,$aIconExpanded,$aIconCollapsed)
 			{
+				parent::MapItem();
+				
+				global $gl_icon_group_expanded;
+				global $gl_icon_group_collapsed;
+				
 				$this->itemtype = $aItemtype;
-			}	
+				if ($aIconExpanded != null) 
+					$this->icon_expanded  = $aIconExpanded;
+				else
+					$this->icon_expanded  = $gl_icon_group_expanded;
+				
+				if ($aIconCollapsed != null) 
+					$this->icon_collapsed = $aIconCollapsed;
+				else
+					$this->icon_collapsed = $gl_icon_group_collapsed;
+			}
+			
+			/**
+			 * set's a new filename for the expanded icon displayed in the tree
+			 * @return 
+			 * @param $aIconname Object
+			 */
+			function setIcon_Expanded($aIconname) {
+				$this->icon_expanded = $aIconname;	
+			}
+			
+			/**
+			 * set's a new filename for the collapsed icon in the tree;
+			 * @return 
+			 * @param $aIconname Object
+			 */
+			function setIcon_Collapsed($aIconname) {
+				if (($aIconname != null) && ($aIconname != ""))
+					$this->icon_collapsed = $aIconname;	
+			}
+			
 		}
 		
 	

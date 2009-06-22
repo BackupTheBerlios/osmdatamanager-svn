@@ -28,6 +28,7 @@
 		$poilist		= $_REQUEST['poilist'];
 		$groupid		= $_REQUEST['groupid'];
 		$poiid	 		= $_REQUEST['poiid'];
+		$icon	 		= $_REQUEST['icon'];
 		global $gl_loglevel;
 		$gl_loglevel 	= 1;
 	} else {
@@ -42,6 +43,7 @@
 		$poilist		= $_GET['poilist'];
 		$groupid		= $_GET['groupid'];
 		$poiid	 		= $_GET['poiid'];
+		$icon	 		= $_GET['icon'];
 		*/
 	}
 		
@@ -90,7 +92,7 @@
 			//msg_updatepoi
 			if ($action == msg_updatepoi) {
 				//updatePoi($aUsrId,	$aPoiId, $aPoiName, $aDescription, $aLatLon, $aGeoRssUrl) {	
-				$poi = $pof->updatePoi($usr->getUid(),$poiid,$poiname,$description,$latlon,$georssurl);
+				$poi = $pof->updatePoi($usr->getUid(),$poiid,$poiname,$description,$latlon,$georssurl,$icon);
 				if ($poi != null) {
 					echo application_getMessage($poi);	
 				} else {

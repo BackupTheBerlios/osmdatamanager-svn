@@ -32,12 +32,13 @@
 		$lon            = $_REQUEST['lon'];
 		$username		= $_REQUEST['username'];
 		$recursiv	    = $_REQUEST['recursiv'];
+		$icon1       	= $_REQUEST['icon1'];
+		$icon2       	= $_REQUEST['icon2'];
 		global $gl_loglevel;
 		$gl_loglevel 	= 1;
 	} else {
 		//uncomment for debug
-		
-		/*
+		/*		
 		$action  		= $_GET['action'];
 		$groupname  	= $_GET['groupname'];
 		$groupid  		= $_GET['groupid'];
@@ -51,6 +52,8 @@
 		$lon            = $_GET['lon'];	
 		$username		= $_GET['username'];
 		$recursiv	    = $_GET['recursiv'];
+		$icon1       	= $_GET['icon1'];
+		$icon2       	= $_GET['icon2'];
 		*/
 	}
 		
@@ -355,7 +358,7 @@
 			if ($action == msg_updategrp) {
 			
 				//($aGroupId, $aUsrId, $aFilename, $aDescription)
-				if ($fac->updateGroup($usr->getUid(),$groupid,$groupname,$protection,$zoomlevel,$lat,$lon) ) {
+				if ($fac->updateGroup($usr->getUid(),$groupid,$groupname,$protection,$zoomlevel,$lat,$lon,$icon1,$icon2) ) {
 					//echo $groupid.$usr->getUid();
 					$grp = $fac->getGroup($usr->getUid(),$groupid);
 					if ($grp != null) {

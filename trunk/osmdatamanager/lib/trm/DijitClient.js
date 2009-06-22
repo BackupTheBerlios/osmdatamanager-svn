@@ -513,6 +513,9 @@ DijitClient.GroupDialog = {
 		dijit.byId('dlgcreategroup_tb_poi_lat').attr("value",group.lat);
 		dijit.byId('dlgcreategroup_tb_poi_lon').attr("value",group.lon);
 		
+		dijit.byId('dlgcreategroup_tb_icon1').attr("value",group.icon_expanded);
+		dijit.byId('dlgcreategroup_tb_icon2').attr("value",group.icon_collapsed);
+		
 		if (group.zoomlevel != null)
 			dijit.byId('dlgcreatgroup_zommlevel').attr("value",group.zoomlevel);			
 		else
@@ -535,10 +538,13 @@ DijitClient.GroupDialog = {
 		
 		if (isupdate) {
 			dijit.byId('dlg_creategroup').attr("option", "update");
-			dijit.byId('tb_groupname').attr("disabled", "");
+			dijit.byId('tb_groupname').attr("disabled", false);
 			dijit.byId('dlgcreategroup_tb_poi_lat').attr("disabled","disabled");
-			dijit.byId('dlgcreategroup_tb_poi_lon').attr("disabled","");
-			dijit.byId('dlgcreatgroup_zommlevel').attr("disabled","");
+			dijit.byId('dlgcreategroup_tb_poi_lon').attr("disabled","disabled");
+			dijit.byId('dlgcreatgroup_zommlevel').attr("disabled","disabled");
+			
+			dijit.byId('dlgcreategroup_tb_icon1').attr("disabled",false);
+			dijit.byId('dlgcreategroup_tb_icon2').attr("disabled",false);
 			
 			 var grp = this.grpman.getGroupTree().getSelectedItem();
 			 if (grp) {
@@ -552,6 +558,8 @@ DijitClient.GroupDialog = {
 			dijit.byId('dlgcreategroup_rd_private').attr("disabled", "disabled");
 			dijit.byId('dlgcreategroup_rd_protected').attr("disabled", "disabled");
 			dijit.byId('dlgcreategroup_rd_public').attr("disabled", "disabled");
+			dijit.byId('dlgcreategroup_tb_icon1').attr("disabled","disabled");
+			dijit.byId('dlgcreategroup_tb_icon2').attr("disabled","disabled");
 		}
 		
 		dijit.byId('dlg_creategroup').show();	
@@ -572,6 +580,9 @@ DijitClient.GroupDialog = {
 		var lat = document.getElementById('dlgcreategroup_tb_poi_lat').value;
 		var lon = document.getElementById('dlgcreategroup_tb_poi_lon').value;
 		
+		var icon1 = document.getElementById('dlgcreategroup_tb_icon1').value;
+		var icon2 = document.getElementById('dlgcreategroup_tb_icon2').value;
+		
 		if ((grp != "") && (grp != null)) {
 			if (option == "root") {
 				this.grpman.createRootGroup(grp);
@@ -582,7 +593,7 @@ DijitClient.GroupDialog = {
 			}
 			else 
 			if (option == "update") {
-			  this.grpman.updateGroup(grpid,grp,protection,zoomlevel,lat,lon);
+			  this.grpman.updateGroup(grpid,grp,protection,zoomlevel,lat,lon,icon1,icon2);
 			}
 		} else {
 			alert("kein g&#252;ltiger Wert");
@@ -673,19 +684,20 @@ DijitClient.PoiDialog = {
 		dijit.byId('tb_poidescription').attr("value",poi.poiname);
 		//dijit.byId('ta_poilongtext').setValue("");
 		dijit.byId('ta_poilongtext').attr("value",poi.description);
-		dijit.byId('tb_georssurl').attr("value","");
 		dijit.byId('tb_poi_lat').attr("value",poi.lat);
 		dijit.byId('tb_poi_lon').attr("value",poi.lon);
+		dijit.byId('dlpoi_tb_icon').attr("disabled",false);
+		dijit.byId('dlpoi_tb_icon').attr("value",poi.icon_collapsed);
 		dijit.byId('dlg_poi').show();
 	},
 	show: function() {
 		dijit.byId('tb_poidescription').attr("value","");
 		//dijit.byId('ta_poilongtext').setValue("");
 		dijit.byId('ta_poilongtext').attr("value","");
-		dijit.byId('tb_georssurl').attr("value","");
 		dijit.byId('tb_poi_lat').attr("value","");
 		dijit.byId('tb_poi_lon').attr("value","");
 		dijit.byId('tb_poi_poiid').attr("value","");
+		dijit.byId('dlpoi_tb_icon').attr("value","");
 		dijit.byId('dlg_poi').show();
 	},
 	showEdit: function() {
@@ -719,16 +731,20 @@ DijitClient.PoiDialog = {
 		if (dijit.byId('tb_poidescription').value.trim() == "") 
 			return false;
 
-		if (dijit.byId('tb_georssurl').value == "") {
-			if (dijit.byId('tb_poi_lat').value == "") 
-				return false;
+		if (dijit.byId('tb_poi_lat').value == "") 
+			return false;
 			
-			if (dijit.byId('tb_poi_lon').value == "") 
-				return false;
-		}else {
+		if (dijit.byId('tb_poi_lon').value == "") 
+			return false;
+		
+		/*
+		if (dijit.byId('tb_georssurl').value == "") {
+			
+		} else {
 			if (dijit.byId('tb_georssurl').value == "") 
 				return false;
-		}	
+		}
+		*/	
 		return true;
 	},
 	okClick: function() {
@@ -742,22 +758,29 @@ DijitClient.PoiDialog = {
 		var longtext = "";
 		var georssurl = "";
 		var poiid = "";
+		var icon  = "";
 		
 		if (dijit.byId('ta_poilongtext').getValue().trim() != "")
 		  longtext = dijit.byId('ta_poilongtext').getValue().trim();
 		  
+		/*
 		if (dijit.byId('tb_georssurl').value.trim() != "")
 		  georssurl = dijit.byId('tb_georssurl').value.trim();
+		*/
 		
 		if (dijit.byId('tb_poi_poiid').value.trim() != "")
 		  poiid = dijit.byId('tb_poi_poiid').value.trim();
+		
+		if (dijit.byId('dlpoi_tb_icon').value.trim() != "")
+		  icon = dijit.byId('dlpoi_tb_icon').value.trim();
+		
 		
 		if (poiid != "") {
 			var cb = {
 				func: this._cb_updatePoi,
 				target: this
 			}
-			pm.updatePoi(poiid, dijit.byId('tb_poidescription').value.trim(), longtext, latlon, georssurl, cb);
+			pm.updatePoi(poiid, dijit.byId('tb_poidescription').value.trim(), longtext, latlon,icon,cb);
 		}
 		else {
 			var cb = {
@@ -1190,7 +1213,7 @@ DijitClient.Application = function(openlayersMap,mm)
 	this._cb_getPoi = function(response, ioargs) {
 		var poi = response[0];
 		if (poi) {		
-			self.createPoi(poi.lat,poi.lon,poi.description,gl_markers);
+			self.createPoi(poi.lat,poi.lon,poi.description,gl_markers,poi.icon_collapsed);
 			self.centerMap(poi.lat,poi.lon,14);
 		}
 	}
@@ -1367,7 +1390,7 @@ DijitClient.Application = function(openlayersMap,mm)
 		dijit.byId('itm_createsubgroup').attr("disabled","disabled");		
 		dijit.byId('itm_createmaingroup').attr("disabled","disabled");
 		dijit.byId('itm_deletegroup').attr("disabled","disabled");
-		dijit.byId('itm_editfile').attr("disabled","disabled");
+		dijit.byId('itm_editfile__').attr("disabled","disabled");
 		dijit.byId('itm_gotoPoi').attr("disabled","disabled");
 		dijit.byId('itm_editPoi').attr("disabled","disabled");
 		//dijit.byId('itm_removePois').attr("disabled","disabled");
@@ -1424,7 +1447,7 @@ DijitClient.Application = function(openlayersMap,mm)
 				dijit.byId('itm_submenu_pois').attr("disabled","");
 				dijit.byId('itm_loadTraces').attr("disabled","");
 				dijit.byId('itm_removeTraces').attr("disabled","");
-				dijit.byId('itm_editfile').attr("disabled","");
+				dijit.byId('itm_editfile__').attr("disabled","");
 				dijit.byId('itm_remFiles').attr("disabled","");
 			}
 			

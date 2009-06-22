@@ -45,6 +45,7 @@
 		
 	</script>
 	
+	
 	<script src="lib/openlayers/OpenLayers.js"></script>
 	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>	
 		
@@ -92,6 +93,7 @@
 			layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
 			gl_map.addLayer(layerCycleMap);
 			gl_map.addControl(new OpenLayers.Control.MousePosition());
+			
 						
 			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
     		gl_map.addLayer(gl_markers);
@@ -149,8 +151,8 @@
 			
 			<div style="margin-top:20px; font-size:10px; text-align:center;">
 				powerd by
-				<a href="http://developer.berlios.de" target="_blank" title="BerliOS Developer"> <img src="http://developer.berlios.de/bslogo.php?group_id=10678" style="margin-left:50px; padding:0px;" width="124px" height="32px" border="0" alt="BerliOS Developer Logo"></a>
-				<br>
+				<a href="http://developer.berlios.de" target="_blank" title="BerliOS Developer"> <img src="http://developer.berlios.de/bslogo.php?group_id=10678" style="margin-left:50px; padding:0px;" width="124px" height="32px" border="0" alt="BerliOS Developer Logo" /></a>
+				<br/>
 				
 				<a href="http://www.openstreetmap.org" target="_blank">Openstreetmap<img src="images/Mag_map-120x120.png" style="cursor:pointer; margin-left:50px; border-style:none;" /></a>
 			</div>
@@ -191,11 +193,11 @@
 	  <table>
 		<tr>
 	      <td><label for="name">Benutzername:</label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="username" id="username"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="username" id="username" /></td>
 	    </tr>
 	    <tr>
 	      <td><label for="loc">Passwort: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="password" name="password" id="password"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="password" id="password" /></td>
 	    </tr>
 		<tr>
 			<td><button dojoType="dijit.form.Button" id="btn_dlglogin_ok">Ok</button></td>	
@@ -210,7 +212,7 @@
 	  <table>
 	    <tr>
 	      <td><label for="name">Benutzer l&ouml;schen: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgadmin_tb_username" id="dlgadmin_tb_username"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgadmin_tb_username" id="dlgadmin_tb_username" /></td>
 		  <td><button dojoType="dijit.form.Button" id="dlgadmin_btn_deluser">L&ouml;schen</button></td>	
 	    </tr>		
 	  </table>
@@ -222,15 +224,15 @@
 	  <table>
 	    <tr>
 	      <td><label for="name">Altes Passwort: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="password" name="oldpassword" id="dlgchangepassword_tb_oldpassword"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="oldpassword" id="dlgchangepassword_tb_oldpassword" /></td>
 	    </tr>
 	    <tr>
 	      <td><label for="loc">Neues Passwort: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="password" name="password1" id="dlgchangepassword_tb_password1"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="password1" id="dlgchangepassword_tb_password1" /></td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Passwort wiederholen: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="password" name="password2" id="dlgchangepassword_tb_password2"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="password2" id="dlgchangepassword_tb_password2" /></td>
 	    </tr>
 		<tr>
 			<td><button dojoType="dijit.form.Button" id="dlgchangepassword_btn_ok">Ok</button></td>	
@@ -244,7 +246,7 @@
 	  <table>
 	    <tr>
 	      <td><label for="name">Benutzername: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" disabled="disabled" name="tb_usrpref_name" id="tb_usrpref_name"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" disabled="disabled" name="tb_usrpref_name" id="tb_usrpref_name" /></td>
 		  <td><button dojoType="dijit.form.Button" onclick="DijitClient.ChangePasswordDialog.show()">Passwort &auml;ndern</button></td>
 	    </tr>
 		<tr>
@@ -252,21 +254,21 @@
 		</tr>
 	    <tr>
 	      <td><label for="loc">eMail: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_email" id="tb_usrpref_email"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_email" id="tb_usrpref_email" /></td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Heimatort: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_lat" disabled="disabled" id="tb_usrpref_lat"></td>
-		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_lon" disabled="disabled" id="tb_usrpref_lon"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_lat" disabled="disabled" id="tb_usrpref_lat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_lon" disabled="disabled" id="tb_usrpref_lon" /></td>
 		  <td><button dojoType="dijit.form.Button" id="btn_usrpref_sethomebase">...</button></td>	
 	    </tr>
 		<tr>
 	      <td><label for="loc">Info: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_info" id="tb_usrpref_info"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_info" id="tb_usrpref_info" /></td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Bild: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_picture" id="tb_usrpref_picture"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_picture" id="tb_usrpref_picture" /></td>
 	    </tr>	
 		<tr>
 			<td><button dojoType="dijit.form.Button" id="btn_usrpref_save">Speichern</button></td>	
@@ -281,25 +283,24 @@
 	  <table>
 	    <tr>
 	      <td><label for="name">Benutzername: </label></td>
-	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Username."  type="text" required="true" trim="true" name="reg_username" id="reg_username"></td>
+	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Username."  type="text" required="true" trim="true" name="reg_username" id="reg_username" /></td>
 	    </tr>
 	    <tr>
 	      <td><label for="loc">Passwort: </label></td>
-	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Password." type="password" required="true" trim="true" name="reg_password" id="reg_password"></td>
+	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Password." type="password" required="true" trim="true" name="reg_password" id="reg_password" /></td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Passwort wiederholen: </label></td>
-	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Password." type="password" required="true" name="reg_password2" id="reg_password2"></td>
+	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Password." type="password" required="true" name="reg_password2" id="reg_password2" /></td>
 	    </tr>
 		<tr>
 			<td><label for="loc">eMail: </label></td>
 	      	<td><input dojoType="dijit.form.ValidationTextBox" type="text" 
 		  			name="reg_email" 
-					regExpGen="dojox.regexp.emailAddress"
 					trim="true"
     				required="true"
     				invalidMessage="Invalid Email Address." 
-					id="reg_email">
+					id="reg_email" />
 			</td>
 		</tr>
 		<tr>
@@ -326,11 +327,11 @@
 	  <table>
 	    <tr>
 	      <td><label for="name">Dateiname: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="tb_filename" id="tb_filename"></td>
+	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="tb_filename" id="tb_filename" /></td>
 	    </tr>
 	    <tr>
 	      <td><label for="loc">Beschreibung: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_filedescription" id="tb_filedescription"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_filedescription" id="tb_filedescription" /></td>
 	    </tr>
 		<tr>
 			<td><button dojoType="dijit.form.Button" id="dlgfileedit_btn_ok">Ok</button></td>	
@@ -364,12 +365,12 @@
 	  <table>
 	    <tr>
 	      <td><label for="name">Bezeichnung: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_groupname" id="tb_groupname"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_groupname" id="tb_groupname" /></td>
 		</tr>
 		<tr>
 	      <td><label for="loc">Position: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lat" id="dlgcreategroup_tb_poi_lat"></td>
-		  <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lon" id="dlgcreategroup_tb_poi_lon"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lat" id="dlgcreategroup_tb_poi_lat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lon" id="dlgcreategroup_tb_poi_lon" /></td>
 		  <td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_selectpoint">...</button></td>	
 	    </tr> 
 		<tr>
@@ -379,10 +380,18 @@
 							    class="medium"
 							    constraints="{max:20,min:1,places:0}"
 							    name="dlgcreatgroup_zommlevel"
-							    id="dlgcreatgroup_zommlevel">
+							    id="dlgcreatgroup_zommlevel" />
 			</td>
 			<td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_zoomlevel">Zoomlevel von Karte</button></td>	
 		</tr>
+		<tr>
+	      <td><label for="name">Icon offen:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_icon1" id="dlgcreategroup_tb_icon1" /></td>
+	    </tr>
+		<tr>
+	      <td><label for="name">Icon geschlossen:</label></td>
+	      <td><input dojoType="dijit.form.TextBox"  type="text" name="dlgcreategroup_tb_icon2" id="dlgcreategroup_tb_icon2" /></td>
+	    </tr>
 		<tr>
 			<td><label for="loc">Schutz:</label></td>
 			<td>
@@ -404,19 +413,19 @@
 	<div class="soria" dojoType="dijit.Dialog" id="dlg_poi" title="Point Of Interest"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
-	    <input dojoType="dijit.form.TextBox" type="hidden" visible="false" name="tb_poi_poiid" id="tb_poi_poiid">
+	    <input dojoType="dijit.form.TextBox" type="hidden" visible="false" name="tb_poi_poiid" id="tb_poi_poiid" />
 		<tr>
 	      <td><label for="name">Bezeichnung: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poidescription" id="tb_poidescription"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poidescription" id="tb_poidescription" /></td>
 	    </tr>
 		<tr>
-	      <td><label for="name">GeoRSS URL: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="tb_georssurl" id="tb_georssurl"></td>
+	      <td><label for="name">Icon:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="dlpoi_tb_icon" id="dlpoi_tb_icon" /></td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Position: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lat" id="tb_poi_lat"></td>
-		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lon" id="tb_poi_lon"></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lat" id="tb_poi_lat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lon" id="tb_poi_lon" /></td>
 		  <td><button dojoType="dijit.form.Button" id="dlgpoi_btn_selectpoint">...</button></td>	
 	    </tr> 
 		<tr>
@@ -453,6 +462,7 @@
 				<div dojoType="dijit.MenuItem" id="itm_deletegroup" onClick="gl_groupmanager.deleteGroup()">Gruppe l&ouml;schen</div>		
 			</div>
 		</div>
+		
 		<!-- Traces -->
 		<div dojoType="dijit.PopupMenuItem" id="itm_submenu_traces">
 			<span>Gpx Spuren</span>
@@ -462,7 +472,9 @@
 				<div dojoType="dijit.MenuSeparator"></div>	
 				<div dojoType="dijit.MenuItem" id="itm_addFiles" onClick="DijitClient.FileListDialog.show()">Spur(en) zur Gruppe hinzuf&uuml;gen</div>
 				<div dojoType="dijit.MenuItem" id="itm_remFiles" onClick="DijitClient.GroupDialog.removeGroupFile()">Spur aus Gruppe entfernen</div>
-				<div dojoType="dijit.MenuItem" id="itm_editfile" onClick="DijitClient.FileEditDialog.show()">Datei Bearbeiten</div>	
+				<div dojoType="dijit.MenuItem" id="itm_editfile__" onClick="DijitClient.FileEditDialog.show()">Datei Bearbeiten</div>	
+				<div dojoType="dijit.MenuSeparator"></div>	
+				<div dojoType="dijit.MenuItem" id="itm_updatefiles" onClick="gl_application.updateFileList(null)">Dateien aktualisieren</div>	
 			</div>
 		</div>
 		
@@ -493,6 +505,8 @@
 		<div dojoType="dijit.MenuSeparator"></div>
 		<div dojoType="dijit.MenuItem" id="itm_createpoi" onClick="DijitClient.PoiDialog.show()">Poi erstellen</div>
 		<div dojoType="dijit.MenuItem" id="itm_doupload" onClick="alert('disabled')">Datei hochladen</div>				
+		<div dojoType="dijit.MenuSeparator"></div>
+		<div dojoType="dijit.MenuItem" id="itm_updatetree" onClick="gl_groupmanager.getRootGroups()">Baum aktualisieren</div>				
   </div>
         
 </body>

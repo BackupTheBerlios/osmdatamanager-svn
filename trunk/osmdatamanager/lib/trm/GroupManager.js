@@ -369,7 +369,7 @@ function Groupmanager(app){
 		}
 	}
 	
-	this.updateGroup = function(groupid,groupname,protection,zommlevel,lat,lon,cb) {
+	this.updateGroup = function(groupid,groupname,protection,zommlevel,lat,lon,icon1,icon2,cb) {
 		var grpid = grouptree.getSelectedGroupId();
 		if (grpid) {
 			params = {
@@ -380,7 +380,9 @@ function Groupmanager(app){
 				"protection":protection,
 				"zoomlevel":zommlevel,
 				"lat":lat,
-				"lon":lon
+				"lon":lon,
+				"icon1":icon1,
+				"icon2":icon2
 			}
 			callback = cb;
 			loadFromServer("groupfunctions.php", params, _cb_updateGroup);

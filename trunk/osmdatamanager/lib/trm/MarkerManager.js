@@ -89,7 +89,7 @@ function Markermanager() {
 		this.addPoiMarker(latlon, layer, popupContentHTML);
 	}
 	
-	this.addMarker = function(latlon, popupClass, popupContentHTML, closeBox, overflow,layer) {
+	this.addMarker = function(latlon, popupClass, popupContentHTML, closeBox, overflow,layer,iconurl) {
 
             var feature = new OpenLayers.Feature(layer, latlon); 
             feature.closeBox = closeBox;
@@ -97,8 +97,18 @@ function Markermanager() {
             feature.data.popupContentHTML = popupContentHTML;
             //feature.data.overflow = (overflow) ? "auto" : "hidden";
                     
-            var marker = feature.createMarker();
-            
+            //var marker = feature.createMarker();
+            			
+			if ((iconurl != null) && (iconurl != "")) {
+				var ico = new OpenLayers.Icon(iconurl, new OpenLayers.Size(16, 16),  new OpenLayers.Pixel(0, -16));
+				//ico.url = iconurl;
+				var marker = new OpenLayers.Marker(latlon,ico);
+				marker.feature = feature;
+			} else {
+				var marker = new OpenLayers.Marker(latlon);
+				marker.feature = feature;	
+			}
+			
 			var markerClick = function (evt) {
 				if (this.popup == null) {
                     this.popup = this.createPopup(this.closeBox);
@@ -155,7 +165,7 @@ function Markermanager() {
 		marker.destroy();
 	}
 	
-	this.addPoiMarker = function(latlon, layer, description) {
+	this.addPoiMarker = function(latlon, layer, description,iconname) {
 		popupClass = AutoSizeAnchoredBubble2;
         //popupContentHTML = '<img src="pic1.png"></img>';
 		popupContentHTML = "<p>"+description+"</p>";
@@ -164,7 +174,7 @@ function Markermanager() {
 		if (this.markerExists(latlon)) 
 			return;
 		
-		this.addMarker(latlon,popupClass, popupContentHTML, true,true,layer); 		
+		this.addMarker(latlon,popupClass, popupContentHTML, true,true,layer,iconname); 		
 	}
 	
 	this.addGeoRssMarker = function(georssurl, layer) {

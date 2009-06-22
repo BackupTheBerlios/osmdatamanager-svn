@@ -139,7 +139,7 @@ function PoiManager(){
 	 * @param {Object} georssurl
 	 * @param {Object} cb
 	 */
-	this.updatePoi = function(poiid,poiname, description, latlon, georssurl,cb) {
+	this.updatePoi = function(poiid,poiname, description, latlon,icon,cb) {
 						
 		params = {
 			"action":"msg.updatepoi",
@@ -147,7 +147,7 @@ function PoiManager(){
 			"poiname":poiname,
 			"description":description,
 			"latlon":latlon,
-			"georssurl":georssurl
+			"icon":icon
 		}
 		callback = cb;
 		loadFromServer("poifunctions.php",params,_cb_updatePoi);

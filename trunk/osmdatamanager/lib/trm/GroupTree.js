@@ -138,7 +138,10 @@ Array.prototype.remove = function(from, to) {
 		//
 		var n1 = _getChildnode(node,"IMG")
 		if (n1 != null) {
-			n1.setAttribute("src","images/treeExpand_minus.gif");
+			var obj = _getObject(clickednodeelem.Id);
+			if (obj != null) {
+				n1.setAttribute("src", obj.icon_expanded);
+			}
 		}
 	}
 	
@@ -146,10 +149,15 @@ Array.prototype.remove = function(from, to) {
 		//
 		var n1 = _getChildnode(node,"IMG")
 		if (n1 != null) {
-			if (node.getAttribute("haschildren") == "true")
-				n1.setAttribute("src","images/treeExpand_plus.gif");
-			else
-				n1.setAttribute("src", "images/treeExpand_none.gif");	
+			if (node.getAttribute("haschildren") == "true") {
+				var obj = _getObject(clickednodeelem.Id);
+				if (obj != null) {
+					n1.setAttribute("src", obj.icon_collapsed);
+				}
+			}
+			else {
+				n1.setAttribute("src", "images/treeExpand_none.gif");
+			}
 		}
 		_removeAllChilds(node, "nodespan");
 	}
@@ -325,7 +333,9 @@ Array.prototype.remove = function(from, to) {
 			e1.setAttribute("class", "rootnodespan");
 			e1.setAttribute("className", "rootnodespan");
 		}
-        		
+        
+		i1.setAttribute("src",child.icon_collapsed);
+				
         parent.appendChild(e1);
 		return tn;
     }
@@ -341,7 +351,7 @@ Array.prototype.remove = function(from, to) {
 		nd1.c_href.ondblclick = function() { _nodeDblClicked(this.parentNode) };
 			
 		if (child.haschildren) {
-			nd1.c_image.setAttribute("src", "images/treeExpand_plus.gif");
+			//nd1.c_image.setAttribute("src", "images/treeExpand_plus.gif");
 			nd1.c_span.setAttribute("haschildren","true");
 		}
 		else {
@@ -360,7 +370,7 @@ Array.prototype.remove = function(from, to) {
 		else
 			nd1.c_href.innerHTML = child.filename;	
 						
-		nd1.c_image.setAttribute("src", "images/gpxfile.gif");
+		//nd1.c_image.setAttribute("src", "images/gpxfile.gif");
 				
 		nd1.c_span.setAttribute("type","file");
 				
@@ -373,7 +383,7 @@ Array.prototype.remove = function(from, to) {
 	var _createPoi = function(parent,child) {
 		var nd1 = _createChildnode(parent,child);
 		nd1.c_href.innerHTML = child.poiname;	
-		nd1.c_image.setAttribute("src", "images/poi.gif");
+		//nd1.c_image.setAttribute("src", "images/poi.gif");
 		
 		nd1.c_span.setAttribute("type","poi");
 		

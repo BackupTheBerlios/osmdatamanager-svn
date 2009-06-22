@@ -239,10 +239,10 @@ TRM.ClientApplication = function(openlayersMap)
 	 * @param {Object} contentHtml
 	 * @param {Object} layer
 	 */
-	var _createPoi = function(lat, lon, contentHtml, layer) {
+	var _createPoi = function(lat, lon, contentHtml, layer,iconname) {
 		if (self.map && self.markermanager) {
 			var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), self.map.getProjectionObject());
-			self.markermanager.addPoiMarker(lonLat, gl_markers, contentHtml);
+			self.markermanager.addPoiMarker(lonLat, gl_markers, contentHtml,iconname);
 		}
 	}
 	
@@ -320,7 +320,7 @@ TRM.ClientApplication = function(openlayersMap)
 						var contentHtml = "<br>";
 						contentHtml += "<b>" + p1.originaldate + "</b><br>";
 						//contentHtml += OpenLayers.Util.getXmlNodeValue(n1) + "<br>";
-						_createPoi(lat,lon,contentHtml,layer);	
+						_createPoi(lat,lon,contentHtml,layer,"");	
 					}
 				}
 				
@@ -551,7 +551,7 @@ TRM.ClientApplication = function(openlayersMap)
 		if (usr != null)
 		{				
 			if ((usr.location_lat != null) && (usr.location_lat != "")) {
-				this.createPoi(usr.location_lat, usr.location_lon, usr.abouthtml,gl_markers);
+				this.createPoi(usr.location_lat, usr.location_lon, usr.abouthtml,gl_markers,"");
 				this.centerMap(usr.location_lat, usr.location_lon, 14);
 			}
 			else {
@@ -625,8 +625,8 @@ TRM.ClientApplication = function(openlayersMap)
 	 * @param {Object} contentHtml
 	 * @param {Object} layer
 	 */	
-	this.createPoi = function(lat, lon, contentHtml, layer) {		
-		_createPoi(lat,lon,contentHtml,layer);
+	this.createPoi = function(lat, lon, contentHtml, layer,iconname) {		
+		_createPoi(lat,lon,contentHtml,layer,iconname);
 	}
 	
 	/**
@@ -665,7 +665,7 @@ TRM.ClientApplication = function(openlayersMap)
 					
 					
 					if (itm1.itemtype == "Poi") {
-						_createPoi(itm1.lat,itm1.lon,itm1.description,lyr);
+						_createPoi(itm1.lat,itm1.lon,itm1.description,lyr,itm1.icon_collapsed);
 					}
 										
 					/*

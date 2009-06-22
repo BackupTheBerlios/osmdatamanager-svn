@@ -31,8 +31,10 @@
 		var $lon;
 		var $georssurl;
 				
-		function Poi($aId, $aUsrId, $aPoiType, $aPoiname, $aDescription, $aLatLon, $aGeoRssUrl) {
-			parent::GroupItem("Poi");
+		function Poi($aId, $aUsrId, $aPoiType, $aPoiname, $aDescription, $aLatLon, $aGeoRssUrl,$aIcon1,$aIcon2) {
+			parent::GroupItem("Poi",$aIcon1,$aIcon2);
+			
+			global $gl_icon_poi;
 			
 			$this->poiid = $aId;
 			$this->usrid = $aUsrId;
@@ -41,6 +43,10 @@
 			$this->description = $aDescription;
 			$this->latlon = $aLatLon;
 			$this->parseLocation($aLatLon);
+			
+			if (($aIcon2 == null) || ($aIcon2 == ""))
+				$this->setIcon_Collapsed($gl_icon_poi);
+			
 			if ($aGeoRssUrl != null)
 				$this->georssurl = $aGeoRssUrl;
 			else
@@ -88,7 +94,7 @@
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6]);
+						$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8]);
 						array_push($pois, $poi);
 					}
 				}
@@ -108,7 +114,7 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){					
-					$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6]);
+					$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8]);
 					return $poi;
 				}
 			}
@@ -122,7 +128,7 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){					
-					$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6]);
+					$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8]);
 					return $poi;
 				}
 			}
@@ -171,13 +177,14 @@
 			return false;
 		}
 		
-		function updatePoi($aUsrId,	$aPoiId, $aPoiName, $aDescription, $aLatLon, $aGeoRssUrl) {		 
+		function updatePoi($aUsrId,	$aPoiId, $aPoiName, $aDescription, $aLatLon, $aGeoRssUrl,$aIcon) {		 
 			$qry1   =  "UPDATE `tab_poi` SET ";
 						
 			$qry1 = $qry1."`poiname`='".$aPoiName."' ";
 			$qry1 = $qry1.", `description`='".$aDescription."' ";
 			$qry1 = $qry1.", `latlon`='".$aLatLon."' ";
 			$qry1 = $qry1.", `georssurl`='".$aGeoRssUrl."' ";
+			$qry1 = $qry1.", `icon2`='".$aIcon."' ";
 			$qry1 = $qry1." WHERE ((`poiid` = ".$aPoiId.")";
 			$qry1 = $qry1." AND    (`usrid` = ".$aUsrId."))";
 						

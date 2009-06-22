@@ -50,6 +50,16 @@
 	
 	$gl_loglevel = 0;
 	$gl_readonly = false;   //if this is true, no insert, update and delete statements are executed
+	
+	$gl_baselat = 0;
+	$gl_baselon = 0;
+	$gl_basezoomlevel = 14;
+	
+	$gl_icon_group_expanded = "images/treeExpand_minus.gif";
+	$gl_icon_group_collapsed = "images/treeExpand_plus.gif";
+	$gl_icon_poi = "images/poi.gif";
+	$gl_icon_file = "images/gpxfile.gif";
+	
 		
 	/****************************************************
 	 * END CONFIG SECTION
