@@ -27,7 +27,7 @@
 		var $description;
 		var $path;
 		var $fullfilename;
-				
+						
 		function File($aUsrId, $aPath, $aFilename, $aDescription) {
 			$this->usrid = $aUsrId;
 			$this->path = $aPath;
@@ -53,6 +53,24 @@
 		}
 	}
 	
+	
+	/**
+	 * FileContainer 
+	 */
+	class FileContainer {
+		
+		var $items;
+		
+		function FileContainer() {
+			$this->items = array();
+		}
+		
+		function addFile($aFile) {
+			array_push($this->items, $aFile);	
+		}
+	}
+	
+	
 	/**
 	 * ExifFile
 	 */
@@ -75,6 +93,7 @@
 		}
 		
 	}
+	
 	
 	/**
 	 * Filefactory

@@ -133,7 +133,10 @@ Array.prototype.remove = function(from, to) {
         }
     }
 	
-	
+	/**
+	 * add the expandend image to a given node
+	 * @param {Object} node
+	 */
 	var _expandNode = function(node){
 		//
 		var n1 = _getChildnode(node,"IMG")
@@ -145,34 +148,52 @@ Array.prototype.remove = function(from, to) {
 		}
 	}
 	
+	/**
+	 * add the collapsed image to a given node
+	 * @param {Object} node
+	 */
 	var _collapseNode = function(node){
 		//
-		var n1 = _getChildnode(node,"IMG")
+		var n1 = _getChildnode(node,"TABLE")
 		if (n1 != null) {
-			if (node.getAttribute("haschildren") == "true") {
-				var obj = _getObject(clickednodeelem.Id);
-				if (obj != null) {
-					n1.setAttribute("src", obj.icon_collapsed);
+			var n2 = _getChildnode(node,"IMG");
+			if (n2 != null) {
+				if (node.getAttribute("haschildren") == "true") {
+					var obj = _getObject(clickednodeelem.Id);
+					if (obj != null) {
+						n2.setAttribute("src", obj.icon_collapsed);
+					}
 				}
-			}
-			else {
-				n1.setAttribute("src", "images/treeExpand_none.gif");
+				else {
+					n1.setAttribute("src", "images/treeExpand_none.gif");
+				}
 			}
 		}
 		_removeAllChilds(node, "nodespan");
 	}
 	
+	/**
+	 * returns a childnode with the given nodename (recursiv call)
+	 * @param {Object} node
+	 * @param {Object} nodename
+	 */
 	var _getChildnode = function(node, nodename) {
 		if (node.hasChildNodes()) {
-            for (var i = (node.childNodes.length - 1); i > -1; i--) {
+            for (var i = 0; i < node.childNodes.length; i++) {
 				var e1 = node.childNodes[i];
 				if (e1.nodeName == nodename) {
 					return e1;
+				} else {
+					var e2 = _getChildnode(e1,nodename);
+					if (e2 != null) {
+						return e2;
+					}
 				}
             }
         }
 		return null;
 	}
+	
 	/*
 	var loadChildGroupsOk = function(response) {
 		if (response != "msg.failed") {
@@ -209,6 +230,10 @@ Array.prototype.remove = function(from, to) {
 		return false;
 	}
 			
+	/**
+	 * callback after _loadGroupItems 
+	 * @param {Object} response
+	 */
 	var _cb_loadGroupItems = function(response) {
 		if (response != "msg.failed") {
 			for (var i = 1; i < response.length; i++) {
@@ -229,7 +254,9 @@ Array.prototype.remove = function(from, to) {
 		isloading = false;
 	}
 	
-		
+	/**
+	 * load all child items of a group
+	 */	
 	var _loadGroupItems = function() {
 		//
 		var grpId = self.getSelectedGroupId();
@@ -239,12 +266,16 @@ Array.prototype.remove = function(from, to) {
 		}
 	}
 	
+	/**
+	 * handle single click
+	 * @param {Object} sender
+	 */
 	var _nodeClicked = function(sender) {
         try {
             if (isloading)
                 return;
-
-            if (clickednodeelem != null)
+			            
+			if (clickednodeelem != null)
                 _unsetSelected();
             			
            	clickednodeelem = sender;			
@@ -256,6 +287,10 @@ Array.prototype.remove = function(from, to) {
         }
     }
 	
+	/**
+	 * handle double click
+	 * @param {Object} sender
+	 */
 	var _nodeDblClicked = function(sender){
 		try {
 			if (isloading) 
@@ -291,6 +326,9 @@ Array.prototype.remove = function(from, to) {
 		}
 	}
 	
+	/**
+	 * set the classname to "selected"
+	 */
 	var _setSelected = function() {
         if (clickednodeelem != null) {
             var nd1 = _getChildnode(clickednodeelem,"A");
@@ -301,6 +339,9 @@ Array.prototype.remove = function(from, to) {
         }
     }
     
+	/**
+	 * remove classname "selected"
+	 */
     var _unsetSelected = function() {
         if (clickednodeelem != null) {
             var nd1 = _getChildnode(clickednodeelem,"A");
@@ -311,21 +352,37 @@ Array.prototype.remove = function(from, to) {
         }
     }
 	
+	/**
+	 * creates a child node element
+	 * @param {Object} parent
+	 * @param {Object} child
+	 */
 	var _createChildnode = function(parent, child) {      
         var e1 = document.createElement("SPAN");				
 		var a1 = document.createElement("A");
 		var i1 = document.createElement("IMG");
         
+		var t1 = document.createElement("TABLE");
+		var r1 = document.createElement("TR");
+		var td1 = document.createElement("TD");
+		var td2 = document.createElement("TD");
+		
+		e1.appendChild(t1);
+		t1.appendChild(r1);
+		r1.appendChild(td1);
+		r1.appendChild(td2);
+		
 		var tn = new TreeNode(e1,a1,i1);
 					
 		e1.Id = "tn_" + idx;
 		idx++;
 		
-		_addObject(e1.Id,child);		
-		a1.onclick = function() { _nodeClicked(this.parentNode) };
-				
+		_addObject(e1.Id,child);		    
+		a1.onclick = function() { _nodeClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
+		
 		e1.appendChild(i1);
         e1.appendChild(a1);
+				
         if (parent != c_parentelement) {
 			e1.setAttribute("class", "nodespan");
 			e1.setAttribute("className", "nodespan");
@@ -335,11 +392,19 @@ Array.prototype.remove = function(from, to) {
 		}
         
 		i1.setAttribute("src",child.icon_collapsed);
-				
+		
+		td1.appendChild(i1);
+		td2.appendChild(a1);		
+		
         parent.appendChild(e1);
 		return tn;
     }
 	
+	/**
+	 * creats a group element in the tree
+	 * @param {Object} parent
+	 * @param {Object} child
+	 */
 	var _createGroup = function(parent, child)
 	{
 		var nd1 = _createChildnode(parent,child);
@@ -347,11 +412,10 @@ Array.prototype.remove = function(from, to) {
 						
 		nd1.c_span.setAttribute("expanded","false");
 				
-		nd1.c_image.onclick = function() { _nodeDblClicked(this.parentNode) };
-		nd1.c_href.ondblclick = function() { _nodeDblClicked(this.parentNode) };
+		nd1.c_image.onclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
+		nd1.c_href.ondblclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
 			
 		if (child.haschildren) {
-			//nd1.c_image.setAttribute("src", "images/treeExpand_plus.gif");
 			nd1.c_span.setAttribute("haschildren","true");
 		}
 		else {
@@ -363,30 +427,36 @@ Array.prototype.remove = function(from, to) {
 		nd1.destroy;
 	}
 	
+	/**
+	 * creates a file element in the tree
+	 * @param {Object} parent
+	 * @param {Object} child
+	 */
 	var _createFile = function(parent,child) {
 		var nd1 = _createChildnode(parent,child);
 		if (child.description)
 			nd1.c_href.innerHTML = child.description;	
 		else
 			nd1.c_href.innerHTML = child.filename;	
-						
-		//nd1.c_image.setAttribute("src", "images/gpxfile.gif");
 				
 		nd1.c_span.setAttribute("type","file");
-				
 		if (isOnMap(child)) {
 			nd1.c_href.setAttribute("class","visibletrace");
 		}		
 		nd1.destroy;
 	}
 	
+	/**
+	 * creates a poi element in the tree
+	 * @param {Object} parent
+	 * @param {Object} child
+	 */
 	var _createPoi = function(parent,child) {
 		var nd1 = _createChildnode(parent,child);
 		nd1.c_href.innerHTML = child.poiname;	
 		//nd1.c_image.setAttribute("src", "images/poi.gif");
 		
 		nd1.c_span.setAttribute("type","poi");
-		
 		nd1.destroy;
 	}
 	

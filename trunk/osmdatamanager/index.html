@@ -7,6 +7,8 @@
 		@import "lib/dojo/dijit/themes/tundra/tundra.css";	
 		@import "lib/dojo/dojox/image/resources/image.css";
 		@import "lib/dojo/dojox/widget/SortList/SortList.css";	
+		@import "lib/dojo/dojox/grid/resources/Grid.css";
+    	@import "lib/dojo/dojox/grid/resources/nihiloGrid.css";
 	</style>
 	
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>			
@@ -30,6 +32,11 @@
 				dojo.require("dijit.form.CheckBox");
 				dojo.require("dijit.form.NumberSpinner");	
 				dojo.require("dijit.form.Textarea");
+				
+				dojo.require("dojox.grid.DataGrid");
+				dojo.require("dojox.grid.compat.Grid");
+				dojo.require("dojox.data.CsvStore");
+				dojo.require("dojox.grid.compat._data.model");
 								
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
@@ -310,14 +317,28 @@
   </div> 
   
   <!-- FileList Dialog -->
-  <div dojoType="dijit.Dialog" id="dlg_filelist" title="Dateiliste" onLoad="alert('x')" 
+  <div dojoType="dijit.Dialog" id="dlg_filelist" title="Dateiliste" onLoad="alert('x')" style="width:640px"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	
 		<div id="filecontainer" >
+			<!--
 			<ul dojoType="dojox.widget.SortList" title="SortList From Markup" id="filelist"
   				sortable="true" style="width:420px; height:200px;">
 			</ul>
+			-->
 		</div>
+		
+		
+		<table id="dlgfilelist_tab_grid" jsId="dlgfilelist_grid" dojoType="dojox.grid.DataGrid"
+	       query="{ filename: '*' }" >
+			<thead>
+				<tr>
+					<th field="filename">Filename</th>
+					<th field="description" width="100px">Description</th>
+				</tr>
+			</thead>
+		</table>
+		
 		<button dojoType="dijit.form.Button" id="dlgfilelist_btn_ok">Ok</button>	
   </div>
   

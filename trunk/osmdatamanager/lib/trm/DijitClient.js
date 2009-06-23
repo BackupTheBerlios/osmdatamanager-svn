@@ -1055,12 +1055,22 @@ DijitClient.FileListDialog = {
 		if (lst1 != null)
 			this.app.removeChilds(lst1,"LI",true);
 		
+		var s1 = new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" });
+				
+		var grid = dijit.byId('dlgfilelist_tab_grid');
+		if (grid != null) {
+			grid.setStore(s1);
+			grid.update();
+		}
+		dijit.byId('dlg_filelist').show();
+		/*
 		var cb = {
 			func: this._cb_getFiles,
 			target: this
 		}
 		
 		this.grpman.getFiles(cb);
+		*/
 	},
 	hide: function() {
 		//dijit.byId('dlg_changepassword').hide();
@@ -1376,6 +1386,7 @@ DijitClient.Application = function(openlayersMap,mm)
 		dijit.byId('itm_submenu_settings').attr("disabled","");
 		dijit.byId('itm_removeall').attr("disabled","");
 		dijit.byId('itm_submenu_groups').attr("disabled","");
+		dijit.byId('itm_updatetree').attr("disabled","");
 	}
 	
 	/**
@@ -1406,7 +1417,7 @@ DijitClient.Application = function(openlayersMap,mm)
 		dijit.byId('itm_remPoi').attr("disabled","disabled");
 		dijit.byId('itm_admin').attr("disabled","disabled");
 		dijit.byId('itm_remFiles').attr("disabled","disabled");
-		
+		dijit.byId('itm_updatetree').attr("disabled","disabled");
 	}
 	
 	/**

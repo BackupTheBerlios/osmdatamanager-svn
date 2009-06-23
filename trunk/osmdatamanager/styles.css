@@ -51,10 +51,12 @@ body {
 	margin:0px;
 }
 
+/*
 #mainmenu img{
 	margin:4px 14px 4px 8px;
 	display:block;
 }
+*/
 
 #filemanager {
 	visibility:hidden;
@@ -101,7 +103,7 @@ body {
 	padding-left:10px;
 	padding-bottom:5px;
 	display:block;			
-	/*border:solid 1px black;*/
+	border:solid 1px black;
 	clear:both;
 }
 
@@ -111,8 +113,21 @@ body {
 	padding-bottom:5px;
 	padding-top:0px;
 	display:block;			
-	/*border:solid 1px Red;*/
+	border:solid 1px Red;
 	clear:both;
+}
+
+.tree_entry {
+	border: solid 1px green;
+	vertical-align:middle;
+}
+
+.tree_entry img {
+	
+}
+
+.tree_entry a {
+	vertical-align:middle;
 }
 
 .nodespan .visibletrace {
@@ -121,7 +136,7 @@ body {
 
 
 .nodespan img, .rootnodespan img {
-	float:left;
+	/*float:left;*/
 	padding:0px;
 	margin: 0px;
 }

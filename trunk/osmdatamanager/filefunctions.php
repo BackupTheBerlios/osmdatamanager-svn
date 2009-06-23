@@ -76,6 +76,7 @@
 			}
 			
 			//msg_getfiles
+			/* old one
 			if ($action == msg_getfiles) {
 				$lst1 = $ff->getFiles($usr->getUid());
 				if ($lst1 != null) {
@@ -83,7 +84,26 @@
 				} else {
 					echo application_getMessage(msg_failed);
 				}
+			}*/
+			
+			//$files = array();
+			if ($action == msg_getfiles) {
+				
+				
+				$lst1 = $ff->getFiles($usr->getUid());
+				if ($lst1 != null) {
+					$fc = new FileContainer();
+					for ($i=0;$i<count($lst1);$i++) {
+						$fn = $lst1[$i];
+						$fc->addFile($fn);
+					}
+					
+					echo application_getMessage($fc);
+				} else {
+					echo application_getMessage(msg_failed);
+				}
 			}
+			
 			
 			//msg_updatefile
 			if ($action == msg_updatefile) {				
@@ -93,6 +113,19 @@
 					echo application_getMessage(msg_failed);
 				}	
 			}
+			/*
+			if ($action == "") {
+				echo "{\"timestamp\":1193692111,\"items\":[{\"namespace\":\"dijit\",\"className\":\"dijit.ColorPalette\",\"summary\":\"Grid showing\"}]}";
+				
+				$lst1 = $ff->getFiles($usr->getUid());
+				if ($lst1 != null) {
+					echo application_getMessage($lst1);
+				} else {
+					echo application_getMessage(msg_failed);
+				}
+				
+			}
+			*/
 		}
 	}
 	
