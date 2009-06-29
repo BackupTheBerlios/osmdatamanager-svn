@@ -261,6 +261,17 @@
 					}
 				}
 				
+				
+				$lst1 = $fac->getGroupItems($usr->getUid(), $groupid);
+				if ($lst1 != null) {
+					for ($i=0;$i<count($lst1);$i++) {
+						$itm1 = $lst1[$i];
+						array_push($items,$itm1);
+					}
+				}
+				
+				
+				/*
 				//groupfiles
 				$lst1 = $fac->getGroupFiles($usr->getUid(), $groupid);
 				if ($lst1 != null) {
@@ -278,6 +289,7 @@
 						array_push($items,$poi1);
 					}
 				}
+				*/
 								
 				if (count($items) > 0) {
 					echo application_getMessage($items);	

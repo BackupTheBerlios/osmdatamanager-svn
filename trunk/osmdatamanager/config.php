@@ -59,7 +59,7 @@
 	$gl_icon_group_collapsed = "images/treeExpand_plus.gif";
 	$gl_icon_poi = "images/poi.gif";
 	$gl_icon_file = "images/gpxfile.gif";
-	
+	$gl_standardtag = "standard";
 		
 	/****************************************************
 	 * END CONFIG SECTION

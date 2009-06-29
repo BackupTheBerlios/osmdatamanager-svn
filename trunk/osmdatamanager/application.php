@@ -186,6 +186,7 @@
 			//var $loglevel;
 			var $domessage;
 			var $readonly;
+			var $fieldnames;
 									
 			function DatabaseAccess()
 			{
@@ -203,6 +204,7 @@
 				//$this->loglevel =	$gl_loglevel;
 				$this->errors = "";
 				$this->domessage = true;
+				$this->fieldnames = null;
 			}
 			
 			function addLogMessage($aMessage, $aLevel) {
@@ -285,8 +287,15 @@
 				}
 			}
 			
+			/**
+			 * executes a sql query
+			 * @return 
+			 * @param $aQuery Object
+			 */						
 			function executeQuery($aQuery)
 			{  
+				$this->fieldnames = null;
+				
 				//check if read only mode (no insert, update and delete allowed)
 				if ($this->readonly) {
 					$ro = strpos(strtolower($aQuery), "insert");
@@ -344,20 +353,72 @@
 				  }
 				}
 				mysql_close($con1);
+				
+				/*
+				$pos = strpos(strtolower($aQuery), "select");
+				if ($pos === 0) {
+					$this->parseFieldnames($result);
+				}*/
 				return $result;
 			}
+			
+			
+			function parseFieldnames($aResult) {
+				if ($aResult == null)
+					return;
+				
+				$this->fieldnames = null;
+        		$field = mysql_num_fields($aResult);
+        		for ( $i = 0; $i < $field; $i++ ) {
+            		$names[] = mysql_field_name($aResult, $i);
+        		}
+        		$this->fieldnames = $names;
+    		}
 		}
+		
+		
+		/**
+		 * base class for items from database
+		 */
+		/*
+		class DatabaseItem {
+			
+			var $fieldnames;
+			
+			function DatabaseItem() {
+				$this->fieldnames = null;	
+			}
+			
+			/**
+			 * returns an array of fieldnames from a mysql result
+			 * @return 
+			 * @param $aResult Object
+			 */
+			/*
+			
+			
+			/**
+			 * 
+			 * @return 
+			 * @param $aResult Object
+			 */
+			/*
+			function parseItem($aResult) {
+				$this->parseFieldnames($aResult);
+			}
+		}
+		*/
 		
 		/**
 		 * base class for items wich can be displayed on the map
-		 * -> has protection, zoomlevel and lat lon 
+		 * -> protection, zoomlevel and lat lon 
 		 */
 		class MapItem {
 			var $protection;
 			var $zoomlevel;
 			var $lat;
 			var $lon;	
-			
+					
 			function MapItem() {
 				global $gl_baselat;
 				global $gl_baselon;
@@ -370,53 +431,73 @@
 			}
 		}
 		
+		/**
+		 * 
+		 */
+		class TagData {
+			var $tagname;
+			var $icon1;
+			var $icon2;
+			var $icon3;
+			
+			function TagData($aTagname,$aIcon1,$aIcon2,$aIcon3) {
+				$this->tagname = $aTagname;
+				$this->icon1 = $aIcon1;
+				$this->icon2 = $aIcon2;
+				$this->icon3 = $aIcon3;
+			}
+		}
 		
 		/**
 		 * base class for all "group" items
 		 */
 		class GroupItem extends MapItem {
 			var $itemtype;
-			var $icon_expanded;
-			var $icon_collapsed;
+			var $tagname;
+			var $itemid;
+			var $parentid;
+			var $usrid;
+			var $itemname;
+			var $tags;
 			
-			function GroupItem($aItemtype,$aIconExpanded,$aIconCollapsed)
+			function GroupItem($aItemtype)
 			{
 				parent::MapItem();
-				
-				global $gl_icon_group_expanded;
-				global $gl_icon_group_collapsed;
-				
+				global $gl_standardtag;
+							
 				$this->itemtype = $aItemtype;
-				if ($aIconExpanded != null) 
-					$this->icon_expanded  = $aIconExpanded;
-				else
-					$this->icon_expanded  = $gl_icon_group_expanded;
-				
-				if ($aIconCollapsed != null) 
-					$this->icon_collapsed = $aIconCollapsed;
-				else
-					$this->icon_collapsed = $gl_icon_group_collapsed;
+				$this->tagname  = $gl_standardtag;
+				$this->itemid   = -1;
+				$this->parentid = -1;
+				$this->usrid    = -1;				
+				$this->itemname = "new item";
+				$this->tags = null;
 			}
+			
+			
 			
 			/**
 			 * set's a new filename for the expanded icon displayed in the tree
 			 * @return 
 			 * @param $aIconname Object
 			 */
+			/*
 			function setIcon_Expanded($aIconname) {
 				$this->icon_expanded = $aIconname;	
 			}
+			*/
 			
 			/**
 			 * set's a new filename for the collapsed icon in the tree;
 			 * @return 
 			 * @param $aIconname Object
 			 */
+			/*
 			function setIcon_Collapsed($aIconname) {
 				if (($aIconname != null) && ($aIconname != ""))
 					$this->icon_collapsed = $aIconname;	
 			}
-			
+			*/
 		}
 		
 	

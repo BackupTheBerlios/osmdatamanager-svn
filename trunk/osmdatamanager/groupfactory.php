@@ -15,6 +15,7 @@
     along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
 */
    	include_once("application.php");
+	include_once("itemparser.php");
 	include_once("poifactory.php");
 	include_once("filefactory.php");
 	
@@ -22,14 +23,32 @@
 	 * Group
 	 */
 	class Group extends GroupItem {
-		
+		/*
 		var $groupid;
 		var $usrid;
 		var $groupname;
 		var $parentgroup;
+		*/
 		var $files;
 		var $haschildren;	
 				
+		function Group() {
+			parent::GroupItem("Group");
+			/*
+			$this->groupid = null;
+			$this->usrid = null;
+			$this->parentgroup = null;
+			$this->groupname = null;
+			*/
+			$this->files = array();
+			$this->haschildren=false;
+			$this->protection=null;
+			$this->zoomlevel=null;
+			$this->lat=null;
+			$this->lon=null;
+		}
+		
+		/*	
 		function Group($aGroupId,$aUsrId,$aParentGroup,$aGroupname,$aHasChildren,$aProtection,$aZoomlevel,$aLat,$aLon,$aIconExpanded,$aIconCollapsed) {
 			parent::GroupItem("Group",$aIconExpanded,$aIconCollapsed);
 			
@@ -44,6 +63,7 @@
 			$this->lat=$aLat;
 			$this->lon=$aLon;
 		}
+		*/
 		
 		function getGroupId() {
 			return $this->groupid;
@@ -53,6 +73,7 @@
 	/**
 	 * Tracefile
 	 */
+	/*
 	class Tracefile extends GroupItem {
 		
 		var $groupid;
@@ -60,6 +81,15 @@
 		var $filename;
 		var $description;
 		
+		function Tracefile() {
+			parent::GroupItem("Tracefile");
+			
+			$this->groupid = null;
+			$this->userid = null;
+			$this->filename = null;
+		}
+		*/
+		/*
 		function Tracefile($aGroupId, $aUserId, $aFilename) {
 			parent::GroupItem("Tracefile",$aIconExpanded,$aIconCollapsed);			
 			
@@ -72,6 +102,8 @@
 			$this->userid = $aUserId;
 			$this->filename = $aFilename;				
 		}
+		*/
+		/*
 		
 		function setCustomData($aDescription) {
 			$this->description = $aDescription;
@@ -89,18 +121,38 @@
 			return $this->description;
 		}
 	}
+	*/
 	
 	/**
 	 * Groupfactory
 	 * 
 	 */
-	class Groupfactory extends DatabaseAccess {
+	class Groupfactory extends ItemParser {
 						
 		function Groupfactory()
 		{
-			parent::DatabaseAccess();
+			parent::ItemParser();
 		}
 				
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aRow Object
+		 * @param $aResult Object
+		 */
+		function parse_Group(&$aItem, $aRow, $aResult) {
+			$this->parseFieldnames($aResult);
+			
+			$this->parse_GroupItem($aItem, $aRow, $aResult);
+			if ($this->hasChildren($aItem->usrid,$aItem->itemid)) {
+				$aItem->haschildren = true;	
+			} else {
+				$aItem->haschildren = false;
+			}
+		}
+		
+		/*
 		function getGroupFile($aGroupId, $aFilename) {
 			
 			if ($aFilename == null)
@@ -119,6 +171,7 @@
 			}
 			return null;
 		}
+		*/
 		
 		/**
 		 * 
@@ -129,6 +182,7 @@
 		 * @param $aIcon1 Object
 		 * @param $aIcon2 Object
 		 */
+		/*
 		function setCustomData(&$aFilellist,&$aNewFiles, $aFile, $aIcon1, $aIcon2) {
 			for ($i=0;$i<count($aFilellist);$i++) {
 				$fl1 = $aFilellist[$i];
@@ -142,6 +196,7 @@
 				}
 			}
 		}
+		*/
 		
 		/**
 		 * 
@@ -149,6 +204,7 @@
 		 * @param $aUserId Object
 		 * @param $aFilellist Object
 		 */		
+		/*
 		function fillFiledata($aUserId, &$aFilellist) {
 			$newfiles = array();
 			$ff = new FileFactory();
@@ -184,7 +240,7 @@
 			}
 			
 		}
-		
+		*/
 		
 		/**
 		 * only for a custom update
@@ -222,6 +278,7 @@
 		 * @param $aUserId Object
 		 * @param $aGroupId Object
 		 */
+		/*
 		function getGroupFiles($aUserId, $aGroupId) {
 									
 			$files = array();
@@ -282,7 +339,25 @@
 			}
 			return false;
 		}
+		*/
 		
+		/**
+		 * returns true if the group has child items, otherwise false
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupId Object
+		 */
+		function hasGroupItems($aUserId, $aGroupId) {
+			$qry = "SELECT * FROM `tab_grp_item` WHERE (itemid = $aGroupId) AND (usrid = $aUserId)";
+			$result = $this->executeQuery($qry);
+			if ($result != NULL) 
+			{   
+				return true;
+			}
+			return false;
+		}
+		
+		/*
 		function getGroupPois($aUserId, $aGroupId) {
 									
 			$pois = array();
@@ -331,7 +406,9 @@
 			}
 			return true;
 		}
+		*/
 		
+		//TODO
 		function addGroupFile($aGroupId, $aUsrId, $aFilename) {
 			$tracefile = $this->getGroupFile($aGroupId, $aFilename);
 						
@@ -403,20 +480,36 @@
 			return true;						
 		}
 		
+		/**
+		 * returns a group with given userid and groupid (itemid)
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupId Object
+		 */
 		function getGroup($aUserId, $aGroupId) {
-			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (grpid = $aGroupId))";
+			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (itemid = $aGroupId))";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){
-					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
+					//TODO
+					//$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]); 
+					$grp = new Group();
+					//$grp->parseItem($row,$result);
+					$this->parse_Group($grp,$row,$result);
 					return $grp;
 				}
 			}
 			return null;
 		}
 		
+		/**
+		 * returns group with given userid and given groupname 
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupName Object
+		 */
 		function getGroupByName($aUserId, $aGroupName) {
 			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (grpname = '$aGroupName'))";
 			$result = $this->executeQuery($qry);
@@ -424,7 +517,8 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){
-					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
+					$grp = new Group();
+					$this->parse_Group($grp,$row,$result);
 					return $grp;
 				}
 			}
@@ -432,6 +526,12 @@
 		}
 		
 		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupName Object
+		 */
 		function getPublicGroupByName($aUserId, $aGroupName) {
 			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (grpname = '$aGroupName') AND (protection = 'public'))";
 			//echo $qry;
@@ -440,7 +540,9 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){
-					$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
+					$grp = new Group();
+					//$grp->parseItem($row,$result);
+					$this->parse_Group($grp,$row,$result);
 					return $grp;
 				}
 			}
@@ -454,14 +556,15 @@
 		 */
 		function getRootGroups($aUserid) {
 			$groups = array();
-			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) AND (prntgrp IS NULL)) ORDER BY grpname";
+			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) AND (parentid IS NULL)) ORDER BY itemname";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserid, $row[0]),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
+						$grp = new Group();
+						$this->parse_Group($grp,$row,$result);
 						array_push($groups, $grp);
 						
 					}
@@ -481,7 +584,7 @@
 				return null;
 							
 			$groups = array();
-			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) AND (prntgrp = $aParentGroupId)) ORDER BY grpname";
+			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) AND (parentid = $aParentGroupId)) ORDER BY itemname";
 			$result = $this->executeQuery($qry);
 			
 			if ($result != NULL) 
@@ -489,7 +592,8 @@
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$grp = new Group($row[0],$row[1],$row[2],$row[3],$this->hasChildren($aUserid, $row[0]),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]);
+						$grp = new Group();
+						$this->parse_Group($grp,$row,$result);
 						array_push($groups, $grp);
 					}
 				}
@@ -498,6 +602,60 @@
 			return null;
 		}
 		
+		/**
+		 * 
+		 */
+		function getGroupItems($aUserid,$aParentGroupId) {
+			$items = array();
+			
+			$pois = array();
+			$files = array();
+			
+			$qry = "SELECT * FROM `tab_grp_item` WHERE ((usrid = $aUserid) AND (itemid = $aParentGroupId))";
+			$result = $this->executeQuery($qry);
+			
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$itemtype = strtolower($row[3]);
+						switch($itemtype) {
+							case "file":
+						  		$fl1 = new File();
+								$this->parse_ItemLink($fl1,$row,$result);
+								array_push($files,$fl1);								
+								break;
+							case "poi":
+								$poi = new Poi();
+								$this->parse_ItemLink($poi,$row,$result);
+								array_push($pois,$poi);
+								break;
+						}
+					}
+					
+				}
+				if (count($pois) > 0) {
+					$pf = new PoiFactory();
+					$pf->addPois($pois,$items);
+				}
+				
+				if (count($files) > 0) {
+					$ff = new FileFactory();
+					$ff->addFiles($files,$items);
+				}
+			}
+			return $items;
+		}
+		
+		
+		/**
+		 * returns true if group with given userid and groupid has children, otherwise false
+		 * @return 
+		 * @param $aUserid Object
+		 * @param $aGroupId Object
+		 */
+		/*
 		function hasChildren($aUserid, $aGroupId) {
 						
 			if ($this->hasGroupPois($aUserid, $aGroupId))
@@ -513,7 +671,18 @@
 			
 			return false;
 		}
+		*/
 		
+		function hasChildren($aUserid, $aItemId) {
+			
+			if ($this->hasGroupItems($aUserid, $aItemId))
+				return true;
+			
+			$lst1 = $this->getChildGroups($aUserid, $aItemId);
+			if ($lst1 != null)
+				return true;
+		}
+				
 		function deletGroupFiles($aUserId, $aTracegroupId) {
 			$delquery = "DELETE FROM `tab_grp_file` WHERE (usrid = $aUserId) AND (grpid = $aTracegroupId)";				
 			$this->executeQuery($delquery);

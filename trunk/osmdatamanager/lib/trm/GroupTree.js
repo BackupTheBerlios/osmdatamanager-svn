@@ -143,7 +143,8 @@ Array.prototype.remove = function(from, to) {
 		if (n1 != null) {
 			var obj = _getObject(clickednodeelem.Id);
 			if (obj != null) {
-				n1.setAttribute("src", obj.icon_expanded);
+				//n1.setAttribute("src", obj.icon_expanded);
+				n1.setAttribute("src",_getIconname2(obj));
 			}
 		}
 	}
@@ -161,7 +162,8 @@ Array.prototype.remove = function(from, to) {
 				if (node.getAttribute("haschildren") == "true") {
 					var obj = _getObject(clickednodeelem.Id);
 					if (obj != null) {
-						n2.setAttribute("src", obj.icon_collapsed);
+						//n2.setAttribute("src", obj.icon_collapsed);
+						n2.setAttribute("src",_getIconname1(obj));
 					}
 				}
 				else {
@@ -229,7 +231,32 @@ Array.prototype.remove = function(from, to) {
 		}
 		return false;
 	}
-			
+	
+	var _getIconname1 = function(child) {
+		if (child.tags != null) {
+			for (var x = 0; x < child.tags.length; x++) {
+				var tag1 = child.tags[x];
+				if (tag1.tagname == child.tagname) {
+					return tag1.icon1;
+				}
+			}	
+		}
+		return "";
+	}
+	
+	var _getIconname2 = function(child) {
+		if (child.tags != null) {
+			for (var x = 0; x < child.tags.length; x++) {
+				var tag1 = child.tags[x];
+				if (tag1.tagname == child.tagname) {
+					return tag1.icon2;
+				}
+			}	
+		}
+		return "";
+	}
+	
+	
 	/**
 	 * callback after _loadGroupItems 
 	 * @param {Object} response
@@ -243,7 +270,7 @@ Array.prototype.remove = function(from, to) {
 				if (itm1.itemtype == "Poi")
 					_createPoi(clickednodeelem, itm1);
 				
-				if (itm1.itemtype == "Tracefile")
+				if (itm1.itemtype == "File")
 					_createFile(clickednodeelem, itm1);	
 				
 				if (itm1.itemtype == "Group")
@@ -277,8 +304,8 @@ Array.prototype.remove = function(from, to) {
 			            
 			if (clickednodeelem != null)
                 _unsetSelected();
-            			
-           	clickednodeelem = sender;			
+            
+			clickednodeelem = sender;			
 			_setSelected();
 			isloading = false;
             
@@ -298,7 +325,7 @@ Array.prototype.remove = function(from, to) {
 		
 			if (!self.hasChildren(sender))
 				return;
-			
+						
 			isloading = true;		
 			if (sender.getAttribute("expanded") == "false") {
 				sender.setAttribute("expanded","true");
@@ -391,7 +418,20 @@ Array.prototype.remove = function(from, to) {
 			e1.setAttribute("className", "rootnodespan");
 		}
         
-		i1.setAttribute("src",child.icon_collapsed);
+		a1.innerHTML = child.itemname;
+		e1.setAttribute("expanded","false");
+		i1.setAttribute("src",_getIconname1(child));
+		
+		if (child.haschildren) {
+			e1.setAttribute("haschildren","true");
+		}
+		else {
+			i1.setAttribute("src", "images/treeExpand_none.gif");
+			e1.setAttribute("haschildren","false");
+			
+		}
+		
+		e1.setAttribute("type",child.itemtype.toLowerCase());
 		
 		td1.appendChild(i1);
 		td2.appendChild(a1);		
@@ -408,22 +448,10 @@ Array.prototype.remove = function(from, to) {
 	var _createGroup = function(parent, child)
 	{
 		var nd1 = _createChildnode(parent,child);
-		nd1.c_href.innerHTML = child.groupname;
-						
-		nd1.c_span.setAttribute("expanded","false");
-				
+							
 		nd1.c_image.onclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
 		nd1.c_href.ondblclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
-			
-		if (child.haschildren) {
-			nd1.c_span.setAttribute("haschildren","true");
-		}
-		else {
-			nd1.c_image.setAttribute("src", "images/treeExpand_none.gif");
-			nd1.c_span.setAttribute("haschildren","false");
-		}
 		
-		nd1.c_span.setAttribute("type","group");
 		nd1.destroy;
 	}
 	
@@ -434,6 +462,7 @@ Array.prototype.remove = function(from, to) {
 	 */
 	var _createFile = function(parent,child) {
 		var nd1 = _createChildnode(parent,child);
+		/*
 		if (child.description)
 			nd1.c_href.innerHTML = child.description;	
 		else
@@ -443,6 +472,7 @@ Array.prototype.remove = function(from, to) {
 		if (isOnMap(child)) {
 			nd1.c_href.setAttribute("class","visibletrace");
 		}		
+		*/
 		nd1.destroy;
 	}
 	
@@ -453,10 +483,12 @@ Array.prototype.remove = function(from, to) {
 	 */
 	var _createPoi = function(parent,child) {
 		var nd1 = _createChildnode(parent,child);
+		/*
 		nd1.c_href.innerHTML = child.poiname;	
 		//nd1.c_image.setAttribute("src", "images/poi.gif");
 		
 		nd1.c_span.setAttribute("type","poi");
+		*/
 		nd1.destroy;
 	}
 	
@@ -507,7 +539,7 @@ Array.prototype.remove = function(from, to) {
 			if (clickednodeelem != null) {
 				var obj = _getObject(clickednodeelem.Id);
 				if (obj != null) {
-					return obj.groupid;
+					return obj.itemid;
 				}
 			}
 		}
@@ -574,7 +606,7 @@ Array.prototype.remove = function(from, to) {
 			if (grp != null) {
 				var obj = _getObject(grp.Id);
 				if (obj != null) {
-					return obj.groupid;
+					return obj.itemid;
 				}
 			}
 		}
@@ -603,7 +635,7 @@ Array.prototype.remove = function(from, to) {
 		if (this.isPoiSelected()) {
 			var obj = _getObject(clickednodeelem.Id);
 			if (obj != null) {
-				return obj.poiid;
+				return obj.itemid;
 			}
 		}
 	}

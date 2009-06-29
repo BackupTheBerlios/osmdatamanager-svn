@@ -53,7 +53,8 @@
 			//TODO delete file from db if the file does not exist in directory
 			if ($action == msg_updatefilelist) {
 				//$ff->updateFiles($usr->getUid());
-								
+				
+				/*
 				if ($gl_usefiledir) {
 					$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_filedir,array("gpx","xml"));
 				} else {
@@ -72,7 +73,7 @@
 						}
 					}
 				}
-				
+				*/
 			}
 			
 			//msg_getfiles

@@ -21,36 +21,25 @@
 	 * Poi
 	 */
 	class Poi extends GroupItem {
-		var $poiid;
-		var $usrid;
-		var $poitype;
-		var $poiname;
-		var $description;		
+		//var $poiid;
+		//var $usrid;
+		
+		//var $poiname;
+				
+		/*
 		var $latlon;
 		var $lat;
 		var $lon;
+		*/
+		var $poitype;
 		var $georssurl;
+		var $description;
 				
-		function Poi($aId, $aUsrId, $aPoiType, $aPoiname, $aDescription, $aLatLon, $aGeoRssUrl,$aIcon1,$aIcon2) {
-			parent::GroupItem("Poi",$aIcon1,$aIcon2);
+		function Poi() {
+			parent::GroupItem("Poi");
 			
-			global $gl_icon_poi;
-			
-			$this->poiid = $aId;
-			$this->usrid = $aUsrId;
-			$this->poitype = $aPoiType;
-			$this->poiname = $aPoiname;
-			$this->description = $aDescription;
-			$this->latlon = $aLatLon;
-			$this->parseLocation($aLatLon);
-			
-			if (($aIcon2 == null) || ($aIcon2 == ""))
-				$this->setIcon_Collapsed($gl_icon_poi);
-			
-			if ($aGeoRssUrl != null)
-				$this->georssurl = $aGeoRssUrl;
-			else
-				$this->georssurl = "";
+			$this->poitype = "Poi";
+			$this->description = "";
 		}
 		
 		function parseLocation($latlon)
@@ -67,21 +56,50 @@
 		}
 		
 		function getPoiId() {
-			return $this->poiid;
+			return $this->itemid;
 		}	
 	}
 	
 	/**
 	 * PoiFactory
 	 */
-	class PoiFactory extends DatabaseAccess {
+	class PoiFactory extends ItemParser {
 
 		function PoiFactory()
 		{
-			parent::DatabaseAccess();
+			parent::ItemParser();
 		}
 		
-		//
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aItem Object
+		 * @param $aRow Object
+		 * @param $aResult Object
+		 */
+		function parse_Poi(&$aItem, $aRow, $aResult) {
+			$this->parseFieldnames($aResult);
+			$this->parse_GroupItem($aItem, $aRow, $aResult);			
+			
+			if ($this->fieldnames == null)
+				return;
+			
+			for ($i=0;$i<count($this->fieldnames);$i++) {
+				$fn1 = $this->fieldnames[$i];
+				switch ($fn1) {
+					case "description":
+						$aItem->description = $aRow[$i];
+						break;
+				}
+			}
+		}
+		
+		/**
+		 * returns all pois from user with given userid
+		 * @return 
+		 * @param $aUserId Object
+		 */
 		function getPois($aUserId) {
 									
 			$pois = array();
@@ -94,7 +112,8 @@
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8]);
+						$poi = new Poi();
+						$this->parse_Poi($poi,$row,$result);
 						array_push($pois, $poi);
 					}
 				}
@@ -106,41 +125,96 @@
 			return null;
 		}
 		
-		//
+		/**
+		 * 
+		 * @return 
+		 * @param $aLinkitemlist Object
+		 * @param $aResultlist Object
+		 */
+		function addPois($aLinkitemlist, &$aResultlist) {
+			$qry = "SELECT * FROM `tab_poi` WHERE itemid in (";
+			
+			if (count($aLinkitemlist) > 0) {
+				for ($i=0;$i<count($aLinkitemlist);$i++) {
+					$itm1 = $aLinkitemlist[$i];
+					if ($i==0)
+						$qry = $qry.$itm1->itemid;
+					else
+						$qry = $qry.",".$itm1->itemid;
+				}		
+			}
+			$qry = $qry.")";
+			
+			$result = $this->executeQuery($qry);
+			
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$poi = new Poi();
+						$this->parse_Poi($poi,$row,$result);
+						array_push($aResultlist, $poi);
+					}
+				}
+			}
+			
+		}
+		
+		/**
+		 * returns poi with given userid an given poiname (itemname)
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aPoiName Object
+		 */
 		function getPoi($aUserId, $aPoiName) {
-			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUserId) AND (poiname = \"$aPoiName\")";
+			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUserId) AND (itemname = \"$aPoiName\")";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){					
-					$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8]);
+					$poi = new Poi();
+					$this->parse_Poi($poi,$row,$result);
 					return $poi;
 				}
 			}
 			return null;
 		}
 		
+		/**
+		 * returns poi with given userid and poiid (itemid)
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aPoiId Object
+		 */
 		function getPoiById($aUserId, $aPoiId) {
-			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUserId) AND (poiid = $aPoiId)";
+			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUserId) AND (itemid = $aPoiId)";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){					
-					$poi = new Poi($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8]);
+					$poi = new Poi();
+					$this->parse_Poi($poi,$row,$result);
 					return $poi;
 				}
 			}
 			return null;
 		}
 		
+		/**
+		 * returns true if poi with given poiname (itemname) exists, otherwise false
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aPoiName Object
+		 */
 		function poiExists($aUsrId, $aPoiName)
 		{
 			if ($aPoiName == "")
 				return false;
 			
-			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUsrId) AND (poiname = \"$aPoiName\")";
+			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUsrId) AND (itemname = \"$aPoiName\")"; //TODO
 			$result = $this->executeQuery($qry);
 					
 			if ($result != NULL) 

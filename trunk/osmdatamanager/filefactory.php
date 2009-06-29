@@ -16,18 +16,20 @@
 	
 */
    	include_once("application.php");
+	include_once("itemparser.php");
 	
 	/**
 	 * File
 	 */
-	class File {
+	class File extends GroupItem {
 		
-		var $usrid;
+		//var $usrid;
 		var $filename;
-		var $description;
+		//var $description;
 		var $path;
 		var $fullfilename;
-						
+		
+		/*			
 		function File($aUsrId, $aPath, $aFilename, $aDescription) {
 			$this->usrid = $aUsrId;
 			$this->path = $aPath;
@@ -35,13 +37,23 @@
 			$this->description = $aDescription;
 			$this->fullfilename = $aPath.$aFilename;
 		}
+		*/
+		
+		function File() {
+			parent::GroupItem("File");
+			$this->itemname = "empty file";
+			$this->path = "";
+			$this->filename = "";
+			//$this->description = "";
+			$this->fullfilename = "";
+		}
 		
 		function getFilename() {
 			return $this->filename;
 		}
 		
 		function getDescription() {
-			return $this->description;
+			return $this->itemname;
 		}
 		
 		function getPath() {
@@ -74,6 +86,7 @@
 	/**
 	 * ExifFile
 	 */
+	/*
 	class ExifFile {
 		
 		var $filename;
@@ -93,18 +106,56 @@
 		}
 		
 	}
+	*/
 	
 	
 	/**
 	 * Filefactory
 	 */
-	class Filefactory extends DatabaseAccess {
+	class Filefactory extends ItemParser {
 						
 		function Filefactory()
 		{
-			parent::DatabaseAccess();
+			parent::ItemParser();
 		}
 		
+		/**
+		 * 
+		 * @return 
+		 * @param $aItem Object
+		 * @param $aRow Object
+		 * @param $aResult Object
+		 */
+		function parse_File(&$aItem, $aRow, $aResult) {
+			$this->parseFieldnames($aResult);
+			$this->parse_GroupItem($aItem, $aRow, $aResult);			
+			
+			if ($this->fieldnames == null)
+				return;
+			
+			for ($i=0;$i<count($this->fieldnames);$i++) {
+				$fn1 = $this->fieldnames[$i];
+				switch ($fn1) {
+					case "filename":
+						$aItem->filename = $aRow[$i];
+						break;
+					case "path":
+						$aItem->path = $aRow[$i];
+						break;
+					case "path":
+						$aItem->filename = $aRow[$i];
+						break;
+				}
+			}
+			$aItem->fullfilename = $aItem->path.$aItem->filename;
+		}
+		
+		/**
+		 * returns true if file with given usrid and filename exists, othwerwise false
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aFilename Object
+		 */
 		function fileExists($aUsrId, $aFilename)
 		{
 			if ($aFilename == "")
@@ -125,6 +176,11 @@
 			return false;
 		}
 		
+		/**
+		 * returns all files from user with given userid
+		 * @return 
+		 * @param $aUserid Object
+		 */
 		function getFiles($aUserid) {
 			$files = array();
 			
@@ -135,13 +191,49 @@
 				while ($row = mysql_fetch_row($result))
 				{
 					if ($row != null){
-						$fl = new File($row[0],$row[1],$row[2],$row[3]);
+						$fl = new File();
+						$this->parse_File($fl,$row,$result);
 						array_push($files, $fl);
 					}
 				}
 				return $files;
 			}
 			return null;
+		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aLinkitemlist Object
+		 * @param $aResultlist Object
+		 */
+		function addFiles($aLinkitemlist, &$aResultlist) {
+			$qry = "SELECT * FROM `tab_file` WHERE itemid in (";
+			
+			if (count($aLinkitemlist) > 0) {
+				for ($i=0;$i<count($aLinkitemlist);$i++) {
+					$itm1 = $aLinkitemlist[$i];
+					if ($i==0)
+						$qry = $qry.$itm1->itemid;
+					else
+						$qry = $qry.",".$itm1->itemid;
+				}		
+			}
+			$qry = $qry.")";
+			$result = $this->executeQuery($qry);
+			
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$fl = new File();
+						$this->parse_File($fl,$row,$result);
+						array_push($aResultlist, $fl);
+					}
+				}
+			}
+			
 		}
 		
 		/**
