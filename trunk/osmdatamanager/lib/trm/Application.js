@@ -247,6 +247,21 @@ TRM.ClientApplication = function(openlayersMap)
 	}
 	
 	/**
+	 * _updatePoi
+	 * @param {Object} lat
+	 * @param {Object} lon
+	 * @param {Object} contentHtml
+	 * @param {Object} layer
+	 * @param {Object} iconname
+	 */
+	var _updatePoi = function(lat, lon, contentHtml, layer,iconname) {
+		if (self.map && self.markermanager) {
+			var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), self.map.getProjectionObject());
+			self.markermanager.updatePoiMarker(lonLat, gl_markers, contentHtml,iconname);
+		}
+	}
+	
+	/**
 	 * _layerExists
 	 * @param {Object} layername
 	 */
@@ -380,7 +395,6 @@ TRM.ClientApplication = function(openlayersMap)
 			  strokeColor: "#ff00ff",
 			  strokeWidth: 3
 			};
-
 			var lgpx = new OpenLayers.Layer.GML(description, filename, {
 													format: OpenLayers.Format.GPX,
 													projection: self.map.displayProjection,
@@ -403,7 +417,7 @@ TRM.ClientApplication = function(openlayersMap)
 		}
 		return null;
 	}
-
+	
 	
 	/*************************************************************************************************
 	 * 
@@ -418,6 +432,22 @@ TRM.ClientApplication = function(openlayersMap)
 	this.getActiveUser = function()
 	{
 		return activeuser;
+	}
+	
+	/**
+	 * 
+	 * @param {Object} child
+	 */
+	this.getIconname1 = function(child) {
+		if (child.tags != null) {
+			for (var x = 0; x < child.tags.length; x++) {
+				var tag1 = child.tags[x];
+				if (tag1.tagname == child.tagname) {
+					return tag1.icon1;
+				}
+			}	
+		}
+		return "";
 	}
 	
 	/**
@@ -538,9 +568,12 @@ TRM.ClientApplication = function(openlayersMap)
 	 * @param {Object} lon
 	 * @param {Object} zommlevel
 	 */
-	this.centerMap = function(lat, lon, zommlevel) {		
+	this.centerMap = function(lat, lon, zoomlevel) {		
+		if (zoomlevel == null) 
+			zoomlevel = 14;
+			
 		var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());	
-		this.map.setCenter(lonLat, zommlevel);
+		this.map.setCenter(lonLat, zoomlevel);
 	}
 			
 	/**
@@ -630,6 +663,19 @@ TRM.ClientApplication = function(openlayersMap)
 	}
 	
 	/**
+	 * updatePoi
+	 * @param {Object} lat
+	 * @param {Object} lon
+	 * @param {Object} contentHtml
+	 * @param {Object} layer
+	 * @param {Object} iconname
+	 */
+	this.updatePoi = function(lat, lon, contentHtml, layer,iconname) {		
+		_updatePoi(lat,lon,contentHtml,layer,iconname);
+	}
+	
+	
+	/**
 	 * shows data of a group
 	 * @param {Object} response
 	 * @param {Object} ioArgs
@@ -646,7 +692,7 @@ TRM.ClientApplication = function(openlayersMap)
 				var itm1 = response[0];
 				if (itm1.itemtype == "Group") {
 					self.centerMap(itm1.lat,itm1.lon,itm1.zoomlevel);
-					desc = itm1.groupname;
+					desc = itm1.itemname;
 					if (!_containsGpxFile(response))
 						lyr = gl_markers;
 				}
@@ -654,9 +700,8 @@ TRM.ClientApplication = function(openlayersMap)
 				for (var i = 1; i < response.length; i++) {
 					itm1 = response[i];
 										
-					if (itm1.itemtype == "Tracefile") {
-					  var fn = itm1.filename;
-					  					  				  
+					if (itm1.itemtype == "File") {
+					  var fn = itm1.path + itm1.filename;
 					  var l1 = _showGpxFile(desc,fn);
 					  if (lyr == null) 
 					    lyr = l1;
@@ -665,7 +710,7 @@ TRM.ClientApplication = function(openlayersMap)
 					
 					
 					if (itm1.itemtype == "Poi") {
-						_createPoi(itm1.lat,itm1.lon,itm1.description,lyr,itm1.icon_collapsed);
+						_createPoi(itm1.lat,itm1.lon,itm1.description,lyr,self.getIconname1(itm1));
 					}
 										
 					/*

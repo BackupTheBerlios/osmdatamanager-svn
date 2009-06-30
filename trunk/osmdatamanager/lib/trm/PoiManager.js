@@ -117,14 +117,15 @@ function PoiManager(){
 	 * @param {Object} georssurl
 	 * @param {Object} cb
 	 */
-	this.createPoi = function(poiname, description, latlon, georssurl,cb) {
+	this.createPoi = function(poiname, description, lat,lon,cb) {
 						
 		params = {
 			"action":"msg.createpoi",
 			"poiname":poiname,
 			"description":description,
-			"latlon":latlon,
-			"georssurl":georssurl
+			"lat":lat,
+			"lon":lon
+			//"georssurl":georssurl
 		}
 		callback = cb;
 		loadFromServer("poifunctions.php",params,_cb_createPoi);
@@ -139,15 +140,17 @@ function PoiManager(){
 	 * @param {Object} georssurl
 	 * @param {Object} cb
 	 */
-	this.updatePoi = function(poiid,poiname, description, latlon,icon,cb) {
+	this.updatePoi = function(poiid,poiname, description,lat,lon,tagname,zoomlevel,cb) {
 						
 		params = {
 			"action":"msg.updatepoi",
 			"poiid": poiid,
 			"poiname":poiname,
 			"description":description,
-			"latlon":latlon,
-			"icon":icon
+			"lat":lat,
+			"lon":lon,
+			"tagname":tagname,
+			"zoomlevel":zoomlevel
 		}
 		callback = cb;
 		loadFromServer("poifunctions.php",params,_cb_updatePoi);

@@ -294,8 +294,6 @@
 			 */						
 			function executeQuery($aQuery)
 			{  
-				$this->fieldnames = null;
-				
 				//check if read only mode (no insert, update and delete allowed)
 				if ($this->readonly) {
 					$ro = strpos(strtolower($aQuery), "insert");

@@ -496,8 +496,8 @@ DijitClient.GroupDialog = {
 		return val;	
 	},
 	showGroupData: function(group) {
-		dijit.byId('dlg_creategroup').attr("grpid", group.groupid);
-		dijit.byId('tb_groupname').attr("value", group.groupname);
+		dijit.byId('dlg_creategroup').attr("grpid", group.itemid);
+		dijit.byId('tb_groupname').attr("value", group.itemname);
 		
 		dijit.byId('dlgcreategroup_rd_private').attr("checked","checked");
 		if (group.protection == "private")
@@ -513,9 +513,8 @@ DijitClient.GroupDialog = {
 		dijit.byId('dlgcreategroup_tb_poi_lat').attr("value",group.lat);
 		dijit.byId('dlgcreategroup_tb_poi_lon').attr("value",group.lon);
 		
-		dijit.byId('dlgcreategroup_tb_icon1').attr("value",group.icon_expanded);
-		dijit.byId('dlgcreategroup_tb_icon2').attr("value",group.icon_collapsed);
-		
+		dijit.byId('dlgcreategroup_tb_tagname').attr("value",group.tagname);
+				
 		if (group.zoomlevel != null)
 			dijit.byId('dlgcreatgroup_zommlevel').attr("value",group.zoomlevel);			
 		else
@@ -541,11 +540,10 @@ DijitClient.GroupDialog = {
 			dijit.byId('tb_groupname').attr("disabled", false);
 			dijit.byId('dlgcreategroup_tb_poi_lat').attr("disabled","disabled");
 			dijit.byId('dlgcreategroup_tb_poi_lon').attr("disabled","disabled");
-			dijit.byId('dlgcreatgroup_zommlevel').attr("disabled","disabled");
+			dijit.byId('dlgcreatgroup_zommlevel').attr("disabled",false);
 			
-			dijit.byId('dlgcreategroup_tb_icon1').attr("disabled",false);
-			dijit.byId('dlgcreategroup_tb_icon2').attr("disabled",false);
-			
+			dijit.byId('dlgcreategroup_tb_tagname').attr("disabled",false);
+						
 			 var grp = this.grpman.getGroupTree().getSelectedItem();
 			 if (grp) {
 			 	this.showGroupData(grp);
@@ -558,8 +556,7 @@ DijitClient.GroupDialog = {
 			dijit.byId('dlgcreategroup_rd_private').attr("disabled", "disabled");
 			dijit.byId('dlgcreategroup_rd_protected').attr("disabled", "disabled");
 			dijit.byId('dlgcreategroup_rd_public').attr("disabled", "disabled");
-			dijit.byId('dlgcreategroup_tb_icon1').attr("disabled","disabled");
-			dijit.byId('dlgcreategroup_tb_icon2').attr("disabled","disabled");
+			dijit.byId('dlgcreategroup_tb_tagname').attr("disabled","disabled");
 		}
 		
 		dijit.byId('dlg_creategroup').show();	
@@ -579,10 +576,8 @@ DijitClient.GroupDialog = {
 		var zoomlevel = document.getElementById('dlgcreatgroup_zommlevel').value;
 		var lat = document.getElementById('dlgcreategroup_tb_poi_lat').value;
 		var lon = document.getElementById('dlgcreategroup_tb_poi_lon').value;
-		
-		var icon1 = document.getElementById('dlgcreategroup_tb_icon1').value;
-		var icon2 = document.getElementById('dlgcreategroup_tb_icon2').value;
-		
+		var tagname = document.getElementById('dlgcreategroup_tb_tagname').value;
+				
 		if ((grp != "") && (grp != null)) {
 			if (option == "root") {
 				this.grpman.createRootGroup(grp);
@@ -593,7 +588,7 @@ DijitClient.GroupDialog = {
 			}
 			else 
 			if (option == "update") {
-			  this.grpman.updateGroup(grpid,grp,protection,zoomlevel,lat,lon,icon1,icon2);
+			  this.grpman.updateGroup(grpid,grp,protection,zoomlevel,lat,lon,tagname);
 			}
 		} else {
 			alert("kein g&#252;ltiger Wert");
@@ -615,7 +610,7 @@ DijitClient.GroupDialog = {
 			var grpid = this.grpman.getGroupTree().getSelectedParentGroupId();
 			if (grpid != null) {
 				var lst1 = new Array();
-				lst1.push(poi.poiid);
+				lst1.push(poi.itemid);
 				var cb = {
 					func: this._cb_remGroupPois,
 					target: this
@@ -656,11 +651,17 @@ DijitClient.PoiDialog = {
 		dojo.connect(dijit.byId("dlgpoi_btn_ok"),"onClick",this,"okClick");
 		dojo.connect(dijit.byId("dlgpoi_btn_selectpoint"),"onClick",this,"selectPosition");
 		dojo.connect(dijit.byId("dlgpoi_btn_showpiclist"),"onClick",this,"showPictureList");
+		dojo.connect(dijit.byId("dlgpoi_btn_zoomlevel"),"onClick",this,"getZoomlevelFromMap");	
 	},
 	_cb_updatePoi: function(response, ioargs) {
 		var poi = response;
 		if (poi != null) {
-			this.app.updatePoi(poi.lat,poi.lon,poi.description);
+			/*
+			this.app.createPoi(poi.lat,poi.lon,poi.description,gl_markers,self.getIconname1(poi));
+			this.app.centerMap(poi.lat,poi.lon,poi.zoomlevel);
+			*/
+			this.app.updatePoi(poi.lat,poi.lon,poi.description,gl_markers,this.app.getIconname1(poi));
+			this.app.centerMap(poi.lat,poi.lon,poi.zoomlevel);
 			this.hide();
 		}	
 	},
@@ -680,14 +681,20 @@ DijitClient.PoiDialog = {
 	},
 	_cb_getPoi: function(response,ioArgs) {
 		var poi = response[0];			
-		dijit.byId('tb_poi_poiid').attr("value",poi.poiid);
-		dijit.byId('tb_poidescription').attr("value",poi.poiname);
+		dijit.byId('tb_poi_poiid').attr("value",poi.itemid);
+		dijit.byId('tb_poidescription').attr("value",poi.itemname);
 		//dijit.byId('ta_poilongtext').setValue("");
 		dijit.byId('ta_poilongtext').attr("value",poi.description);
 		dijit.byId('tb_poi_lat').attr("value",poi.lat);
 		dijit.byId('tb_poi_lon').attr("value",poi.lon);
-		dijit.byId('dlpoi_tb_icon').attr("disabled",false);
-		dijit.byId('dlpoi_tb_icon').attr("value",poi.icon_collapsed);
+		dijit.byId('dlpoi_tb_tagname').attr("disabled",false);
+		dijit.byId('dlpoi_tb_tagname').attr("value",poi.tagname);
+		
+		if (poi.zoomlevel != null)
+			dijit.byId('dlgpoi_zommlevel').attr("value",poi.zoomlevel);			
+		else
+			dijit.byId('dlgpoi_zommlevel').attr("value",gl_map.getZoom());
+		
 		dijit.byId('dlg_poi').show();
 	},
 	show: function() {
@@ -697,7 +704,8 @@ DijitClient.PoiDialog = {
 		dijit.byId('tb_poi_lat').attr("value","");
 		dijit.byId('tb_poi_lon').attr("value","");
 		dijit.byId('tb_poi_poiid').attr("value","");
-		dijit.byId('dlpoi_tb_icon').attr("value","");
+		dijit.byId('dlpoi_tb_tagname').attr("value","");
+		dijit.byId('dlgpoi_zommlevel').attr("value","");
 		dijit.byId('dlg_poi').show();
 	},
 	showEdit: function() {
@@ -723,6 +731,9 @@ DijitClient.PoiDialog = {
 			target: this
 		}
 		this.app.getPoint(cb,'dlg_poi',"Punkt","machen Sie einen Doppelklick einen Punkt");	
+	},
+	getZoomlevelFromMap: function() {
+		dijit.byId('dlgpoi_zommlevel').attr("value",gl_map.getZoom());	
 	},
 	showPictureList: function() {
 		DijitClient.PictureListDialog.show('dlg_poi');
@@ -753,12 +764,13 @@ DijitClient.PoiDialog = {
 			return;
 		}
 		var pm = new PoiManager();
-		var latlon = dijit.byId('tb_poi_lat').value + ";" + dijit.byId('tb_poi_lon').value;
-		
+		var lat = dijit.byId('tb_poi_lat').value;
+		var lon = dijit.byId('tb_poi_lon').value;
+		var zoomlevel = document.getElementById('dlgpoi_zommlevel').value;
 		var longtext = "";
-		var georssurl = "";
+		//var georssurl = "";
 		var poiid = "";
-		var icon  = "";
+		var tagname  = "";
 		
 		if (dijit.byId('ta_poilongtext').getValue().trim() != "")
 		  longtext = dijit.byId('ta_poilongtext').getValue().trim();
@@ -771,8 +783,8 @@ DijitClient.PoiDialog = {
 		if (dijit.byId('tb_poi_poiid').value.trim() != "")
 		  poiid = dijit.byId('tb_poi_poiid').value.trim();
 		
-		if (dijit.byId('dlpoi_tb_icon').value.trim() != "")
-		  icon = dijit.byId('dlpoi_tb_icon').value.trim();
+		if (dijit.byId('dlpoi_tb_tagname').value.trim() != "")
+		  tagname = dijit.byId('dlpoi_tb_tagname').value.trim();
 		
 		
 		if (poiid != "") {
@@ -780,14 +792,14 @@ DijitClient.PoiDialog = {
 				func: this._cb_updatePoi,
 				target: this
 			}
-			pm.updatePoi(poiid, dijit.byId('tb_poidescription').value.trim(), longtext, latlon,icon,cb);
+			pm.updatePoi(poiid, dijit.byId('tb_poidescription').value.trim(), longtext, lat, lon, tagname, zoomlevel, cb);
 		}
 		else {
 			var cb = {
 				func: this._cb_createPoi,
 				target: this
 			}
-			pm.createPoi(dijit.byId('tb_poidescription').value.trim(), longtext, latlon, georssurl, cb);
+			pm.createPoi(dijit.byId('tb_poidescription').value.trim(), longtext, lat, lon, cb);
 		}
 	},
 	cancelClick: function() {
@@ -826,8 +838,8 @@ DijitClient.PoiListDialog = {
 					var poi1 = response[i]		;
 					if (poi1 != "") {
 						var node = dojo.doc.createElement("LI");
-						node.innerHTML = poi1.poiname;
-						node.value = poi1.poiid;
+						node.innerHTML = poi1.itemname;
+						node.value = poi1.itemid;
 						var sl = dijit.byId("poilist");
 						sl.containerNode.appendChild(node);
 					}
@@ -1024,6 +1036,7 @@ DijitClient.FileListDialog = {
 		this.app = application;
 		this.grpman = groupmanager;
 		dojo.connect(dijit.byId("dlgfilelist_btn_ok"),"onClick",this,"okClick");
+		dojo.connect(dijit.byId("dlgfilelist_btn_close"),"onClick",this,"cancelClick");
 	},
 	_cb_getFiles: function(response,ioArgs) {
 		var sl = dijit.byId("filelist");
@@ -1033,8 +1046,8 @@ DijitClient.FileListDialog = {
 				var node = dojo.doc.createElement('li');
 				
 				var txt1 = fn1.filename;
-				if ((fn1.description != null) && (fn1.description != ""))
-					txt1 = fn1.description;
+				if ((fn1.itemname != null) && (fn1.itemname != ""))
+					txt1 = fn1.itemname;
 				
 				node.setAttribute("filename",fn1.filename);
 				node.innerHTML = txt1;
@@ -1062,7 +1075,10 @@ DijitClient.FileListDialog = {
 			grid.setStore(s1);
 			grid.update();
 		}
-		dijit.byId('dlg_filelist').show();
+		//dijit.byId('dlg_filelist').show();
+		document.getElementById('dlg_filelist').setAttribute("class","filemanager_visible");
+		document.getElementById('dlg_filelist').setAttribute("className","filemanager_visible");
+				
 		/*
 		var cb = {
 			func: this._cb_getFiles,
@@ -1128,7 +1144,8 @@ DijitClient.FileListDialog = {
 		}
 	},
 	cancelClick: function() {
-		this.hide();	
+		document.getElementById('dlg_filelist').setAttribute("class","filemanager_hidden");
+		document.getElementById('dlg_filelist').setAttribute("className","filemanager_hidden");
 	},
 	onKeyPress: function(event) {
 		if (event.keyCode == '13') {
@@ -1223,8 +1240,8 @@ DijitClient.Application = function(openlayersMap,mm)
 	this._cb_getPoi = function(response, ioargs) {
 		var poi = response[0];
 		if (poi) {		
-			self.createPoi(poi.lat,poi.lon,poi.description,gl_markers,poi.icon_collapsed);
-			self.centerMap(poi.lat,poi.lon,14);
+			self.updatePoi(poi.lat,poi.lon,poi.description,gl_markers,self.getIconname1(poi));
+			self.centerMap(poi.lat,poi.lon,poi.zoomlevel);
 		}
 	}
 		
@@ -1302,7 +1319,7 @@ DijitClient.Application = function(openlayersMap,mm)
 		var usr = this.getActiveUser();
 		if (usr != null) {
 			var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
-			if (!this.markermanager.markerExists(lonLat)) {
+			//if (!this.markermanager.markerExists(lonLat)) {
 				var pm = new PoiManager();
 				var cb = {
 					func: this._cb_getPoi,
@@ -1310,8 +1327,8 @@ DijitClient.Application = function(openlayersMap,mm)
 				}
 				pm.getPoi(poiid,cb);
 				return;		
-			}
-			this.centerMap(lat,lon,14);
+			//}
+			//this.centerMap(lat,lon,14);
 		}
 	}
 	
@@ -1321,10 +1338,19 @@ DijitClient.Application = function(openlayersMap,mm)
 	 * @param {Object} lon
 	 * @param {Object} htmltext
 	 */
+	/*
 	this.updatePoi = function(lat, lon, htmltext) {
 		var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
 		this.markermanager.updateMarker(lonLat,gl_markers,htmltext);
 	}
+	*/
+	/*
+	this.updatePoi = function(poi){
+		self.createPoi(poi.lat,poi.lon,poi.description,gl_markers,self.getIconname1(poi));
+		self.centerMap(poi.lat,poi.lon,poi.zoomlevel);
+	}
+	*/
+	
 	
 	/**
 	 * loads all data from selected group an shows it on the map

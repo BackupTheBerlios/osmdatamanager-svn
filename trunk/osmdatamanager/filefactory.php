@@ -63,6 +63,16 @@
 		function getFullFilename() {
 			return $this->fullfilename;
 		}
+		
+		/**
+		 * returns extension from a filename
+		 * @return file extension
+		 * @param $filename Object
+		 */
+		function getFileExtension()
+		{
+			return end(explode(".", $this->filename));
+		}
 	}
 	
 	
@@ -148,6 +158,8 @@
 				}
 			}
 			$aItem->fullfilename = $aItem->path.$aItem->filename;
+			if (($aItem->tagname == "standard") || ($aItem->tagname == "null"))
+				$aItem->tagname = "file_".$aItem->getFileExtension();
 		}
 		
 		/**
@@ -161,20 +173,52 @@
 			if ($aFilename == "")
 				return false;
 			
-			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUsrId) AND (filename = \"$aFilename\")";
+			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUsrId) AND (filename = '$aFilename')";
 			$result = $this->executeQuery($qry);
-					
 			if ($result != NULL) 
 			{   
 				while ($row = mysql_fetch_row($result))
 				{
-					$filename = $row[2];
+					$filename = $row[3];
 					if (strtolower($filename) == strtolower($aFilename))
 						return true;
 				}
 			}
 			return false;
 		}
+		
+		/**
+		 * set all files from given user to invalid state
+		 * @return 
+		 * @param $aUsrId Object
+		 */
+		function setInvalid($aUsrId) {
+			$qry = "UPDATE `tab_file` SET valid = 0 WHERE (usrid = $aUsrId)";
+			$result = $this->executeQuery($qry);
+		}
+		
+		/**
+		 * delete invalid files from database table
+		 * @return 
+		 * @param $aUsrId Object
+		 */
+		function deleteInvalid($aUsrId) {
+			$qry = "DELETE FROM `tab_file` WHERE (valid = 0) AND (usrid = $aUsrId)";
+			$result = $this->executeQuery($qry);
+		}
+		
+		
+		/**
+		 * sets given filename to valid status
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aFilename Object
+		 */
+		function setValid($aUsrId,$aFilename) {
+			$qry = "UPDATE `tab_file` SET valid = 1 WHERE (usrid = $aUsrId) AND (filename = '$aFilename')";
+			$result = $this->executeQuery($qry);
+		}
+		
 		
 		/**
 		 * returns all files from user with given userid
@@ -184,7 +228,7 @@
 		function getFiles($aUserid) {
 			$files = array();
 			
-			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid) ORDER BY description, filename";
+			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid) ORDER BY itemname, filename";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
@@ -270,8 +314,7 @@
 			if ($aFilename == "")
 				return false;
 			
-			$insquery = "INSERT INTO `tab_file` (`usrid`,`path`,`filename`,`description`) VALUES ($aUserId, '$aPath', '$aFilename','$aDescription')";
-			
+			$insquery = "INSERT INTO `tab_file` (`usrid`,`path`,`filename`,`itemname`,`valid`) VALUES ($aUserId, '$aPath', '$aFilename','$aDescription',1)";
 			if ($this->executeQuery($insquery) == null)
 			{
 				return false;

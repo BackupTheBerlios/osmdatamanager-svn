@@ -409,6 +409,7 @@
 		*/
 		
 		//TODO
+		/*
 		function addGroupFile($aGroupId, $aUsrId, $aFilename) {
 			$tracefile = $this->getGroupFile($aGroupId, $aFilename);
 						
@@ -431,6 +432,7 @@
 			}
 			return true;						
 		}
+		*/
 		
 		/*
 		function updateGroupFile($aGroupId, $aUsrId, $aFilename, $aDescription) {
@@ -455,6 +457,8 @@
 		 * @param $aUsrId Object
 		 * @param $aPoiId Object
 		 */
+		//TODO
+		/*
 		function addGroupPoi($aGroupId, $aUsrId, $aPoiId) {
 			$insquery = "INSERT INTO `tab_grp_poi` (`grpid`,`usrid`,`poiid`) VALUES ($aGroupId, $aUsrId,$aPoiId)";
 			if ($this->executeQuery($insquery) == null)
@@ -471,8 +475,43 @@
 		 * @param $aUsrId Object
 		 * @param $aPoiId Object
 		 */
+		/*
+		//TODO
 		function remGroupPoi($aGroupId, $aUsrId, $aPoiId) {
 			$delquery = "DELETE FROM `tab_grp_poi` WHERE (grpid = $aGroupId) AND (usrid = $aUsrId) AND (poiid = $aPoiId)";
+			if ($this->executeQuery($delquery) == null)
+			{
+				return false;
+			}
+			return true;						
+		}
+		*/
+		
+		/**
+		 * adds a groupitem to a group
+		 * @return 
+		 * @param $aGroupId Object
+		 * @param $aUsrId Object
+		 * @param $aItemid Object
+		 */
+		function addGroupItem($aGroupId, $aUsrId, $aItemid,$aItemType) {
+			$insquery = "INSERT INTO `tab_grp_item` (`itemid`,`usrid`,`childid`,`itemtype`) VALUES ($aGroupId, $aUsrId,$aItemid,'$aItemType')";
+			if ($this->executeQuery($insquery) == null)
+			{
+				return false;
+			}
+			return true;						
+		}
+		
+		/**
+		 * removes a groupitem from a group
+		 * @return 
+		 * @param $aGroupId Object
+		 * @param $aUsrId Object
+		 * @param $aItemid Object
+		 */
+		function remGroupItem($aGroupId, $aUsrId, $aItemid,$aItemType) {
+			$delquery = "DELETE FROM `tab_grp_item` WHERE (itemid = $aGroupId) AND (usrid = $aUsrId) AND (childid = $aItemid) AND (itemtype = '$aItemType')";
 			if ($this->executeQuery($delquery) == null)
 			{
 				return false;
@@ -493,10 +532,7 @@
 			{   
 				$row = mysql_fetch_row($result);
 				if ($row != null){
-					//TODO
-					//$grp = new Group($row[0],$row[1],null,$row[3],$this->hasChildren($aUserId, $aGroupId),$row[5],$row[6],$row[7],$row[8],$row[9],$row[10]); 
 					$grp = new Group();
-					//$grp->parseItem($row,$result);
 					$this->parse_Group($grp,$row,$result);
 					return $grp;
 				}
@@ -511,7 +547,7 @@
 		 * @param $aGroupName Object
 		 */
 		function getGroupByName($aUserId, $aGroupName) {
-			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (grpname = '$aGroupName'))";
+			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (itemname = '$aGroupName'))";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
@@ -533,7 +569,7 @@
 		 * @param $aGroupName Object
 		 */
 		function getPublicGroupByName($aUserId, $aGroupName) {
-			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (grpname = '$aGroupName') AND (protection = 'public'))";
+			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserId) AND (itemname = '$aGroupName') AND (protection = 'public'))";
 			//echo $qry;
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
@@ -682,17 +718,49 @@
 			if ($lst1 != null)
 				return true;
 		}
-				
+			
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aTracegroupId Object
+		 */	
+		/*
 		function deletGroupFiles($aUserId, $aTracegroupId) {
 			$delquery = "DELETE FROM `tab_grp_file` WHERE (usrid = $aUserId) AND (grpid = $aTracegroupId)";				
 			$this->executeQuery($delquery);
 		}
 		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aFilename Object
+		 */
+		/*
 		function deleteGroupFile($aUserId, $aFilename) {
 			$delquery = "DELETE FROM `tab_grp_file` WHERE (usrid = $aUserId) AND (filename = $aFilename)";				
 			$this->executeQuery($delquery);
 		}
+		*/
 		
+		/**
+		 * deletes data from tab_grp_item table
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aTracegroupId Object
+		 */
+		function deletGroupItems($aUserId, $aTracegroupId) {
+			$delquery = "DELETE FROM `tab_grp_item` WHERE (usrid = $aUserId) AND (itemid = $aTracegroupId)";				
+			$this->executeQuery($delquery);
+		}
+		
+		/**
+		 * deletes group with given userid an groupid (itemid)
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupId Object
+		 */
 		function deleteGroup($aUserId, $aGroupId) {
 			
 			$childs = $this->getChildgroups($aUserId, $aGroupId); 
@@ -706,9 +774,9 @@
 				}
 			}
 			
-			$this->deletGroupFiles($aUserId, $aGroupId);
+			$this->deletGroupItems($aUserId, $aGroupId);
 			
-			$delquery = "DELETE FROM `tab_grp` WHERE (usrid = $aUserId) AND (grpid = $aGroupId)";				
+			$delquery = "DELETE FROM `tab_grp` WHERE (usrid = $aUserId) AND (itemid = $aGroupId)";				
 			$this->executeQuery($delquery);
 			return true;
 		}
@@ -725,9 +793,9 @@
 				return false;
 			
 			if ($aParentGroupId == -1)
-				$insquery = "INSERT INTO `tab_grp` (`usrid`,`prntgrp`,`grpname`) VALUES ($aUserId, NULL,'$aGroupname')";
+				$insquery = "INSERT INTO `tab_grp` (`usrid`,`parentid`,`itemname`) VALUES ($aUserId, NULL,'$aGroupname')";
 			else
-				$insquery = "INSERT INTO `tab_grp` (`usrid`,`prntgrp`,`grpname`) VALUES ($aUserId, $aParentGroupId,'$aGroupname')";
+				$insquery = "INSERT INTO `tab_grp` (`usrid`,`parentid`,`itemname`) VALUES ($aUserId, $aParentGroupId,'$aGroupname')";
 			
 			if ($this->executeQuery($insquery) == null)
 			{
@@ -749,17 +817,16 @@
 		 * @param $aIcon1 Object
 		 * @param $aIcon2 Object
 		 */
-		function updateGroup($aUserId,$aGroupId,$aGroupname,$aProtection,$aZoomlevel,$aLat,$aLon,$aIcon1,$aIcon2) {
+		function updateGroup($aUserId,$aGroupId,$aGroupname,$aProtection,$aZoomlevel,$aLat,$aLon,$aTagName) {
 			$qry1   =  "UPDATE `tab_grp` SET ";
 			 //$qry1 = $qry1 + "`username`='".$aVal1."' ";
-			 $qry1 = $qry1."`grpname`='".$aGroupname."' ";
+			 $qry1 = $qry1."`itemname`='".$aGroupname."' ";
 			 $qry1 = $qry1.", `protection`='".$aProtection."' ";
 			 $qry1 = $qry1.", `zoomlevel`= ".$aZoomlevel." ";
 			 $qry1 = $qry1.", `lat`='".$aLat."' ";
 			 $qry1 = $qry1.", `lon`='".$aLon."' ";
-			 $qry1 = $qry1.", `icon1`='".$aIcon1."' ";
-			 $qry1 = $qry1.", `icon2`='".$aIcon2."' ";
-			 $qry1 = $qry1." WHERE  (`grpid` = ".$aGroupId.")";
+			 $qry1 = $qry1.", `tagname`='".$aTagName."' ";
+			 $qry1 = $qry1." WHERE  (`itemid` = ".$aGroupId.")";
 			 $qry1 = $qry1." AND (`usrid` = ".$aUserId.")";
 			 			 
 			 $result = $this->executeQuery($qry1);

@@ -37,7 +37,8 @@
 				dojo.require("dojox.grid.compat.Grid");
 				dojo.require("dojox.data.CsvStore");
 				dojo.require("dojox.grid.compat._data.model");
-								
+				dojo.require("dojo.dnd.Source"); 
+									
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
                       node:"overlay",
@@ -121,7 +122,26 @@
 			gl_application.checkUser(cb);
 			
 		}		
+		
+		function onStyleRow(inRow) {
+			with (inRow) {
+		      var i = index % 10;
+		      var special = (i > 2 && i < 6);
+		      if (odd)
+		        customStyles += ' color: orange;';
+		      if (selected)
+		        customClasses += ' selectedRow';
+		      if (special)
+		        customClasses += ' specialRow';
+		      if (over)
+		        customClasses += ' overRow';
+		      if (!over && !selected)
+		        //dojox.Grid.prototype.onStyleRow.apply(this, arguments);
+				dojox.grid.DataGrid.prototype.onStyleRow.apply(this, arguments);
+		    }
+		}
 
+		
 	</script>
 </head>
 
@@ -317,8 +337,9 @@
   </div> 
   
   <!-- FileList Dialog -->
-  <div dojoType="dijit.Dialog" id="dlg_filelist" title="Dateiliste" onLoad="alert('x')" style="width:640px"
-    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+  <!-- <div dojoType="dijit.Dialog" id="dlg_filelist" title="Dateiliste" onLoad="alert('x')" style="width:640px" 
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));"> -->
+  <div class="filemanager_hidden" id="dlg_filelist">
 	
 		<div id="filecontainer" >
 			<!--
@@ -329,17 +350,23 @@
 		</div>
 		
 		
-		<table id="dlgfilelist_tab_grid" jsId="dlgfilelist_grid" dojoType="dojox.grid.DataGrid"
+		<table id="dlgfilelist_tab_grid" jsId="dlgfilelist_grid" dojoType="dojox.grid.DataGrid" columnReordering="true" onStyleRow="onStyleRow"
 	       query="{ filename: '*' }" >
 			<thead>
 				<tr>
-					<th field="filename">Filename</th>
-					<th field="description" width="100px">Description</th>
+					<th field="filename" cellClasses="dojoDndItem" editor="dojox.grid.editors.ComboBox" dndType="blue">Filename</th>
+					<th field="itemname" width="100px">Description</th>
 				</tr>
 			</thead>
+			<tbody dojoType="dojo.dnd.Source"></tbody>
 		</table>
 		
-		<button dojoType="dijit.form.Button" id="dlgfilelist_btn_ok">Ok</button>	
+		<table>
+			<tr>
+				<td><button dojoType="dijit.form.Button" id="dlgfilelist_btn_ok">Ok</button></td>
+				<td><button dojoType="dijit.form.Button" id="dlgfilelist_btn_close">Close</button></td>	
+			</tr>
+		</table>
   </div>
   
   <!-- FileEdit Dialog -->
@@ -406,13 +433,10 @@
 			<td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_zoomlevel">Zoomlevel von Karte</button></td>	
 		</tr>
 		<tr>
-	      <td><label for="name">Icon offen:</label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_icon1" id="dlgcreategroup_tb_icon1" /></td>
+	      <td><label for="name">Tagname:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_tagname" id="dlgcreategroup_tb_tagname" /></td>
 	    </tr>
-		<tr>
-	      <td><label for="name">Icon geschlossen:</label></td>
-	      <td><input dojoType="dijit.form.TextBox"  type="text" name="dlgcreategroup_tb_icon2" id="dlgcreategroup_tb_icon2" /></td>
-	    </tr>
+
 		<tr>
 			<td><label for="loc">Schutz:</label></td>
 			<td>
@@ -440,15 +464,26 @@
 	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poidescription" id="tb_poidescription" /></td>
 	    </tr>
 		<tr>
-	      <td><label for="name">Icon:</label></td>
-	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="dlpoi_tb_icon" id="dlpoi_tb_icon" /></td>
+	      <td><label for="name">Tagname:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="dlpoi_tb_tagname" id="dlpoi_tb_tagname" /></td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Position: </label></td>
 	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lat" id="tb_poi_lat" /></td>
 		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lon" id="tb_poi_lon" /></td>
 		  <td><button dojoType="dijit.form.Button" id="dlgpoi_btn_selectpoint">...</button></td>	
-	    </tr> 
+	    </tr>
+		<tr>
+			<td><label for="loc">Zoomlevel:</label></td>
+			<td><input dojoType="dijit.form.NumberSpinner"
+							    value="14"
+							    class="medium"
+							    constraints="{max:20,min:1,places:0}"
+							    name="dlgpoi_zommlevel"
+							    id="dlgpoi_zommlevel" />
+			</td>
+			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_zoomlevel">Zoomlevel von Karte</button></td>	
+		</tr> 
 		<tr>
 			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_showpiclist">[]</button></td>	
 		</tr>

@@ -23,12 +23,15 @@
 	if (isset($action)) {
 		$poiname 		= $_REQUEST['poiname'];
 		$description	= $_REQUEST['description'];
-		$latlon 		= $_REQUEST['latlon'];
-		$georssurl		= $_REQUEST['georssurl'];
+		$lat 		    = $_REQUEST['lat'];
+		$lon            = $_REQUEST['lon'];
+		//$georssurl		= $_REQUEST['georssurl'];
 		$poilist		= $_REQUEST['poilist'];
 		$groupid		= $_REQUEST['groupid'];
 		$poiid	 		= $_REQUEST['poiid'];
-		$icon	 		= $_REQUEST['icon'];
+		$tagname 		= $_REQUEST['tagname'];
+		$zoomlevel 		= $_REQUEST['zoomlevel'];
+		//$itemtype       = $_REQUEST['itmetype'];
 		global $gl_loglevel;
 		$gl_loglevel 	= 1;
 	} else {
@@ -38,12 +41,15 @@
 		$poiname 		= $_GET['poiname'];
 		$description	= $_GET['description'];
 		$longtext		= $_GET['longtext'];
-		$latlon 		= $_GET['latlon'];
+		$lat 		    = $_GET['lat'];
+		$lon            = $_GET['lon'];
 		$georssurl		= $_GET['georssurl'];
 		$poilist		= $_GET['poilist'];
 		$groupid		= $_GET['groupid'];
 		$poiid	 		= $_GET['poiid'];
-		$icon	 		= $_GET['icon'];
+		$tagname 		= $_GET['tagname'];
+		$zoomlevel 		= $_GET['zoomlevel'];
+		//$itemtype       = $_GET['itmetype'];
 		*/
 	}
 		
@@ -56,7 +62,7 @@
 			//msg_createpoi
 			if ($action == msg_createpoi) {
 				if (!$pof->poiExists($usr->getUid(),$poiname)) {
-					if ($pof->createPoi($usr->getUid(),$poiname,$description,$latlon,$georssurl)) {
+					if ($pof->createPoi($usr->getUid(),$poiname,$description,$lat,$lon,"Poi")) {
 						echo application_getMessage(msg_crtok);	
 					} else {
 						echo application_getMessage(msg_failed);	
@@ -92,7 +98,7 @@
 			//msg_updatepoi
 			if ($action == msg_updatepoi) {
 				//updatePoi($aUsrId,	$aPoiId, $aPoiName, $aDescription, $aLatLon, $aGeoRssUrl) {	
-				$poi = $pof->updatePoi($usr->getUid(),$poiid,$poiname,$description,$latlon,$georssurl,$icon);
+				$poi = $pof->updatePoi($usr->getUid(),$poiid,$poiname,$description,$lat,$lon,$zoomlevel,$tagname);
 				if ($poi != null) {
 					echo application_getMessage($poi);	
 				} else {
@@ -119,7 +125,7 @@
 							$poi1 = $pof->getPoi($usr->getUid(), $poiid);
 							if ($poi1 != null) {
 								
-								if (!$gf->addGroupPoi($groupid,$usr->getUid(),$poi1->getPoiId())) {
+								if (!$gf->addGroupItem($groupid,$usr->getUid(),$poi1->getPoiId(),"Poi")) {
 									$ok = false;
 								}
 							}
@@ -153,7 +159,7 @@
 							$poiid = $lst1[$i];
 							$poi1 = $pof->getPoiById($usr->getUid(), $poiid);
 							if ($poi1 != null) {
-								if (!$gf->remGroupPoi($groupid,$usr->getUid(),$poi1->getPoiId())) {
+								if (!$gf->remGroupItem($groupid,$usr->getUid(),$poi1->getPoiId(),"Poi")) {
 									$ok = false;
 								}
 							}

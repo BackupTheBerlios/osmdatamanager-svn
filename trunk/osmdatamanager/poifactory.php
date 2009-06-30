@@ -30,9 +30,9 @@
 		var $latlon;
 		var $lat;
 		var $lon;
-		*/
-		var $poitype;
 		var $georssurl;
+		*/
+		var $poitype;  //TODO benötigt ?
 		var $description;
 				
 		function Poi() {
@@ -81,7 +81,6 @@
 		function parse_Poi(&$aItem, $aRow, $aResult) {
 			$this->parseFieldnames($aResult);
 			$this->parse_GroupItem($aItem, $aRow, $aResult);			
-			
 			if ($this->fieldnames == null)
 				return;
 			
@@ -93,6 +92,8 @@
 						break;
 				}
 			}
+			if (($aItem->tagname == "standard") || ($aItem->tagname == "null"))
+				$aItem->tagname = "standard_poi";
 		}
 		
 		/**
@@ -104,7 +105,7 @@
 									
 			$pois = array();
 			
-			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUserId)";
+			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUserId) ORDER BY itemname";
 			$result = $this->executeQuery($qry);
 			
 			if ($result != NULL) 
@@ -238,10 +239,10 @@
 		 * @param $aLatLon Object
 		 * @param $aGeoRssUrl Object
 		 */
-		function createPoi($aUsrId, $aPoiName, $aDescription, $aLatLon, $aGeoRssUrl) {
+		function createPoi($aUsrId, $aPoiName, $aDescription, $aLat,$aLon) {
 			
 			if (!$this->poiExists($aUsrId, $aPoiName)) {
-				$insquery = "INSERT INTO `tab_poi` (`usrid`,`poitype`,`poiname`,`description`,`latlon`,`georssurl`) VALUES ('$aUsrId','-1','$aPoiName','$aDescription','$aLatLon','$aGeoRssUrl')";
+				$insquery = "INSERT INTO `tab_poi` (`usrid`,`poitype`,`itemname`,`description`,`lat`,`lon`) VALUES ('$aUsrId','-1','$aPoiName','$aDescription','$aLat','$aLon')";
 				if ($this->executeQuery($insquery) == null)
 				{
 					return false;
@@ -251,15 +252,17 @@
 			return false;
 		}
 		
-		function updatePoi($aUsrId,	$aPoiId, $aPoiName, $aDescription, $aLatLon, $aGeoRssUrl,$aIcon) {		 
+		function updatePoi($aUsrId,	$aPoiId, $aPoiName, $aDescription, $aLat, $aLon,$aZoomlevel,$aTagname) {		 
 			$qry1   =  "UPDATE `tab_poi` SET ";
 						
-			$qry1 = $qry1."`poiname`='".$aPoiName."' ";
+			$qry1 = $qry1."`itemname`='".$aPoiName."' ";
 			$qry1 = $qry1.", `description`='".$aDescription."' ";
-			$qry1 = $qry1.", `latlon`='".$aLatLon."' ";
-			$qry1 = $qry1.", `georssurl`='".$aGeoRssUrl."' ";
-			$qry1 = $qry1.", `icon2`='".$aIcon."' ";
-			$qry1 = $qry1." WHERE ((`poiid` = ".$aPoiId.")";
+			$qry1 = $qry1.", `lat`='".$aLat."' ";
+			$qry1 = $qry1.", `lon`='".$aLon."' ";
+			$qry1 = $qry1.", `zoomlevel`=".$aZoomlevel." ";
+			//$qry1 = $qry1.", `georssurl`='".$aGeoRssUrl."' ";
+			$qry1 = $qry1.", `tagname`='".$aTagname."' ";
+			$qry1 = $qry1." WHERE ((`itemid` = ".$aPoiId.")";
 			$qry1 = $qry1." AND    (`usrid` = ".$aUsrId."))";
 						
 			$result = $this->executeQuery($qry1);

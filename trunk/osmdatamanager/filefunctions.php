@@ -53,8 +53,8 @@
 			//TODO delete file from db if the file does not exist in directory
 			if ($action == msg_updatefilelist) {
 				//$ff->updateFiles($usr->getUid());
+				$ff->setInvalid($usr->getUid());
 				
-				/*
 				if ($gl_usefiledir) {
 					$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_filedir,array("gpx","xml"));
 				} else {
@@ -66,14 +66,16 @@
 				if ($lst1 != null) {
 					for ($i=0;$i<count($lst1);$i++) {
 						$fn = $lst1[$i];
-						if (! $ff->fileExists($usr->getUid(), $fn)) {
+						if (! $ff->fileExists($usr->getUid(),basename($fn))) {
 							$path = $gl_ftpprefix.dirname($fn)."/";
 							$filename = basename($fn);																						
 							$ff->createFile($usr->getUid(),$path,$filename,NULL);
+						} else {
+							$ff->setValid($usr->getUid(),basename($fn));
 						}
 					}
 				}
-				*/
+				$ff->deleteInvalid($usr->getUid());
 			}
 			
 			//msg_getfiles
@@ -89,8 +91,6 @@
 			
 			//$files = array();
 			if ($action == msg_getfiles) {
-				
-				
 				$lst1 = $ff->getFiles($usr->getUid());
 				if ($lst1 != null) {
 					$fc = new FileContainer();

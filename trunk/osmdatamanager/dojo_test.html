@@ -12,13 +12,20 @@
         margin: 0;
     }
 </style>
+<style type="text/css">
+        .target {border: 1px dotted gray; width: 300px; height: 300px;padding: 5px;}
+        .source {border: 1px dotted skyblue;height: 200px; width: 300px;}
+        .bluesquare {height:50px;width:100%;background-color:skyblue}
+        .redsquare {height:50px;width:100%;background-color:red}
+</style>
 <script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:true, isDebug: true"></script>
 
 <script type="text/javascript">
     dojo.require("dojox.grid.DataGrid");
     dojo.require("dojox.data.CsvStore");
 	dojo.require("dojo.data.ItemFileReadStore");
-	
+	dojo.require("dojo.dnd.Source"); // dojo.dnd.source in 0.9
+    dojo.require("dojo.parser");    
 	//var jsonStore = new dojo.data.ItemFileReadStore({ url: "filefunctions.php" });
 </script>
 
@@ -32,41 +39,36 @@
 	}	
 </script>
 
-<body class="nihilo">
-	<!--
-<span dojoType="dojox.data.ItemFileReadStore"
-    jsId="store1" url="filefunctions.php">
-</span>-->
+<body style="font-size: 12px;">
+<h1>A Simple Example</h1>
+<table><tbody><tr>
+<td>
+<!-- Create a source with two nodes -->
+<div dojoType="dojo.dnd.Source" jsId="c1" class="source">
+        SOURCE
+        <div>
+		<div class="dojoDndItem" dndType="blue">
+                <div class="bluesquare">BLUE</div>
+        </div>
+        <div class="dojoDndItem" dndType="red,darkred">
+                <div class="redsquare">RED</div>
+        </div>
+		<div  dndType="red,darkred">
+                <div class="redsquare">Yellow</div>
+        </div>
+		<div class="dojoDndItem">
+                <div class="redsquare">Green</div>
+        </div>
+		</div>
+</div>
+</td>
+<td>
+<!-- Create a target that accepts nodes of type red and blue. -->
+<div dojoType="dojo.dnd.Target" jsId="c2" class="target" accept="blue,darkred">
+        TARGET
+</div>
+</td>
+</tr><tbody/></table>
 
-	<table id="gridNode" jsId="grid" dojoType="dojox.grid.DataGrid"
-	       query="{ filename: '*' }" >
-		<thead>
-			<tr>
-				<th field="filename">Part Number</th>
-				<th field="description" width="100px">Minimum Temperature</th>
-				<th field="max_temp" width="100px">Maximum Temperature</th>
-				<th field="type" width="100px">Type</th>
-				<th field="thick" width="5em">Thickness</th>
-			</tr>
-		</thead>
-	</table>
-	<div onclick="test()">Hallo</div>
-<!--
-<table dojoType="dojox.grid.DataGrid"
-    store="jsonStore"
-    query="{ className: '*' }"
-    clientSort="true"
-    style="width: 400px; height: 200px;"
-    rowSelector="20px">
-    <thead>
-        <tr>
-            <th width="300px" field="className">Title of Movie</th>
-            <th width="50px">Year</th>
-        </tr>
-        <tr>
-            <th colspan="2">Producer</th>
-        </tr>
-    </thead>
-</table>-->
 </body>
 </html>

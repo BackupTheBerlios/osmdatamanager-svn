@@ -426,9 +426,8 @@ Array.prototype.remove = function(from, to) {
 			e1.setAttribute("haschildren","true");
 		}
 		else {
-			i1.setAttribute("src", "images/treeExpand_none.gif");
-			e1.setAttribute("haschildren","false");
-			
+			//i1.setAttribute("src", "images/treeExpand_none.gif");
+			e1.setAttribute("haschildren","false");			
 		}
 		
 		e1.setAttribute("type",child.itemtype.toLowerCase());
@@ -536,7 +535,7 @@ Array.prototype.remove = function(from, to) {
 	
 	this.getSelectedGroupId = function() {
 		if (this.isGroupSelected()) {
-			if (clickednodeelem != null) {
+			if (clickednodeelem != null) {	
 				var obj = _getObject(clickednodeelem.Id);
 				if (obj != null) {
 					return obj.itemid;

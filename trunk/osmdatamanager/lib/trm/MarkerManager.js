@@ -22,7 +22,8 @@ Markermanager.prototype = new TRM.ServerConnection;
  */
 function Markermanager() {
 	
-	var featurelist = new Array();
+	//var featurelist = new Array();
+	var markerlist = new Array();
 	var self = this;
 	
 	var AutoSizeAnchoredBubble = OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, {
@@ -50,43 +51,57 @@ function Markermanager() {
 			return false;
 	}
 	
-	this.getMarker = function(latlon) {
-		var f1 = this.getFeature(latlon);
-		if (f1 != null) {
-			if (f1.marker) {
-				return f1.marker;
+	this.getFeature = function(latlon) {
+		var m1 = this.getMarker(latlon);
+		if (m1 != null) {
+			if (m1.feature) {
+				return m1.feature;
 			}
 		}
 		return null;
 	}
 	
-	this.getFeature = function(latlon) {
-		for (var i=0;i<featurelist.length;i++) {
-			var f1 = featurelist[i];
-			var m1 = f1.marker;
+	this.getMarker = function(latlon) {
+		for (var i=0;i<markerlist.length;i++) {
+			var m1 = markerlist[i];
+						
+			if ((m1.lonlat.lat == latlon.lat) && (m1.lonlat.lon == latlon.lon)) {
+				return m1;
+			}
+			/*
 			if (m1) {
+				alert(m1.lonlat.lat);
 				if ((m1.lonlat.lat == latlon.lat) && (m1.lonlat.lon == latlon.lon)) {
 					return f1;
 				}
 			}
+			*/
 		}
 		return null;
 	}
 
 	this.updateMarker = function(latlon,layer,popupContentHTML) {
+		var f1 = this.getFeature(latlon);
+		if (f1 != null) {
+			alert(popupContentHTML);
+			f1.data.popupContentHTML = popupContentHTML;
+			alert(f1.data.popupContentHTML);
+		}
 		/*
 		var f1 = this.getFeature(latlon);
 		if (f1 != null) {
 			f1.data.popupContentHTML = popupContentHTML;
 			alert(f1.data.popupContentHTML);
 		}
-		*/
+		
+		alert(latlon);
 		var m1 = this.getMarker(latlon);
 		if (m1 != null) {
 			this.removeMarker(layer,m1);
 		}
 		
 		this.addPoiMarker(latlon, layer, popupContentHTML);
+		*/
 	}
 	
 	this.addMarker = function(latlon, popupClass, popupContentHTML, closeBox, overflow,layer,iconurl) {
@@ -125,7 +140,7 @@ function Markermanager() {
             
 			marker.events.register("mousedown", feature, markerClick);
 			layer.addMarker(marker);
-			featurelist.push(feature);
+			markerlist.push(marker);
     }
 	
 	this.addTestmarker = function(latlon, layer) {
@@ -149,19 +164,19 @@ function Markermanager() {
 	}
 	
 	this.removeMarkers = function(layer) {
-		for (var i=(featurelist.length-1);i>-1;i--) {
-			var f1 = featurelist[i];
-			var m1 = f1.marker;
+		for (var i=(markerlist.length-1);i>-1;i--) {
+			var m1 = markerlist[i];
+			//var f1 = m1.feature;
 			if (m1) {
 				layer.removeMarker(m1);
-				featurelist.pop(m1);
+				markerlist.pop(m1);
 			}
 		}
 	}
 	
 	this.removeMarker = function(layer, marker) {
 		layer.removeMarker(marker);
-		featurelist.pop(marker);
+		markerlist.pop(marker);
 		marker.destroy();
 	}
 	
@@ -171,10 +186,24 @@ function Markermanager() {
 		popupContentHTML = "<p>"+description+"</p>";
 		//alert(popupContentHTML);
 		
-		if (this.markerExists(latlon)) 
+		if (this.markerExists(latlon)) {
 			return;
+		}
 		
 		this.addMarker(latlon,popupClass, popupContentHTML, true,true,layer,iconname); 		
+	}
+	
+	this.updatePoiMarker = function(latlon, layer, description,iconname) {
+		popupClass = AutoSizeAnchoredBubble2;
+		popupContentHTML = "<p>"+description+"</p>";
+				
+		var m1 = this.getMarker(latlon);
+		if (m1) {
+			this.removeMarker(layer,m1);
+			this.addMarker(latlon, popupClass, popupContentHTML, true, true, layer, iconname);
+		} else {
+			this.addPoiMarker(latlon, layer, description,iconname);
+		}
 	}
 	
 	this.addGeoRssMarker = function(georssurl, layer) {
