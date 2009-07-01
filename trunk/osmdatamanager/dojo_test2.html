@@ -1,0 +1,88 @@
+<html>
+<head>
+<title>Dojo Toolkit Test Page</title>
+
+<style type="text/css">
+    @import "lib/dojo/dojo/resources/dojo.css";
+    @import "lib/dojo/dijit/tests/css/dijitTests.css";
+    @import "lib/dojo/dijit/themes/soria/soria.css";
+    @import "lib/dojo/dojo/resources/dnd.css";
+</style>
+
+<script type="text/javascript" src="lib/dojo/dojo/dojo.js"
+    djConfig="parseOnLoad:true, isDebug:true">
+</script>
+
+<script type="text/javascript">
+    dojo.require("dojo.parser");
+    dojo.require("dojo.dnd.Source");
+    dojo.require("dijit.dijit");
+    dojo.require("dijit.layout.TabContainer");
+    dojo.require("dijit.layout.ContentPane");
+    //dojo.require("dojox.grid.DataGrid");
+
+    var tc;
+
+    function addTab (name) {
+        var tgt;
+
+        var cp = new dijit.layout.ContentPane (
+            {
+                id: name + '_DropPane',
+                title: name
+            }
+        );
+        cp.startup ();
+
+        var da = dojo.doc.createElement ("div");
+        da.id = name + '_DropArea';
+        da.innerHTML = 'Drap Area for ' + name;
+        cp.domNode.appendChild (da);
+
+        tc.addChild (cp);
+
+        console.log (da);
+        try {
+            tgt = new dojo.dnd.Target (da.id,{accept:["dnd_source"]});
+			console.log("hallo");
+        } catch (e) { console.log ("TGT:", e); }
+
+        // tgt can new accept drop events.
+    }
+
+    function removeActiveTab () {
+        tc.removeChild (tc.selectedChildWidget);
+    }
+
+    function init () {
+        tc = new dijit.layout.TabContainer (
+            {
+                style:'height:200px;width:500px;'
+            },
+            dojo.byId('main')
+        );
+        addTab ("Foobee");
+        tc.startup ();
+    }
+
+    dojo.addOnLoad (init);
+</script>
+
+</head>
+<body class="soria">
+    <h2>Test of programmatically adding tabs.</h2>
+    <div id="main"></div>
+
+        <button onclick="removeActiveTab()">Remove Active Tab</button>
+        <button onclick="addTab('Foobee');">Add Foobee</button>
+        <button onclick="addTab('Rocky');">Add Rocky</button>
+        <button onclick="addTab('Jerry');">Add Jerry</button>
+		
+		<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source" dndType="dnd_source">
+	    <div class="dojoDndItem" dndType="red,darkred">
+	            <!--<div class="redsquare">RED</div>-->
+				Red
+	    </div>
+	</div>
+</body>
+</html>

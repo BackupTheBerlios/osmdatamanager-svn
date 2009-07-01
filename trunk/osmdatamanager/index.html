@@ -74,6 +74,7 @@
 		var gl_groupmanager = null; 
 		var gl_dblclick = null;
 		var gl_application=null;	//client application
+		var gl_idx = 0;
 				
 		TRM.TargetPrefix = "";
 		
@@ -121,9 +122,53 @@
 			}
 			gl_application.checkUser(cb);
 			
+			dojo.connect(dojo.byId("dnd_source"), "onDndDrop", onDrop);
+			
+			
+			dojo.subscribe("/dnd/drop", function(source,nodes,iscopy){
+  				
+				var t = dojo.dnd.manager().target;
+				//ClearMsg();	
+				if(t == source) return;
+				
+				if (t) {
+					
+				}
+				
+				if (source) {
+					console.debug(nodes[0].innerHTML);
+					console.debug(iscopy);
+					console.debug(source);
+					//document.removeChild(nodes[0]);
+				}
+				
+				dojo.dnd.manager().canDrop(false);
+				console.debug("drop");
+				//alert("xxx");
+				//if(t == cart)AddItems(t,nodes);
+				//if(t == shelf)SubstractItems(t,nodes);
+				});
+				
+			dojo.subscribe("/dnd/source/over", function(source){
+			  if (dojo.dnd.manager().target) {
+			  //code to perform some action	
+			  	//var t = dojo.dnd.manager().target;
+			  	//console.debug(t.parent.innerHTML);
+				//alert(dojo.dnd.manager().target.innerHTML);
+			  }
+			});
+			
+			
+
 		}		
 		
+		function onDrop(sender) {
+			console.debug("onDrop");
+			console.debug(sender);
+		}
+		
 		function onStyleRow(inRow) {
+			//alert(inRow.innerHTML);
 			with (inRow) {
 		      var i = index % 10;
 		      var special = (i > 2 && i < 6);
@@ -139,6 +184,79 @@
 		        //dojox.Grid.prototype.onStyleRow.apply(this, arguments);
 				dojox.grid.DataGrid.prototype.onStyleRow.apply(this, arguments);
 		    }
+		}
+		
+		function foo() {
+			alert("");
+		}
+		
+		function test(e) {
+			//alert(e.target.parentNode.innerHTML);
+			//alert(e.screenPoint.x);
+			var c1 = dojo.coords(e.target.parentNode);
+			if (c1) {
+				//alert(c1.x);
+				
+				
+				var s1 = document.getElementById("dnd_source");
+				if (s1) {
+					s1.style.left = c1.x;
+					s1.style.top = c1.y;
+				}
+			}
+		}
+		
+		function formatType(value){
+			
+			/*
+			switch(value){
+				case 0:
+					return "<img src='images/gasket_ring.png' alt='Ring' width='64' height='64'/>";
+				case 1:
+					return "<img src='images/gasket_full_face.png' alt='Full Face' width='64' height='64'/>";
+			}
+			*/
+			//jsId="c1"
+			//alert(value);
+			//return "<div dojoType=\"dojo.dnd.Source\"  class=\"source\"> <div class=\"dojoDndItem\" dndType=\"blue\"><div class=\"bluesquare1\">BLUE</div></div></div>";
+			//var node = dojo.doc().createElement("div");
+			//node.innerHTML = value;	
+			try {
+				
+				var p1= dojo.doc.createElement("div");
+				var div= dojo.doc.createElement("div");
+				
+				p1.appendChild(div);
+				
+				var c1 = new dojo.dnd.Source(div);
+				c1.insertNodes(false, [{
+					data: "Wrist watch",
+					type: ["inStock"]
+				}]);
+				
+				//alert(div.outerHTML);
+				return new dijit.form.Button({label: "hello world", onClick: foo});
+
+				//return p1.innerHTML;
+				
+				var x1 = document.getElementById("dnd_"+gl_idx);
+				if (x1) {
+					alert(x1.outerHTML);
+					return x1.outerHTML;	
+				} else {
+					return "empty";
+				}
+				
+				/*
+				alert(c1.containerNode.outerHTML);
+				return c1.containerNode.outerHTML;
+				*/
+				
+			} catch (e) {
+				alert(e);
+				return "";
+			}
+			
 		}
 
 		
@@ -171,8 +289,8 @@
 				</div>
 				
 				<div>
-					<div id="treecontainer">
-					</div>			
+					<div id="treecontainer" >
+					</div>
 				</div>
 			</div>	
 			
@@ -350,15 +468,14 @@
 		</div>
 		
 		
-		<table id="dlgfilelist_tab_grid" jsId="dlgfilelist_grid" dojoType="dojox.grid.DataGrid" columnReordering="true" onStyleRow="onStyleRow"
+		<table id="dlgfilelist_tab_grid" jsId="dlgfilelist_grid" dojoType="dojox.grid.DataGrid" onCellMouseOver="test" columnReordering="true" onStyleRow="onStyleRow"
 	       query="{ filename: '*' }" >
 			<thead>
 				<tr>
-					<th field="filename" cellClasses="dojoDndItem" editor="dojox.grid.editors.ComboBox" dndType="blue">Filename</th>
+					<th field="filename" formatter="formatType" editor="dojox.grid.editors.ComboBox" dndType="blue">Filename</th>
 					<th field="itemname" width="100px">Description</th>
 				</tr>
 			</thead>
-			<tbody dojoType="dojo.dnd.Source"></tbody>
 		</table>
 		
 		<table>
@@ -564,6 +681,25 @@
 		<div dojoType="dijit.MenuSeparator"></div>
 		<div dojoType="dijit.MenuItem" id="itm_updatetree" onClick="gl_groupmanager.getRootGroups()">Baum aktualisieren</div>				
   </div>
-        
+    <!--    
+	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source" copyOnly="true" dndType="dnd_source">
+	    <div class="dojoDndItem" dndType="red,darkred">
+	            <!--<div class="redsquare">RED</div>
+				Red
+	    </div>
+	</div>
+	-->
+	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source" copyOnly="true" dndType="dnd_source">
+		<span class="dojoDndItem nodespan" dndType="red,darkred">
+			<table>
+				<tr>
+					<td><img src="images/folder.png"></img></td>
+					<td><a><i>please wait...</i></a></td>
+				</tr>
+			</table>
+		</span>
+	</div>
+	
+		
 </body>
 </html>

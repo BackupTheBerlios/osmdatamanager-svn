@@ -115,6 +115,8 @@ body {
 	clear:both;
 }
 
+
+
 .tree_entry {
 	border: solid 1px green;
 	vertical-align:middle;
@@ -149,6 +151,10 @@ body {
 	font-size:12px;
 	color:#000000;
 	cursor:pointer;
+}
+
+.rootnodespan .dojoDndContainerOver a {
+	color:red;
 }
 
 /*
@@ -249,6 +255,22 @@ body {
  * Filemanager
  * 
  *************************************************************/
+
+.target {border: 1px dotted gray; width: 300px; height: 300px;padding: 5px;}
+
+.dnd_source {
+	border: 1px dotted skyblue;
+	/*height: 200px; width: 300px;*/
+	background-color: #ffffff;
+	position:absolute;
+	left: 40px;
+	top:40px;
+	z-index: 10;	
+}
+        
+		
+		.bluesquare {height:50px;width:100%;background-color:skyblue}
+        .redsquare {height:50px;width:100%;background-color:red}
 
 .heading {
     font-weight: bold;

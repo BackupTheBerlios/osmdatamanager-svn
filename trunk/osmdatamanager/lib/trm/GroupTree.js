@@ -49,6 +49,7 @@ Array.prototype.remove = function(from, to) {
 	var idx=1;
 	var isloading = false;
 	var self = this;
+	var dropdone = false;
 	
 	var treeobjects = new Array();
 	
@@ -83,6 +84,15 @@ Array.prototype.remove = function(from, to) {
 		return null;
 	}
 	
+	var _getObjectByItemId = function(itemid, itemtype) {
+		for (var i=0;i<treeobjects.length;i++) {
+			var to = treeobjects[i];
+			if ((to.c_object.itemid == itemid) && (to.c_object.itemtype == itemtype))
+			  return to.c_object;
+		}
+		return null;
+	}
+	
 	var _getObjectPos = function(id) {
 		for (var i=0;i<treeobjects.length;i++) {
 			var to = treeobjects[i];
@@ -110,12 +120,32 @@ Array.prototype.remove = function(from, to) {
 		}
 	}
 	
+	var _classMatch = function(node, classname) {
+		if (node.getAttribute("class") == classname) {
+			return true;
+		} else {
+			var at1 = node.getAttribute("class");
+			if (at1) {
+				var lst1 = at1.split(" ");
+				if (lst1) {
+					for (var i = 0; i < lst1.length; i++) {
+						var s1 = lst1[i];
+						if (s1 == classname) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	var _removeAllChilds = function(node, classname) {
         if (node.hasChildNodes()) {
             for (var i = (node.childNodes.length - 1); i > -1; i--) {
 				var e1 = node.childNodes[i];
 				if (e1.nodeName != "#text") {
-					if (e1.getAttribute("class") == classname) {
+					if (_classMatch(e1,classname)) {
 						node.removeChild(e1);
 						_removeObject(e1);
 					}
@@ -267,14 +297,21 @@ Array.prototype.remove = function(from, to) {
 				//var poi1 = response[i];
 				//createPoi(clickednodeelem.parentNode, poi1);
 				var itm1 = response[i];
-				if (itm1.itemtype == "Poi")
-					_createPoi(clickednodeelem, itm1);
 				
-				if (itm1.itemtype == "File")
-					_createFile(clickednodeelem, itm1);	
-				
-				if (itm1.itemtype == "Group")
-					_createGroup(clickednodeelem, itm1);
+				var itm2 = _getObjectByItemId(itm1.itemid,itm1.itemtype);
+				if (itm2) {
+					_updateItem(clickednodeelem,itm1,itm2);
+				}
+				else {
+					if (itm1.itemtype == "Poi") 
+						_createPoi(clickednodeelem, itm1);
+					
+					if (itm1.itemtype == "File") 
+						_createFile(clickednodeelem, itm1);
+					
+					if (itm1.itemtype == "Group") 
+						_createGroup(clickednodeelem, itm1);
+				}
 						
 			}
 		}
@@ -320,6 +357,8 @@ Array.prototype.remove = function(from, to) {
 	 */
 	var _nodeDblClicked = function(sender){
 		try {
+			console.debug("loading: " + isloading);
+			console.debug(sender.nodeName);
 			if (isloading) 
 				return;
 		
@@ -327,6 +366,7 @@ Array.prototype.remove = function(from, to) {
 				return;
 						
 			isloading = true;		
+			console.debug(sender);
 			if (sender.getAttribute("expanded") == "false") {
 				sender.setAttribute("expanded","true");
 				
@@ -384,15 +424,104 @@ Array.prototype.remove = function(from, to) {
 	 * @param {Object} parent
 	 * @param {Object} child
 	 */
+	var _onDrop = function(sender) {
+		
+		if (dropdone)
+			return;
+		
+		//alert("_onDrop");
+		//dojo.dnd.manager().target == null;
+		console.debug("_onDrop");
+		//console.debug(sender);
+		/*
+		sender.selectNone();
+		dojo.dnd.manager().source.selectNone();
+		dojo.dnd.manager().target.selectNone();
+		*/
+		//dojo.dnd.manager().target.accept = false;
+		if (dojo.dnd.manager().nodes) {
+			console.debug(dojo.dnd.manager().nodes.length);
+			//document.removeChild(dojo.dnd.manager().nodes[0]);
+		}
+		
+		var t = dojo.dnd.manager().target;
+		//console.debug(t.parent.innerHTML);
+		if (t) {
+			var span = t.parent;
+			if (span) {
+				console.log("_nodeDblClicked");
+				console.log(span.nodeName);
+				_nodeDblClicked(span);
+			}
+		}
+		dropdone = true;
+	}
+	
+	var _mouseOver = function(sender) {
+		//alert("ovr");
+		/*
+		dojo.dnd.manager().canDrop(true);
+		if (dojo.dnd.manager().target) {
+			var t = dojo.dnd.manager().target;
+			console.debug(t.innerHTML);
+		}
+		if (dojo.dnd.nodes) {
+			console.debug(dojo.dnd.nodes.length);
+		}
+		*/
+		dropdone = false;
+	}
+	
+	var _check = function(sender,arg) {
+		/*
+		if (dojo.dnd.manager().target) {
+			var t = dojo.dnd.manager().target;
+			
+			console.debug(t);
+			
+		}
+		
+		if (dojo.dnd.manager().target) {
+			var s = dojo.dnd.manager().source;
+			console.debug(s.innerHTML);
+		}
+		*/
+		return true;
+	}
+	
+	var _updateItem = function (parent,oldchild,newchild) {
+		alert("update");
+	}
+	
 	var _createChildnode = function(parent, child) {      
-        var e1 = document.createElement("SPAN");				
-		var a1 = document.createElement("A");
-		var i1 = document.createElement("IMG");
+        var e1 = dojo.doc.createElement("SPAN");				
+		//var a1 = document.createElement("DIV");
+		//var a1 = dojo.doc.createElement("div");
+		var a1 = dojo.doc.createElement("A");
+		
+		var i1 = dojo.doc.createElement("IMG");
         
-		var t1 = document.createElement("TABLE");
-		var r1 = document.createElement("TR");
-		var td1 = document.createElement("TD");
-		var td2 = document.createElement("TD");
+		var t1 = dojo.doc.createElement("TABLE");
+		var r1 = dojo.doc.createElement("TR");
+		var td1 = dojo.doc.createElement("TD");
+		var td2 = dojo.doc.createElement("TD");
+		try {
+			/*
+			var dnd = new dojo.dnd.Target(a1, {
+				accept: ["dnd_source"]
+			});
+			*/
+			//td2.id = "td_" + treeobjects.length;
+			//td2.setAttribute("accept","dnd_source");
+			
+			var dnd = new dojo.dnd.Source(e1,{accept:["dnd_source"]});
+			//dnd.parent = t1;
+			dojo.connect(dnd, "onDndDrop", this, _onDrop);
+			dnd.checkAcceptance = _check;
+		//	a1.setAttribute("accept","dnd_source");
+		} catch (e) {
+			alert(e);
+		}
 		
 		e1.appendChild(t1);
 		t1.appendChild(r1);
@@ -406,6 +535,7 @@ Array.prototype.remove = function(from, to) {
 		
 		_addObject(e1.Id,child);		    
 		a1.onclick = function() { _nodeClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
+		a1.onmouseover = function() {_mouseOver(this)};
 		
 		e1.appendChild(i1);
         e1.appendChild(a1);
@@ -497,6 +627,10 @@ Array.prototype.remove = function(from, to) {
 	 * public functions
 	 *  
 	 */
+	
+	this.onDrop = function() {
+		alert("onDrop");
+	}
 	
 	this.addGroups = function(groups) {
 		if (clickednodeelem == null) {
