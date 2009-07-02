@@ -1037,6 +1037,10 @@ DijitClient.FileListDialog = {
 		this.grpman = groupmanager;
 		dojo.connect(dijit.byId("dlgfilelist_btn_ok"),"onClick",this,"okClick");
 		dojo.connect(dijit.byId("dlgfilelist_btn_close"),"onClick",this,"cancelClick");
+		dojo.connect(dijit.byId("dlgfilelist_tab_grid"),"onCellFocus",this,"_onCellFocus");
+		dojo.connect(dijit.byId("dlgfilelist_tab_grid"),"onCellMouseOver",this,"_onCellMouseOver");
+		dojo.connect(dijit.byId("dlgfilelist_btn_gpx"),"onClick",this,"loadGpxFiles");
+		dojo.connect(dijit.byId("dlgfilelist_btn_pois"),"onClick",this,"loadPois");
 	},
 	_cb_getFiles: function(response,ioArgs) {
 		var sl = dijit.byId("filelist");
@@ -1062,6 +1066,96 @@ DijitClient.FileListDialog = {
 			grpTree.collapseSelected(true);
 		}
 		dijit.byId('dlg_filelist').hide();
+	},
+	_onCellFocus: function(sender,rowindex) {
+		//console.debug(sender);
+		console.debug(rowindex);
+		
+		var grid = dijit.byId("dlgfilelist_tab_grid");
+		if (grid) {
+			var itm1 = grid.getItem(rowindex);
+			if (itm1) {
+				console.debug(itm1);	
+			}
+		}
+	},
+	_getIconname1: function(item) {
+		if (item.tags != null) {
+			
+			return item.tags[3].icon1;
+			
+			for (var x = 0; x < item.tags.length; x++) {
+				var tag1 = item.tags[x];
+				
+				console.debug(item.tags[x].tagname);
+				console.debug(item.tagname);
+				if (tag1.tagname == item.tagname) {
+					return item.tags[x].icon1;
+				}
+			}	
+		}
+		return "";
+	},
+	_onCellMouseOver: function(sender) {
+		var coord = dojo.coords(sender.target.parentNode,true);
+		if (coord) {
+
+			var src1 = document.getElementById("dnd_source");
+			if (src1) {
+				src1.setAttribute("class","dnd_source_visible");
+				src1.setAttribute("className","dnd_source_visible");
+				src1.style.left = coord.x;
+				src1.style.top = coord.y;
+			}
+			
+			var grid = dijit.byId("dlgfilelist_tab_grid");
+			//var text = document.getElementById("dnd_source_text");
+			var img  = document.getElementById("dnd_source_image");
+			if ((grid) && (img)) {
+				var itm1 = grid.getItem(sender.rowIndex);
+				//console.debug(itm1);
+				if (itm1) {
+					/*
+					if ((itm1.description != null) && (itm1.description != ""))
+						text.innerHTML = itm1.description;
+					else
+						text.innerHTML = itm1.itemname;
+					
+					console.debug(itm1.tagname);
+					console.debug(itm1.tags.length);
+					console.debug(this.app.getIconname1(itm1));
+					*/	
+					//console.debug(itm1);
+					img.setAttribute("src",this._getIconname1(itm1));
+					gl_groupmanager.setDropitem(itm1);
+				}
+			}
+		}
+	},
+	loadGpxFiles: function() {
+		this.hideDndSource();
+		var s1 = new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" });
+		var grid = dijit.byId('dlgfilelist_tab_grid');
+		if (grid != null) {
+			grid.setStore(s1);
+			grid.update();
+		}
+	},
+	loadPois: function() {
+		this.hideDndSource();
+		var s1 = new dojo.data.ItemFileReadStore({ url: "poifunctions.php?action=msg.getpois" });
+		var grid = dijit.byId('dlgfilelist_tab_grid');
+		if (grid != null) {
+			grid.setStore(s1);
+			grid.update();
+		}
+	},
+	hideDndSource: function() {
+		var src1 = document.getElementById("dnd_source");
+		if (src1) {
+			src1.setAttribute("class", "dnd_source_hidden");
+			src1.setAttribute("className", "dnd_source_hidden");
+		}	
 	},
 	show: function() {
 		var lst1 = document.getElementById('filelist');
@@ -1089,7 +1183,9 @@ DijitClient.FileListDialog = {
 		*/
 	},
 	hide: function() {
-		//dijit.byId('dlg_changepassword').hide();
+		this.hideDndSource();
+		document.getElementById('dlg_filelist').setAttribute("class","filemanager_hidden");
+		document.getElementById('dlg_filelist').setAttribute("className","filemanager_hidden");
 	},
 	dataOk: function() {
 		return true;	
@@ -1144,8 +1240,7 @@ DijitClient.FileListDialog = {
 		}
 	},
 	cancelClick: function() {
-		document.getElementById('dlg_filelist').setAttribute("class","filemanager_hidden");
-		document.getElementById('dlg_filelist').setAttribute("className","filemanager_hidden");
+		this.hide();
 	},
 	onKeyPress: function(event) {
 		if (event.keyCode == '13') {

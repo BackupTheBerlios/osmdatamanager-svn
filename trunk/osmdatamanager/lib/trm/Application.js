@@ -440,10 +440,26 @@ TRM.ClientApplication = function(openlayersMap)
 	 */
 	this.getIconname1 = function(child) {
 		if (child.tags != null) {
+			for (var xx = 0; xx < child.tags.length; xx++) {
+				var tag1 = child.tags[xx];
+				if (tag1.tagname == child.tagname) {
+					return tag1.icon1;
+				}
+			}	
+		}
+		return "";
+	}
+	
+	/**
+	 * 
+	 * @param {Object} child
+	 */
+	this.getIconname2 = function(child) {
+		if (child.tags != null) {
 			for (var x = 0; x < child.tags.length; x++) {
 				var tag1 = child.tags[x];
 				if (tag1.tagname == child.tagname) {
-					return tag1.icon1;
+					return tag1.icon2;
 				}
 			}	
 		}

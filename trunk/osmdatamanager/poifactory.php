@@ -61,6 +61,22 @@
 	}
 	
 	/**
+	 * PoiContainer
+	 */
+	class PoiContainer {
+		
+		var $items;
+		
+		function PoiContainer() {
+			$this->items = array();
+		}
+		
+		function addPoi($aPoi) {
+			array_push($this->items, $aPoi);	
+		}
+	}
+	
+	/**
 	 * PoiFactory
 	 */
 	class PoiFactory extends ItemParser {

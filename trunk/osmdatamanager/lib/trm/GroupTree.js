@@ -52,6 +52,7 @@ Array.prototype.remove = function(from, to) {
 	var dropdone = false;
 	
 	var treeobjects = new Array();
+	var dropitem = null;
 	
 	/*
 	 * private functions
@@ -93,6 +94,23 @@ Array.prototype.remove = function(from, to) {
 		return null;
 	}
 	
+	var _getNodeByItemId = function(itemid, itemtype) {
+		console.debug(itemid);
+		console.debug(itemtype);
+		
+		return document.getElementById("tn_" + itemtype + "_" + itemid);
+		/*
+		for (var i=0;i<treeobjects.length;i++) {
+			var to = treeobjects[i];
+			if ((to.c_object.itemid == itemid) && (to.c_object.itemtype == itemtype)) {
+				console.debug(to.c_id);
+				return document.getElementById("tn_" + to.c_id);
+			}
+		}
+		return null;
+		*/
+	}
+	
 	var _getObjectPos = function(id) {
 		for (var i=0;i<treeobjects.length;i++) {
 			var to = treeobjects[i];
@@ -103,7 +121,7 @@ Array.prototype.remove = function(from, to) {
 	}
 	
 	var _removeObject = function(node) {
-		var to = _getObjectPos(node.Id);
+		var to = _getObjectPos(node.id);
 		if (to != null) {
 			treeobjects.remove(to);
 		}
@@ -171,7 +189,7 @@ Array.prototype.remove = function(from, to) {
 		//
 		var n1 = _getChildnode(node,"IMG")
 		if (n1 != null) {
-			var obj = _getObject(clickednodeelem.Id);
+			var obj = _getObject(clickednodeelem.id);
 			if (obj != null) {
 				//n1.setAttribute("src", obj.icon_expanded);
 				n1.setAttribute("src",_getIconname2(obj));
@@ -190,7 +208,7 @@ Array.prototype.remove = function(from, to) {
 			var n2 = _getChildnode(node,"IMG");
 			if (n2 != null) {
 				if (node.getAttribute("haschildren") == "true") {
-					var obj = _getObject(clickednodeelem.Id);
+					var obj = _getObject(clickednodeelem.id);
 					if (obj != null) {
 						//n2.setAttribute("src", obj.icon_collapsed);
 						n2.setAttribute("src",_getIconname1(obj));
@@ -293,25 +311,33 @@ Array.prototype.remove = function(from, to) {
 	 */
 	var _cb_loadGroupItems = function(response) {
 		if (response != "msg.failed") {
+			
+			var prnt = response[0]; //first item in the respnse is always the parent group
+			var prntNode = _getNodeByItemId(prnt.itemid,prnt.itemtype); 
+			if (prntNode){
+				_removeAllChilds(prntNode, "nodespan"); //remove the children
+			}
+						
 			for (var i = 1; i < response.length; i++) {
 				//var poi1 = response[i];
 				//createPoi(clickednodeelem.parentNode, poi1);
 				var itm1 = response[i];
-				
+				/*
 				var itm2 = _getObjectByItemId(itm1.itemid,itm1.itemtype);
 				if (itm2) {
 					_updateItem(clickednodeelem,itm1,itm2);
 				}
 				else {
-					if (itm1.itemtype == "Poi") 
-						_createPoi(clickednodeelem, itm1);
-					
-					if (itm1.itemtype == "File") 
-						_createFile(clickednodeelem, itm1);
-					
-					if (itm1.itemtype == "Group") 
-						_createGroup(clickednodeelem, itm1);
-				}
+				*/
+				if (itm1.itemtype == "Poi") 
+					_createPoi(clickednodeelem, itm1);
+				
+				if (itm1.itemtype == "File") 
+					_createFile(clickednodeelem, itm1);
+				
+				if (itm1.itemtype == "Group") 
+					_createGroup(clickednodeelem, itm1);
+				
 						
 			}
 		}
@@ -439,10 +465,12 @@ Array.prototype.remove = function(from, to) {
 		dojo.dnd.manager().target.selectNone();
 		*/
 		//dojo.dnd.manager().target.accept = false;
+		/*
 		if (dojo.dnd.manager().nodes) {
 			console.debug(dojo.dnd.manager().nodes.length);
 			//document.removeChild(dojo.dnd.manager().nodes[0]);
 		}
+		*/
 		
 		var t = dojo.dnd.manager().target;
 		//console.debug(t.parent.innerHTML);
@@ -450,7 +478,9 @@ Array.prototype.remove = function(from, to) {
 			var span = t.parent;
 			if (span) {
 				console.log("_nodeDblClicked");
-				console.log(span.nodeName);
+				console.log(span.innerHTML);
+				span.setAttribute("expanded","false");
+				span.setAttribute("haschildren","true");
 				_nodeDblClicked(span);
 			}
 		}
@@ -530,10 +560,10 @@ Array.prototype.remove = function(from, to) {
 		
 		var tn = new TreeNode(e1,a1,i1);
 					
-		e1.Id = "tn_" + idx;
+		e1.id = "tn_" + child.itemtype + "_" + child.itemid;
 		idx++;
 		
-		_addObject(e1.Id,child);		    
+		_addObject(e1.id,child);		    
 		a1.onclick = function() { _nodeClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
 		a1.onmouseover = function() {_mouseOver(this)};
 		
@@ -670,7 +700,7 @@ Array.prototype.remove = function(from, to) {
 	this.getSelectedGroupId = function() {
 		if (this.isGroupSelected()) {
 			if (clickednodeelem != null) {	
-				var obj = _getObject(clickednodeelem.Id);
+				var obj = _getObject(clickednodeelem.id);
 				if (obj != null) {
 					return obj.itemid;
 				}
@@ -698,7 +728,7 @@ Array.prototype.remove = function(from, to) {
 	
 	this.getFileName = function () {
 		if (this.isFileSelected()) {
-			var obj = _getObject(clickednodeelem.Id);
+			var obj = _getObject(clickednodeelem.id);
 			if (obj != null) {
 				return obj.filename;
 			}
@@ -708,7 +738,7 @@ Array.prototype.remove = function(from, to) {
 	
 	this.getFileDescription = function () {
 		if (this.isFileSelected()) {
-			var obj = _getObject(clickednodeelem.Id);
+			var obj = _getObject(clickednodeelem.id);
 			if (obj != null) {
 				return obj.description;
 			}
@@ -728,7 +758,7 @@ Array.prototype.remove = function(from, to) {
 	
 	this.getSelectedItem = function() {
 		if (clickednodeelem != null) {
-			return _getObject(clickednodeelem.Id);
+			return _getObject(clickednodeelem.id);
 		}
 		return null;
 	}
@@ -737,7 +767,7 @@ Array.prototype.remove = function(from, to) {
 		if (clickednodeelem != null) {
 			var grp = _getParentgroup(clickednodeelem);
 			if (grp != null) {
-				var obj = _getObject(grp.Id);
+				var obj = _getObject(grp.id);
 				if (obj != null) {
 					return obj.itemid;
 				}
@@ -748,7 +778,7 @@ Array.prototype.remove = function(from, to) {
 	
 	this.getPoiLat = function () {
 		if (this.isPoiSelected()) {
-			var obj = _getObject(clickednodeelem.Id);
+			var obj = _getObject(clickednodeelem.id);
 			if (obj != null) {
 				return obj.lat;
 			}
@@ -757,7 +787,7 @@ Array.prototype.remove = function(from, to) {
 	
 	this.getPoiLon = function () {
 		if (this.isPoiSelected()) {
-			var obj = _getObject(clickednodeelem.Id);
+			var obj = _getObject(clickednodeelem.id);
 			if (obj != null) {
 				return obj.lon;
 			}
@@ -766,7 +796,7 @@ Array.prototype.remove = function(from, to) {
 	
 	this.getPoiId = function(){
 		if (this.isPoiSelected()) {
-			var obj = _getObject(clickednodeelem.Id);
+			var obj = _getObject(clickednodeelem.id);
 			if (obj != null) {
 				return obj.itemid;
 			}
@@ -828,10 +858,10 @@ Array.prototype.remove = function(from, to) {
 	this.updateGroup = function(newgroup) {
 		if (clickednodeelem != null) {
 			if (this.isGroupSelected()) {
-				var obj = _getObject(clickednodeelem.Id);
+				var obj = _getObject(clickednodeelem.id);
 				if (obj != null) {
 					_removeObject(clickednodeelem);
-					_addObject(clickednodeelem.Id,newgroup);
+					_addObject(clickednodeelem.id,newgroup);
 				}
 			}
 		}
@@ -849,6 +879,10 @@ Array.prototype.remove = function(from, to) {
 		}
 		clickednodeelem = null;
 		clickednode = null;
+	}
+	
+	this.setDropItem = function(item) {
+		dropitem = item;	
 	}
 	
 	this.reset = function() {

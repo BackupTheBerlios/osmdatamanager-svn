@@ -33,6 +33,8 @@
 		$username		= $_REQUEST['username'];
 		$recursiv	    = $_REQUEST['recursiv'];
 		$tagname       	= $_REQUEST['tagname'];
+		$grpitmid       = $_REQUEST['grpitmid'];
+		$itemtype       = $_REQUEST['itemtype'];
 		global $gl_loglevel;
 		$gl_loglevel 	= 1;
 	} else {
@@ -235,7 +237,7 @@
 			//msg_getgrpitems
 			if ($action == msg_getgrpitems) {
 				$items = array();
-								
+																
 				//get groupitems by groupname
 				if (($groupname != "") &&($groupid == -1)) {
 					$grp = $fac->getGroupByName($usr->getUid(),$groupname);
@@ -248,6 +250,10 @@
 					if ($grp != null) {
 						array_push($items,$grp);
 					}
+				}
+				
+				if (isset($grpitmid)) {
+				   $fac->addGroupItem($groupid,$usr->getUid(),$grpitmid,$itemtype);
 				}
 				
 				//childgroups

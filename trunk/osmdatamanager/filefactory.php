@@ -148,6 +148,7 @@
 				switch ($fn1) {
 					case "filename":
 						$aItem->filename = $aRow[$i];
+						//$aItem->itemname = $aRow[$i];
 						break;
 					case "path":
 						$aItem->path = $aRow[$i];
@@ -160,6 +161,10 @@
 			$aItem->fullfilename = $aItem->path.$aItem->filename;
 			if (($aItem->tagname == "standard") || ($aItem->tagname == "null"))
 				$aItem->tagname = "file_".$aItem->getFileExtension();
+				
+			if (($aItem->itemname == "") || ($aItem->itemname == "null")) {
+				$aItem->itemname = $aItem->filename;
+			}
 		}
 		
 		/**

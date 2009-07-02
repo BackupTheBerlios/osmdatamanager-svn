@@ -26,6 +26,7 @@ function Groupmanager(app){
 	var grouptree = new GroupTree(document.getElementById("treecontainer"),document.getElementById("treedata"));
 	var callback = null;
 	var application = app;
+	var dropitem = null;
 	
 	/**
 	 * @private
@@ -332,6 +333,7 @@ function Groupmanager(app){
 			"action": "msg.getgrps",
 			"parentgroupid":"-1"
 		}
+		dropitem = null;
 		grouptree.reset();
 		loadFromServer("groupfunctions.php",params,getRootGroupsOk);	
 	}
@@ -409,9 +411,19 @@ function Groupmanager(app){
 	
 	//getGroupItems
 	this.getGroupItems = function(groupid, cb){
+		
+		var grpitmid = null;
+		var itemtype = null;
+		if (dropitem) {
+			//grpitmid = dropitem.itemid;
+			//itemtype = dropitem.itemtype;	
+		}
+		
 		params = {
 			"action":"msg.getgrpitems",
-			"groupid":groupid
+			"groupid":groupid,
+			"grpitmid":grpitmid,
+			"itemtype":itemtype
 		}
 		callback = cb;
 		loadFromServer("groupfunctions.php",params,getGroupItemsOk);
@@ -578,4 +590,14 @@ function Groupmanager(app){
 			}
 		}
 	}	
+	
+	this.setDropitem = function(item) {
+		dropitem = item;
+	}
+	
+	this.getDropitem = function() {
+		return dropitem;
+	}
+	
+	
 }

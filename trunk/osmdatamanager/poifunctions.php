@@ -76,7 +76,14 @@
 			if ($action == msg_getpois) {
 				$lst1 = $pof->getPois($usr->getUid());
 				if ($lst1 != null) {
-					echo application_getMessage($lst1);	
+					$pc = new PoiContainer();
+					for ($i=0;$i<count($lst1);$i++) {
+						$poi = $lst1[$i];
+						$pc->addPoi($poi);
+					}
+					
+					echo application_getMessage($pc);
+					//echo application_getMessage($lst1);	
 				} else {
 					echo application_getMessage(msg_failed);	
 				}
