@@ -1,0 +1,8 @@
+<div class="trmLoginForm">
+	<div class="dijitLoginError" dojoAttachPoint="errorNode"></div>
+	<div class="trmLoginLabelUser" dojoAttachPoint="trmLoginLabelUserNode"></div>
+	<div class="trmLoginInputUser"><input type="text" dojoAttachPoint="trmLoginInputUserNode" /></div>
+	<div class="trmLoginLabelPassword" dojoAttachPoint="trmLoginLabelPasswordNode"></div>
+	<div class="trmLoginInputPassword"><input type="password" dojoAttachPoint="trmLoginInputPasswordNode" /></div>
+	<div class="trmLoginBtnOk" dojoAttachPoint="trmLoginBtnOkNode"></div>
+</div>

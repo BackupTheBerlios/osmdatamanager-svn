@@ -338,6 +338,7 @@ function Groupmanager(app){
 		loadFromServer("groupfunctions.php",params,getRootGroupsOk);	
 	}
 	
+	//TODO kann raus
 	this.getChildgroups = function(parentgroupid, cb) {
 		params = {
 			"action":"msg.getchildgrps",
@@ -390,6 +391,7 @@ function Groupmanager(app){
 		}
 	}
 	
+	//TODO raus ?
 	this.getGroupFiles = function(groupid, cb) {
 		params = {
 			"action":"msg.getgrpfiles",
@@ -399,7 +401,7 @@ function Groupmanager(app){
 		loadFromServer("groupfunctions.php",params,getGroupFilesOk);
 	}
 	
-	//getGroupPois
+	//getGroupPois TODO raus ?
 	this.getGroupPois = function(groupid, cb) {
 		params = {
 			"action":"msg.getgrppois",
@@ -409,14 +411,19 @@ function Groupmanager(app){
 		loadFromServer("groupfunctions.php",params,getGroupPoisOk);
 	}
 	
-	//getGroupItems
+	/**
+	 * loads all child items from a group (subgroups, files, pois...)
+	 * if dropitem is set, a new childitem will created
+	 * @param {Object} groupid
+	 * @param {Object} cb
+	 */
 	this.getGroupItems = function(groupid, cb){
 		
 		var grpitmid = null;
 		var itemtype = null;
 		if (dropitem) {
-			//grpitmid = dropitem.itemid;
-			//itemtype = dropitem.itemtype;	
+			grpitmid = dropitem.itemid;
+			itemtype = dropitem.itemtype;	
 		}
 		
 		params = {
@@ -429,7 +436,7 @@ function Groupmanager(app){
 		loadFromServer("groupfunctions.php",params,getGroupItemsOk);
 	}
 	
-	//getGroupFiles_Recursiv
+	//getGroupFiles_Recursiv //TODO raus
 	this.getGroupFiles_Recursiv = function(cb) {
 		var groupid = grouptree.getSelectedGroupId();
 		params = {
@@ -452,7 +459,7 @@ function Groupmanager(app){
 		loadFromServer("filefunctions.php",params,_cb_getFiles);
 	}
 	
-	//getGroupPois_Recursiv
+	//getGroupPois_Recursiv //TODO raus
 	this.getGroupPois_Recursiv = function(cb) {
 		var groupid = grouptree.getSelectedGroupId();
 		params = {

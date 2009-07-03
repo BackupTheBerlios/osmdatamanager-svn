@@ -1523,7 +1523,7 @@ DijitClient.Application = function(openlayersMap,mm)
 		dijit.byId('itm_createmaingroup').attr("disabled","disabled");
 		dijit.byId('itm_deletegroup').attr("disabled","disabled");
 		dijit.byId('itm_editfile__').attr("disabled","disabled");
-		dijit.byId('itm_gotoPoi').attr("disabled","disabled");
+		//dijit.byId('itm_gotoPoi').attr("disabled","disabled");
 		dijit.byId('itm_editPoi').attr("disabled","disabled");
 		//dijit.byId('itm_removePois').attr("disabled","disabled");
 		dijit.byId('itm_submenu_traces').attr("disabled","disabled");

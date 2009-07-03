@@ -17,6 +17,9 @@
                     
 		  
 		  dojo.addOnLoad(function(){
+				dojo.registerModulePath("trm","../../trm");		
+				dojo.requireLocalization("trm", "popupmenu");
+						
 				dojo.require("dojox.widget.SortList");
 				dojo.require("dijit.layout.ContentPane");
 			  	dojo.require("dijit.layout.BorderContainer");
@@ -43,7 +46,11 @@
 				dojo.require("dojo.dnd.Mover");
   				dojo.require("dojo.dnd.Moveable");
   				dojo.require("dojo.dnd.move");
-
+				
+				//trm widgets
+				dojo.require("trm.login.Form");
+				dojo.require("trm.translation.tt");
+				dojo.require("trm.Button.TrmButton");
 									
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
@@ -284,13 +291,17 @@
 
 		
 	</script>
+	
+	
+
 </head>
 
 <body class="tundra" >
 	  <div id="overlay"><div class="innerOverlay">Loading please wait...</div></div>
 
 	  <div dojoType="dijit.layout.BorderContainer" class="maincontent" design="sidebar" id="borderContainer">
-	    <!-- TOP Menu (general map options)  -->
+	    	
+		<!-- TOP Menu (general map options)  -->
 		<div dojoType="dijit.layout.ContentPane" region="top" class="topmenu">						
 				<button dojoType="dijit.form.Button" onclick="window.open('http://osmdatamanager.berlios.de/')">.:Project Page:.</button>
 		</div>	
@@ -307,7 +318,7 @@
 			<div style="width: 210px; height:400px; padding-top:8px;background-color:#fdd13a;" id="roundeddiv">
 							
 				<div class="custombutton1">								
-					<button dojoType="dijit.form.Button" id="btn_login" onclick="DijitClient.LoginDialog.show()">::Login::</button>
+					<button dojoType="trm.Button.TrmButton" id="btn_login" startup="function() {alert('a')}" onclick="DijitClient.LoginDialog.show()" field="name">Login</button>
 					<button dojoType="dijit.form.Button" onclick="gl_application.centerHomebase()"  id="btn_centerhomebase">Heimatort anzeigen</button><br/>
 				</div>
 				
@@ -649,8 +660,13 @@
   <!-- Tracemanager Popup -->
   <div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="roundeddiv" style="display: none;" >
 	  	
-		<div dojoType="dijit.MenuItem" id="itm_loaddata" onClick="gl_application.loadGroupData()">Daten von markierter Gruppe laden</div> 
-		<div dojoType="dijit.MenuItem" id="itm_gotoPoi" onClick="gl_application.gotoSelectedPoi()">Gehe zu Poi</div>
+		<script type="dojo/connect" event="startup">
+        console.debug("started downloading:", this.id);
+        //advanced behavior here
+    	</script>
+		
+		<div dojoType="dijit.MenuItem" id="itm_loaddata" onClick="">Anzeigen</div> 
+		<div dojoType="dijit.MenuItem" id="itm_edit" onClick="">Bearbeiten</div>
 		
 		<div dojoType="dijit.MenuSeparator"></div>	
 	  	<div dojoType="dijit.MenuItem" id="itm_removeall" onClick="gl_application.clearMap()">Karte bereinigen</div>

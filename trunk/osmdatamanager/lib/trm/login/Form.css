@@ -1,0 +1,34 @@
+.trmLoginForm {
+	position:absolute;
+	left:100px;
+	top:100px;
+	width:200px;
+	border: solid 1px red;
+	background-color: yellow;
+	visibility:visible;
+}
+
+.trmLoginForm_hidden {
+	visibility:hidden;
+	display:none;
+}
+
+.trmLoginLabelUser {
+	
+}
+
+.trmLoginInputUser {
+	
+}
+
+.trmLoginLabelPassword {
+	
+}
+
+.trmLoginInputPassword {
+	
+}
+
+.trmLoginBtnOk {
+	
+}

@@ -1,0 +1,8 @@
+<form class="dijitLoginForm" dojoAttachEvent="onsubmit:_onSubmit">
+	<div class="dijitLoginError" dojoAttachPoint="errorNode"></div>
+	<div class="dijitLoginLabel" dojoAttachPoint="usernameLabelNode"></div>
+	<div class="dijitLoginInput"><input type="text" dojoAttachPoint="usernameInputNode" /></div>
+	<div class="dijitLoginLabel" dojoAttachPoint="passwordLabelNode"></div>
+	<div class="dijitLoginInput"><input type="password" dojoAttachPoint="passwordInputNode" /></div>
+	<div><input type="submit" class="dijitLoginSubmit" dojoAttachPoint="sumbitButtonNode" /></div>
+</form>
