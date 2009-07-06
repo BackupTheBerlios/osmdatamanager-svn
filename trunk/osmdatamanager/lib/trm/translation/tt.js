@@ -17,10 +17,11 @@ dojo.declare("trm.translation.tt", [dijit._Widget], {
 		
 		console.debug(this.field);
 		console.debug(nls[this.field]);
-		this.domNode.textContent = nls[this.field];
+		//this.domNode.textContent = nls[this.field];
 		this.translation = nls[this.field];
 		console.debug(this.domNode.innerHTML);
-					
+		console.debug(this.domNode.nodeName);
+		this.domNode.innerHTML = nls[this.field];			
 		//Now, we need to get the translations
 		//console.debug(arguments);
 		/*

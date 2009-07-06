@@ -110,6 +110,7 @@ DijitClient.AboutDialog = {
 /**
  * Login Dialog
  */
+/*
 DijitClient.LoginDialog = {	
 	objectname: "LoginDialog",
 	app:null,
@@ -192,7 +193,7 @@ DijitClient.LoginDialog = {
 		}
 	}
 }
-
+*/
 
 /**
  * UserSettingsDialog
@@ -1303,6 +1304,38 @@ DijitClient.AdminDialog = {
 	}
 }
 
+
+dojo.declare("DijitClient2", Application2, {
+        constructor: function(name){
+                // remember, Person constructor is called automatically
+        	dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_login");        
+        },
+		this._cb_LoggedIn: function(user){
+			alert(user.username);
+			this.setActiveUser(user);
+					
+			//disablePrivatemode();
+			//this.updateFilelist();
+			
+			var usr = this.getActiveUser();
+			console.debug(usr);
+			console.debug(self);
+			if (usr != null) {
+				//dijit.byId('btn_login').attr("label", "Logout [" + usr.username + "]");
+				/*
+				self.updateFileList(null);
+				self.enablePrivatemode();
+				gl_groupmanager.getRootGroups();
+				self.centerHomebase();
+				*/
+				dijit.byId('dlg_login').hide();
+			} else {
+				//self.disablePrivatemode();
+			}		
+		}
+});
+
+
 /**
  * connection between dijit gui and client application
  */
@@ -1311,6 +1344,7 @@ DijitClient.Application = function(openlayersMap,mm)
 	this.initialize(openlayersMap,mm);
 	var self = this;		
 	
+	/*
 	DijitClient.LoginDialog.initialize(this);
 	DijitClient.UserSettingsDialog.initialize(this);
 	DijitClient.RegisterDialog.initialize(this);
@@ -1318,6 +1352,41 @@ DijitClient.Application = function(openlayersMap,mm)
 	DijitClient.PictureListDialog.initialize(this);
 	DijitClient.AdminDialog.initialize(this);
 	DijitClient.AboutDialog.initialize(this);
+	*/
+	
+	console.debug("Application init");
+	
+	/**
+	 * callback after successful login
+	 * @param {Object} user
+	 */
+	this._cb_login = function(user) {
+		alert(user.username);
+		self.activeuser = user;
+				
+		//disablePrivatemode();
+		//this.updateFilelist();
+		
+		var usr = self.getActiveUser();
+		console.debug(usr);
+		console.debug(self);
+		if (usr != null) {
+			//dijit.byId('btn_login').attr("label", "Logout [" + usr.username + "]");
+			self.updateFileList(null);
+			self.enablePrivatemode();
+			gl_groupmanager.getRootGroups();
+			self.centerHomebase();
+			dijit.byId('dlg_login').hide();
+		} else {
+			self.disablePrivatemode();
+		}	
+	}
+	
+	
+	
+	//connect trm widgets
+	dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_login");
+	
 			
 	this.initGroupmanager = function(groupmanager)	 {
 	  DijitClient.GroupDialog.initialize(this,groupmanager);
@@ -1385,6 +1454,7 @@ DijitClient.Application = function(openlayersMap,mm)
 	 * disablePrivatemode
 	 */
 	this.disablePrivatemode = function() {
+		/*
 		this.disabledAllMenuItems();
 		dijit.byId('btn_centerhomebase').attr("disabled","disabled");
 		if (gl_groupmanager) {
@@ -1393,14 +1463,28 @@ DijitClient.Application = function(openlayersMap,mm)
 				grpTree.reset();
 			}
 		}
+		*/
 	}
 	
 	/**
 	 * enablePrivatemode 
 	 */
 	this.enablePrivatemode = function(){
+		/*
 		dijit.byId('btn_centerhomebase').setAttribute("disabled",false);
 		this.enablePrivateMenuItems();
+		*/
+	}
+	
+	this.showLogin = function() {
+		console.debug("showLogin");
+		var dlg1 = dijit.byId('dlg_login');
+		if (dlg1)  {
+			console.debug("gotit");
+			console.debug(dlg1);
+			dlg1.show();
+		}
+		
 	}
 			
 	/**
@@ -1501,6 +1585,7 @@ DijitClient.Application = function(openlayersMap,mm)
 	 * enablePrivateMenuItems
 	 */
 	this.enablePrivateMenuItems = function() {
+		/*
 		dijit.byId('itm_createmaingroup').attr("disabled","");
 		dijit.byId('itm_createpoi').attr("disabled","");
 		dijit.byId('itm_doupload').attr("disabled","");
@@ -1508,12 +1593,14 @@ DijitClient.Application = function(openlayersMap,mm)
 		dijit.byId('itm_removeall').attr("disabled","");
 		dijit.byId('itm_submenu_groups').attr("disabled","");
 		dijit.byId('itm_updatetree').attr("disabled","");
+		*/
 	}
 	
 	/**
 	 * disabledAllMenuItems
 	 */
 	this.disabledAllMenuItems = function() {
+		/*
 		dijit.byId('itm_loadTraces').attr("disabled","disabled");
 		dijit.byId('itm_removeTraces').attr("disabled","disabled");		
 		//dijit.byId('itm_loadPois').attr("disabled","disabled");
@@ -1539,6 +1626,7 @@ DijitClient.Application = function(openlayersMap,mm)
 		dijit.byId('itm_admin').attr("disabled","disabled");
 		dijit.byId('itm_remFiles').attr("disabled","disabled");
 		dijit.byId('itm_updatetree').attr("disabled","disabled");
+		*/
 	}
 	
 	/**

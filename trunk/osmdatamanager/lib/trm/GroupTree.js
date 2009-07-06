@@ -365,15 +365,20 @@ Array.prototype.remove = function(from, to) {
             if (isloading)
                 return;
 			            
+			console.debug("_nodeClicked 1");
+			
 			if (clickednodeelem != null)
                 _unsetSelected();
             
 			clickednodeelem = sender;			
 			_setSelected();
 			isloading = false;
+			
+			console.debug("_nodeClicked 1");
             
         } catch (e) {
             handleException(e);
+			console.debug(e);
         }
     }
 	
@@ -471,6 +476,8 @@ Array.prototype.remove = function(from, to) {
 			//document.removeChild(dojo.dnd.manager().nodes[0]);
 		}
 		*/
+		//console.debug(dojo.dnd.manager().source);
+		
 		
 		var t = dojo.dnd.manager().target;
 		//console.debug(t.parent.innerHTML);

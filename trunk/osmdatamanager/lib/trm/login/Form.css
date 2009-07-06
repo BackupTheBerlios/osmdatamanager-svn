@@ -2,31 +2,36 @@
 	position:absolute;
 	left:100px;
 	top:100px;
-	width:200px;
-	border: solid 1px red;
-	background-color: yellow;
+	/*width:320px;*/
+	border: solid 1px #83839a;
+	background-color: #d6d6de;
 	visibility:visible;
+	z-index:10;
+	padding:10px;
 }
 
 .trmLoginForm_hidden {
 	visibility:hidden;
 	display:none;
+	z-index:10;
 }
 
 .trmLoginLabelUser {
+	float:left;
 	
 }
 
 .trmLoginInputUser {
-	
+	float:left;
 }
 
 .trmLoginLabelPassword {
+	float:left;
 	
 }
 
 .trmLoginInputPassword {
-	
+	float:left;
 }
 
 .trmLoginBtnOk {

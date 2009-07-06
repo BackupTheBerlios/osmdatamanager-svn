@@ -40,6 +40,7 @@ TRM.ServerConnection.prototype
 		 * @param {Object} callBack
 		 */
 		function loadFromServer(targetfile, params, callBack){
+			console.debug("lfs");
 			if (TRM.TargetPrefix) 
 				targetfile = TRM.TargetPrefix + targetfile;
 			

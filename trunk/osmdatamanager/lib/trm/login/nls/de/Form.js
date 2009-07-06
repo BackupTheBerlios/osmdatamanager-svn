@@ -4,5 +4,8 @@
 	"password": "Password:",
 	"invalidUsername": "The username \"%s\" is not valid",
 	"cancel": "cancel",
-	"ok":"ok"
+	"ok":"ok",
+	"invalidusername": "Bitte geben Sie einen Benutzernamen an",
+	"invalidpassword": "Bitte geben Sie ein Passwort ein",
+	"loginfailed": "Login Fehlgeschlagen"
 })

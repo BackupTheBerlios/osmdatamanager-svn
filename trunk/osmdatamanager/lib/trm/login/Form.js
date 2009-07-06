@@ -1,58 +1,92 @@
 dojo.provide("trm.login.Form");
-dojo.require("dijit._Widget");
+//dojo.require("dijit._Widget");
+dojo.require("trm.widget._TrmWidget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 
 dojo.requireLocalization("trm.login", "Form");
 
-dojo.declare("trm.login.Form", [dijit._Widget, dijit._Templated], {
+dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 	action: "",
 	//method: "POST",
 	templatePath:    dojo.moduleUrl('trm.login', 'Form.html'),
-	templateCssPath: dojo.moduleUrl('trm.login', 'Form.css'),
+	templateCssPath: dojo.moduleUrl('trm.login', 'Form.css'),  //TODO does not work, you have to include the css in your html page
 	baseClass: dojo.moduleUrl('trm.login', 'Form.css'),
 	postCreate: function() {
 		this.inherited(arguments);
 		//Now, we need to get the translations
-		//console.debug(arguments);
 		var nls = dojo.i18n.getLocalization("trm.login", "Form");
 		this.trmLoginLabelUserNode.textContent=nls.username;
 		this.trmLoginLabelPasswordNode.textContent=nls.password;
 		this.trmLoginBtnOkNode.textContent     = nls.ok;
 		this.trmLoginBtnCancelNode.textContent = nls.cancel;
+		this.domNode.setAttribute("class","trmLoginForm_hidden");
 	},
 	startup: function() {
-		console.debug("startup");
-	},/*
-	_onSubmit: function(e) {
-		//get our translations first...
 		
+	},
+	onLoad: function(){
+			// summary: when href is specified we need to reposition the dialog after the data is loaded
+			this._position();
+			this.inherited(arguments);
+	},
+	onLoggedIn: function(user) {
+		console.debug(user);
+	},
+	_cb_loginUser: function(response, ioArgs) {
 		var nls = dojo.i18n.getLocalization("trm.login", "Form");
-		//ok, so for validation we're just going to say that
-		//if the username has spaces in it, don't submit it,
-		//and alert the user that their username is incorrect.
-		if(this.usernameInputNode.value.indexOf(" ") != -1) {
-			//ok, we need to replace the '%s' in the translation with the inputted username
-			this.errorNode.textContent = nls.invalidUsername.replace("%s", this.usernameInputNode.value);
-			dojo.stopEvent(e);
-			return false;
+		console.debug(response);
+		if (response != "msg.loginfailed") {
+			this.onLoggedIn(response);
+		} else {
+			alert(nls["loginfailed"]);
 		}
-		else
-			this.errorNode.textContent = "";
-	},*/
+	},
+	_okClick: function(e) {
+		console.debug("okclick");
+		var nls = dojo.i18n.getLocalization("trm.login", "Form");
+		var username = this.trmLoginInputUserNode.value;
+		var password = this.trmLoginInputPasswordNode.value;
+		
+		if ((username == null) || (username  == "")) {
+			alert(nls["invalidusername"]);
+			return;	
+		}
+		
+		if ((password == null) || (password == "")) {
+			alert(nls["invalidpassword"]);
+			return;
+		}
+		
+		params = {
+			"action": "msg.login",
+			"username":username,
+			"password":password
+		}
+		
+		this.loadFromServer("userfunctions.php",params,this._cb_loginUser);
+	},
 	_cancelClick: function(e) {
-		console.debug("_cancelClick");
 		this.hide();
 	},
+	_position: function(){
+			// summary: position modal dialog in center of screen		
+			if(dojo.hasClass(dojo.body(),"dojoMove")){ return; }
+			var viewport = dijit.getViewport();
+			var mb = dojo.marginBox(this.domNode);
+
+			var style = this.domNode.style;
+			style.left = Math.floor((viewport.l + (viewport.w - mb.w)/2)) + "px";
+			style.top = Math.floor((viewport.t + (viewport.h - mb.h)/2)) + "px";
+	},
 	show: function() {
+		console.debug("show");
+		this._position();
 		this.domNode.setAttribute("class","trmLoginForm");
 	},
 	hide: function() {
 		console.debug(this.domNode.getAttribute("class"));
 		this.domNode.setAttribute("class","trmLoginForm_hidden");
-	},
-	_onButtonClick: function(e) {
-		console.debug(e);
 	}
 	
 });

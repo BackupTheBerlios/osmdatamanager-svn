@@ -1,0 +1,9 @@
+.trmGroupDialog {
+	position:absolute;
+	visibility:visible;
+}
+
+.trmGroupDialog_hidden {
+ 	display:none;
+	visibility:hidden;	
+}
