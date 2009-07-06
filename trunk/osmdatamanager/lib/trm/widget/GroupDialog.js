@@ -6,6 +6,8 @@ dojo.require("dojo.parser");
 //dojo.requireLocalization("trm.translation", "tt");
 
 dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated], {
+	isUpdate: false,
+	group: null,
 	templatePath:    dojo.moduleUrl('trm.widget', 'GroupDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
@@ -17,16 +19,32 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 	_okClick: function(e) {
 		console.debug("_ok");
 	},
+	_resetFields: function() {
+		this.dlgGrp_tbDescription.value = "";
+		this.dlgGrp_tbLat.value = "";
+		this.dlgGrp_tbLon.value = "";
+		this.dlgGrp_spinZoomlevel.value = "";
+	},
+	_loadGroupData: function() {
+		if (this.group == null)
+			return;
+			
+		this.dlgGrp_tbDescription.value = group.itemname;
+		this.dlgGrp_tbLat.value = group.lat;
+		this.dlgGrp_tbLon.value = group.lon;
+		this.dlgGrp_spinZoomlevel.value = group.zoomlevel;
+	},
+	setGroup: function(group) {
+		this.group = group;
+		this._loadGroupData();
+	},
 	show: function() {
-		console.debug("show");
 		this._position();
+		this._resetFields();
 		this.domNode.setAttribute("class","trmGroupDialog");
-		console.debug(this.grid);
-		this.loadGpxFiles();
 	},
 	hide: function() {
-		console.debug(this.domNode.getAttribute("class"));
-		this.hideDndSource();
+		this._resetFields();
 		this.domNode.setAttribute("class","trmGroupDialog_hidden");
 	}
 		

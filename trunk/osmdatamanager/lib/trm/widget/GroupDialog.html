@@ -1,14 +1,14 @@
 <div class="trmGroupDialog">
 	<table>
 	    <tr>
-	      <td><label for="name">Bezeichnung: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_groupname" id="tb_groupname" /></td>
+	      <td><label for="name">Bezeichnung:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgGrp_tbDescription" /></td>
 		</tr>
 		<tr>
 	      <td><label for="loc">Position: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lat" id="dlgcreategroup_tb_poi_lat" /></td>
-		  <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lon" id="dlgcreategroup_tb_poi_lon" /></td>
-		  <td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_selectpoint">...</button></td>	
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgGrp_tbLat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgGrp_tbLon" /></td>
+		  <td><button dojoType="dijit.form.Button" >...</button></td>	
 	    </tr> 
 		<tr>
 			<td><label for="loc">Zoomlevel:</label></td>
@@ -17,28 +17,29 @@
 							    class="medium"
 							    constraints="{max:20,min:1,places:0}"
 							    name="dlgcreatgroup_zommlevel"
-							    id="dlgcreatgroup_zommlevel" />
+							    dojoAttachPoint="dlgGrp_spinZoomlevel" />
 			</td>
-			<td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_zoomlevel">Zoomlevel von Karte</button></td>	
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlgGrp_btnZoomlevel">Zoomlevel von Karte</button></td>	
 		</tr>
 		<tr>
 	      <td><label for="name">Tagname:</label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_tagname" id="dlgcreategroup_tb_tagname" /></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgGrp_tbTagname" /></td>
 	    </tr>
 
 		<tr>
 			<td><label for="loc">Schutz:</label></td>
 			<td>
-				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" id="dlgcreategroup_rd_private" value="private" checked="true" />
+				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" dojoAttachPoint="dlgGrp_rdPrivate" value="private" checked="true" />
 				<label for="dlgcreategroup_rd_private">Privat</label>
-				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" id="dlgcreategroup_rd_protected" value="protected" />
+				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" dojoAttachPoint="dlgGrp_rdProtected" value="protected" />
 				<label for="dlgcreategroup_rd_protected">Gesch&uuml;tzt</label>
-				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" id="dlgcreategroup_rd_public" value="public" />
+				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" dojoAttachPoint="dlgGrp_rdPublic" value="public" />
 				<label for="dlgcreategroup_rd_public">&Ouml;ffentlich</label>
 			 </td>
 		</tr>
 		<tr>
-			<td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_ok">Ok</button></td>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlgGrp_btnOk" >Ok</button></td>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlgGrp_btnCacnel" dojoAttachEvent="ondijitclick:_cancelClick">Abbrechen</button></td>
 		</tr> 
 	  </table>	
 </div>

@@ -1,6 +1,8 @@
 .trmGroupDialog {
 	position:absolute;
 	visibility:visible;
+	border: solid 1px #83839a;
+	background-color: #d6d6de;
 }
 
 .trmGroupDialog_hidden {

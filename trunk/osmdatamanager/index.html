@@ -11,6 +11,7 @@
     	@import "lib/dojo/dojox/grid/resources/nihiloGrid.css";
 		@import "lib/trm/login/Form.css";
 		@import "lib/trm/widget/ItemManager.css";
+		@import "lib/trm/widget/GroupDialog.css";
 	</style>
 	
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>			
@@ -56,6 +57,7 @@
 				dojo.require("trm.Button.TrmButton");
 				dojo.require("trm.MenuItem.TrmMenuItem");
 				dojo.require("trm.widget.ItemManager");
+				dojo.require("trm.widget.GroupDialog");
 									
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
@@ -587,6 +589,11 @@
   </div>
   
     <!-- create group dialog -->
+	<div dojoType="trm.widget.GroupDialog" id="dlg_group">
+		
+	</div>
+	
+	<!--
 	<div class="soria" dojoType="dijit.Dialog" id="dlg_creategroup" title="Gruppe"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
@@ -632,6 +639,7 @@
 		</tr> 
 	  </table>
   	</div>
+	-->
   
   <!-- Point Of Interest dialog -->
 	<div class="soria" dojoType="dijit.Dialog" id="dlg_poi" title="Point Of Interest"
@@ -689,7 +697,7 @@
 		<div dojoType="dijit.PopupMenuItem" id="itm_submenu_groups">
 			<span>Gruppen</span>
 			<div dojoType="dijit.Menu" id="submenu_groups">
-				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createmaingroup" field="createrootgroup" onClick="DijitClient.GroupDialog.show(true,false)">Hauptgruppe hinzuf&uuml;gen</div>
+				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createmaingroup" field="createrootgroup" onClick="gl_application.showGroupDialog()">Hauptgruppe hinzuf&uuml;gen</div>
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createsubgroup" field="createsubgroup" onClick="DijitClient.GroupDialog.show(false,false)">Untergruppe hinzuf&uuml;gen</div>
 				<div dojoType="dijit.MenuSeparator"></div>	
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_deletegroup" field="deletegroup" onClick="gl_groupmanager.deleteGroup()">Gruppe l&ouml;schen</div>		

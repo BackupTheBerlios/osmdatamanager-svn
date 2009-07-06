@@ -121,6 +121,13 @@ dojo.declare("DijitClient2", Application2, {
 			if (dlg1)  {
 				dlg1.show();
 			}
+		},
+		
+		showGroupDialog: function() {
+			var dlg1 = dijit.byId('dlg_group');
+			if (dlg1)  {
+				dlg1.show();
+			}
 		}
 		
 		
