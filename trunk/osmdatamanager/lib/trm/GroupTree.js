@@ -304,6 +304,18 @@ Array.prototype.remove = function(from, to) {
 		return "";
 	}
 	
+	var _getIconname3 = function(child) {
+		if (child.tags != null) {
+			for (var x = 0; x < child.tags.length; x++) {
+				var tag1 = child.tags[x];
+				if (tag1.tagname == child.tagname) {
+					return tag1.icon3;
+				}
+			}	
+		}
+		return "";
+	}
+	
 	
 	/**
 	 * callback after _loadGroupItems 
@@ -594,7 +606,9 @@ Array.prototype.remove = function(from, to) {
 		}
 		else {
 			//i1.setAttribute("src", "images/treeExpand_none.gif");
-			e1.setAttribute("haschildren","false");			
+			e1.setAttribute("haschildren","false");
+			if (child.itemtype.toLowerCase() == "group")
+				i1.setAttribute("src",_getIconname3(child));			
 		}
 		
 		e1.setAttribute("type",child.itemtype.toLowerCase());

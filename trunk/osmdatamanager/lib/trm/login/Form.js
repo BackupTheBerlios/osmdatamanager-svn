@@ -20,7 +20,7 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 		this.trmLoginLabelPasswordNode.textContent=nls.password;
 		this.trmLoginBtnOkNode.textContent     = nls.ok;
 		this.trmLoginBtnCancelNode.textContent = nls.cancel;
-		this.domNode.setAttribute("class","trmLoginForm_hidden");
+		this.domNode.setAttribute("class","trmLoginForm_hidden trmDialog");
 	},
 	startup: function() {
 		
@@ -82,11 +82,11 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 	show: function() {
 		console.debug("show");
 		this._position();
-		this.domNode.setAttribute("class","trmLoginForm");
+		this.domNode.setAttribute("class","trmLoginForm trmDialog");
 	},
 	hide: function() {
 		console.debug(this.domNode.getAttribute("class"));
-		this.domNode.setAttribute("class","trmLoginForm_hidden");
+		this.domNode.setAttribute("class","trmLoginForm_hidden trmDialog");
 	}
 	
 });

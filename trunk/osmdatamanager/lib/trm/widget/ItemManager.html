@@ -1,10 +1,10 @@
-<div class="trmItemManager">
+<div class="trmItemManager trmDialog">
 	
 	<div id="dlgfilelist_buttons">
-		<button dojoType="dijit.form.Button" id="dlgfilelist_btn_pois" dojoAttachEvent="ondijitclick: loadPois">
+		<button dojoType="dijit.form.Button" dojoAttachEvent="onClick: loadPois">
 		 	<img src="images/flag.png" border="0" /> 
 		 </button>
-		 <button dojoType="dijit.form.Button" id="dlgfilelist_btn_gpx" dojoAttachEvent="ondijitclick: loadGpxFiles">
+		 <button dojoType="dijit.form.Button" dojoAttachEvent="onClick: loadGpxFiles">
 		 	<img src="images/gpx_small.png" border="0" /> 
 		 </button>
 	</div>
@@ -13,25 +13,17 @@
 		
 	</div>
 	
-	<!--
-	<table id="dlgfilelist_tab_grid" jsId="dlgfilelist_grid" dojoType="dojox.grid.DataGrid" dojoAttachEvent="onCellMouseOver:_onCellMouseOver" columnReordering="true" onStyleRow="onStyleRow"
-	       query="{ filename: '*' }" >
-		<thead>
-			<tr>
-				<th field="itemname" width="300px;" formatter="formatType" editor="dojox.grid.editors.ComboBox" dndType="blue">Name</th>
-				<!-- <th field="itemname" width="250px;">Beschreibung</th> 
-				<th field="itemtype" width="40px;">Typ</th>
-			</tr>
-		</thead>
-	</table>
-	-->
-	
 		
 	<table>
 		<tr>
-			<td><button dojoType="dijit.form.Button" id="dlgfilelist_btn_ok" dojoAttachEvent="ondijitclick:_okClick">Ok</button></td>
-			<td><button dojoType="dijit.form.Button" id="dlgfilelist_btn_close" dojoAttachEvent="ondijitclick:_cancelClick">Abbrechen</button></td>	
+			<td><button dojoType="dijit.form.Button"  dojoAttachEvent="onClick:_okClick">Ok</button></td>
+			<td><button dojoType="dijit.form.Button"  dojoAttachEvent="onClick:_cancelClick">Abbrechen</button></td>	
 		</tr>
 	</table>
 	
+	<div dojoType="dijit.Menu" onOpen="alert('a')" dojoAttachPoint="popup"  contextMenuForWindow="false" style="display: none;" >
+		<div dojoType="trm.MenuItem.TrmMenuItem" dojoAttachPoint="itmDisplay" field="display" onClick="">Anzeigen</div> 
+ 	</div>
+	
 </div>
+

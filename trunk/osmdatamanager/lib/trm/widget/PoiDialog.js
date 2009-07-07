@@ -1,18 +1,17 @@
-/*
-dojo.provide("trm.widget.GroupDialog");
+dojo.provide("trm.widget.PoiDialog");
 dojo.require("trm.widget._TrmWidget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 
 //dojo.requireLocalization("trm.translation", "tt");
 
-dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated], {
-	widgetsInTemplate: true,
+dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], {
 	grid: null,
-	templatePath:    dojo.moduleUrl('trm.widget', 'GroupDialog.html'),
+	widgetsInTemplate: true,
+	templatePath:    dojo.moduleUrl('trm.widget', 'PoiDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
-		this.domNode.setAttribute("class","trmGroupDialog_hidden");
+		this.domNode.setAttribute("class","trmPoiDialog_hidden trmDialog");
 	},
 	_cancelClick: function(e) {
 		this.hide();
@@ -23,15 +22,14 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 	show: function() {
 		console.debug("show");
 		this._position();
-		this.domNode.setAttribute("class","trmItemManager");
+		this.domNode.setAttribute("class","trmPoiDialog trmDialog");
 		console.debug(this.grid);
 		this.loadGpxFiles();
 	},
 	hide: function() {
 		console.debug(this.domNode.getAttribute("class"));
 		this.hideDndSource();
-		this.domNode.setAttribute("class","trmItemManager_hidden");
+		this.domNode.setAttribute("class","trmPoiDialog_hidden trmDialog");
 	}
 		
 });
-*/

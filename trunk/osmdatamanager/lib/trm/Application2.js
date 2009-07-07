@@ -92,6 +92,18 @@ dojo.declare("Application2", Serverconnection, {
 			} catch (e)
 			{console.error(e);}
 		},
+		
+		/**
+		 * callback after getPointFromMap
+		 * @param {Object} e
+		 */
+		_cb_getPointFromMap: function(e) {
+			console.debug(e);
+			console.debug(this);
+			if (this.callback != null) {
+				this.callback.func.apply(this.callback.target, [e]);
+			}	
+		},
 				
 		/*******************************************************
 		 * 
@@ -211,6 +223,33 @@ dojo.declare("Application2", Serverconnection, {
 					var lat = 50.9350850727913;
 					var lon = 6.95356597872225;
 					this.centerMap(lat, lon, 6);
+				}
+			}
+		},
+		
+		/**
+		 * getPointFromMap
+		 * @param {Object} cb
+		 */
+		getPointFromMap: function(cb){
+			this.callback = cb;
+			
+			var ctrl2 = this.map.getControlsByClass("OpenLayers.Control.Click");
+			if (ctrl2.length < 1) {
+				try {
+					gl_dblclick = new OpenLayers.Control.Click({
+	                        handlerOptions: {
+	                            "single": false,
+	                            "double": true,
+								"clickhandler": dojo.hitch(this,this._cb_getPointFromMap)
+	                        }
+	                    });
+					
+					console.debug("hhh");
+					this.map.addControl(gl_dblclick);
+					gl_dblclick.activate();
+				} catch (e) {
+					alert(e);
 				}
 			}
 		}

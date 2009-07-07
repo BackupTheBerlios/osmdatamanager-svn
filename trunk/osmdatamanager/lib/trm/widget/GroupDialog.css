@@ -1,11 +1,18 @@
 .trmGroupDialog {
 	position:absolute;
 	visibility:visible;
-	border: solid 1px #83839a;
-	background-color: #d6d6de;
 }
 
 .trmGroupDialog_hidden {
  	display:none;
 	visibility:hidden;	
+}
+
+.trmGroupDialog .table_update {
+	visibility:visible;
+	display:block;
+}
+
+.trmGroupDialog .table_update_hidden {
+	display:none;
 }

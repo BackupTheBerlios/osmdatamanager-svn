@@ -50,6 +50,43 @@ dojo.declare("Groupmanager", Serverconnection, {
 			}
 		},
 		
+		/**
+		 * standard callback, check if answer is not msg.failed an call custom callback if defined
+		 * @param {Object} response
+		 * @param {Object} ioArgs
+		 */
+		_cb_standard: function(response, ioArgs) {
+			try {		
+				if (response != "msg.failed")
+				{
+					if (this.callback != null) {
+						this.callback.func.apply(this.callback.target, [response, ioArgs]);
+					}
+					
+				}
+			} catch (e)
+			{console.error(e);}
+		},
+		
+		/**
+		 * callback after createRootGroup and createSubGroup 
+		 * @param {Object} response
+		 * @param {Object} ioArgs
+		 */
+		_cb_createGroup: function(response, ioArgs) {
+			try {		
+				if (response != "msg.failed")
+				{
+					//grouptree.addGroups(response);
+					if (callback != null) {
+						callback.func.apply(callback.target, [response, ioArgs]);
+					}
+					
+				}
+			} catch (e)
+			{console.error(e);}
+		},
+		
 		/*********************************************************
 		 * 
 		 * public useable functions
@@ -108,6 +145,66 @@ dojo.declare("Groupmanager", Serverconnection, {
 		 */
 		getGroupTree: function() {
 			return this.grouptree;
+		},
+		
+		/**
+		 * creates a new rootgroup
+		 * @param {Object} groupname
+		 * @param {Object} cb
+		 */
+		createRootGroup: function(groupname,cb) {			
+			params = {
+				"action":"msg.crtgrp",
+				"groupname":groupname,
+				"parentgroupid":"-1"
+			}
+			this.grouptree.reset();
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php",params, this._cb_standard);		
+		},
+		
+		/**
+		 * creates a new subgroup
+		 * @param {Object} groupname
+		 * @param {Object} cb
+		 */
+		createSubGroup: function(parentgroupid, groupname,cb) {			
+			
+			params = {
+				"action": "msg.crtgrp",
+				"groupname": groupname,
+				"parentgroupid": parentgroupid
+			}
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php", params, this._cb_standard);
+		},
+		
+		/**
+		 * updates the group with given groupid
+		 * @param {Object} groupid
+		 * @param {Object} groupname
+		 * @param {Object} protection
+		 * @param {Object} zommlevel
+		 * @param {Object} lat
+		 * @param {Object} lon
+		 * @param {Object} tagname
+		 * @param {Object} cb
+		 */
+		updateGroup: function(groupid,groupname,protection,zommlevel,lat,lon,tagname,cb) {
+			
+			params = {
+				"action": "msg.updategrp",
+				"groupid":groupid,
+				"groupname": groupname,
+				"parentgroupid": "-1",
+				"protection":protection,
+				"zoomlevel":zommlevel,
+				"lat":lat,
+				"lon":lon,
+				"tagname":tagname
+			}
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php", params, this._cb_standard);
 		}
 		
 });

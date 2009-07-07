@@ -9,6 +9,7 @@ dojo.require("dojox.grid.DataGrid");
 
 dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated], {
 	grid: null,
+	widgetsInTemplate: true,
 	templatePath:    dojo.moduleUrl('trm.widget', 'ItemManager.html'),
 	_gridStructure: [
 		{ field: "itemname", name: "Part Number", width: 'auto' },
@@ -17,7 +18,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	_store: null,
 	postCreate: function() {
 		this.inherited(arguments);
-		this.domNode.setAttribute("class","trmItemManager_hidden");
+		this.domNode.setAttribute("class","trmItemManager_hidden trmDialog");
 		//this.grid = new dojox.grid.DataGrid(null,this.trmItemManagerGridNode);
 		
 		this._store = null; //new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" }); 
@@ -29,6 +30,8 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 					onCellMouseOver: dojo.hitch(this,this._onCellMouseOver),
 					structure: this._gridStructure
 		}, this.trmItemManagerGridNode);
+		
+		this.popup.targetNodeIds = this.grid.domNode.id;
 		
 		//var jsonStore = new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" });
 		//this.grid.setStore(jsonStore);
@@ -53,7 +56,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		return "";
 	},
 	_onCellMouseOver: function(sender) {
-		console.debug(sender);
+		console.debug(sender.target);
 		console.debug(this);
 		var c1 = dojo.coords(sender.target.parentNode,true);
 		if (c1) {
@@ -147,14 +150,14 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	show: function() {
 		console.debug("show");
 		this._position();
-		this.domNode.setAttribute("class","trmItemManager");
+		this.domNode.setAttribute("class","trmItemManager trmDialog");
 		console.debug(this.grid);
 		this.loadGpxFiles();
 	},
 	hide: function() {
 		console.debug(this.domNode.getAttribute("class"));
 		this.hideDndSource();
-		this.domNode.setAttribute("class","trmItemManager_hidden");
+		this.domNode.setAttribute("class","trmItemManager_hidden trmDialog");
 	}
 		
 });
