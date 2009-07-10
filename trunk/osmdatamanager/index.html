@@ -87,12 +87,12 @@
 	<script src="lib/trm/DijitClient2.js"></script>
 	<script src="lib/trm/GroupTree.js"></script>
 	<script src="lib/trm/GroupManager2.js"></script>
-	
+	<script src="lib/trm/PoiManager2.js"></script>
+	<script src="lib/trm/Markermanager2.js"></script>
 	<!--
 	<script src="lib/trm/GroupManager.js"></script>
-	<script src="lib/trm/MarkerManager.js"></script>
-	<script src="lib/trm/PoiManager.js"></script>
 	
+		
 	-->
 
 	<script src="json2.js"></script>		
@@ -136,6 +136,7 @@
 			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
     		gl_map.addLayer(gl_markers);
 			
+			var pm = new PoiManager();
 									
 			//Client Application
 			gl_application = new DijitClient2("osmdatamanager",gl_map);			
@@ -145,8 +146,8 @@
 			gl_groupmanager = new Groupmanager(gl_application);	
 			//gl_application.initGroupmanager(gl_groupmanager);
 			
+						
 			//check if users is already logged in
-			
 			var cb = {
 				func:gl_application._cb_loginUser,
 				target:gl_application
@@ -517,7 +518,7 @@
   <!-- FileList Dialog -->
   <!-- <div dojoType="dijit.Dialog" id="dlg_filelist" title="Dateiliste" onLoad="alert('x')" style="width:640px" 
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));"> -->
-  <div dojoType="trm.widget.ItemManager" class="filemanager_hidden" id="dlg_itemmanager">
+  <div dojoType="trm.widget.ItemManager" id="dlg_itemmanager">
 		<!--
 		<div id="filecontainer" >
 			
@@ -698,7 +699,7 @@
   
   <!-- Tracemanager Popup -->
   <div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="roundeddiv" style="display: none;" >
-		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_loaddata" field="display" onClick="">Anzeigen</div> 
+		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_loaddata" field="display" onClick="gl_application.displaySelected()">Anzeigen</div> 
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_edit" field="edit" onClick="gl_application.showEdit()">Bearbeiten</div>		
 	  	<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_remove" field="remove" >Entfernen</div>
 		<div dojoType="dijit.MenuSeparator"></div>	

@@ -3,3 +3,14 @@
 	border: solid 1px #83839a;	
 	padding:8px;
 }
+
+.trmHidden {
+	display:none;
+	position: absolute;
+}
+
+.trmVisible {
+	display:block;
+	visibility: visible;
+	position: absolute;
+}

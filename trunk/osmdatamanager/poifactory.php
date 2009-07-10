@@ -255,10 +255,10 @@
 		 * @param $aLatLon Object
 		 * @param $aGeoRssUrl Object
 		 */
-		function createPoi($aUsrId, $aPoiName, $aDescription, $aLat,$aLon) {
+		function createPoi($aUsrId, $aPoiName, $aDescription, $aLat,$aLon,$aZoomlevel,$aTagname) {
 			
 			if (!$this->poiExists($aUsrId, $aPoiName)) {
-				$insquery = "INSERT INTO `tab_poi` (`usrid`,`poitype`,`itemname`,`description`,`lat`,`lon`) VALUES ('$aUsrId','-1','$aPoiName','$aDescription','$aLat','$aLon')";
+				$insquery = "INSERT INTO `tab_poi` (`usrid`,`poitype`,`itemname`,`description`,`lat`,`lon`,`zoomlevel`,`tagname`) VALUES ('$aUsrId','-1','$aPoiName','$aDescription','$aLat','$aLon','$aZoomlevel','$aTagname')";
 				if ($this->executeQuery($insquery) == null)
 				{
 					return false;

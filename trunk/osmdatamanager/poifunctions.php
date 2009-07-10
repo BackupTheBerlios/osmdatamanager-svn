@@ -62,7 +62,7 @@
 			//msg_createpoi
 			if ($action == msg_createpoi) {
 				if (!$pof->poiExists($usr->getUid(),$poiname)) {
-					if ($pof->createPoi($usr->getUid(),$poiname,$description,$lat,$lon,"Poi")) {
+					if ($pof->createPoi($usr->getUid(),$poiname,$description,$lat,$lon,$zoomlevel,$tagname,"Poi")) {
 						echo application_getMessage(msg_crtok);	
 					} else {
 						echo application_getMessage(msg_failed);	

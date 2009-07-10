@@ -1,10 +1,98 @@
 .trmItemManager {
-	position:absolute;
-	visibility:visible;
 	width:640px;	
 }
 
-.trmItemManager_hidden {
-	display:none;
-	visibility: hidden;
+
+/*
+.trmGridRow {
+	border: solid 1px red;
+	
 }
+
+.dojoxGridRowTable td {
+	padding-left:20px;
+}
+
+.heading {
+    font-weight: bold;
+    padding-bottom: 0.25em;
+  }
+
+  #dlgfilelist_tab_grid {
+    border: 1px solid #333;
+    width: 45em;
+    height: 30em;
+  }
+
+  #dlgfilelist_tab_grid .dojoxGrid-row {
+    border: none;
+  }
+
+  #dlgfilelist_tab_grid .dojoxGrid-row-table {
+    border-collapse: collapse;
+  }
+
+  #dlgfilelist_tab_grid .dojoxGrid-cell {
+    border: none;
+    padding: 10px;
+  }
+
+  .selectedRow .dojoxGrid-cell {
+    background-color: Red; /*#003366;
+    color: white;
+  }
+
+  .specialRow .dojoxGrid-cell {
+    background-color: dimgray;
+  }
+
+  .selectedRow.specialRow .dojoxGrid-cell {
+    text-decoration: line-through;
+    /* duplicate selection background-color so has precendence over specialRow background-color 
+    background-color: #003366;
+  }
+
+  /* in the yellow column, assign specific decoration for special rows that are selected 
+  .selectedRow.specialRow .yellowColumnData {
+    text-decoration: line-through underline;
+  }
+
+  .yellowColumn {
+    color: #006666;
+  }
+
+  .overRow .dojoxGrid-cell {
+    text-decoration: underline;
+  }
+
+  .greenColumn {
+    color: yellow;
+    background-color: #006666;
+    font-style: italic;
+  }
+  .yellowColumnData {
+    background-color: yellow;
+    text-decoration: underline;
+  }
+
+.filemanager_hidden {
+	position:absolute;
+	/*display:none;
+	visibility:hidden;
+	top:60;
+	left:60;
+	background-color:#dbdbdb;
+	width: 640px;
+}
+
+.filemanager_visible {
+	position:absolute;
+	top:60;
+	left:240;
+	visibility:visible;
+	background-color:#dbdbdb;
+	/*width: 640px;
+	z-index:10;
+	border:solid 1px black;
+}
+*/

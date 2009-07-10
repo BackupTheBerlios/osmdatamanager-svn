@@ -9,6 +9,13 @@ dojo.declare("DijitClient2", Application2, {
 			dojo.connect(dijit.byId("dlg_group"),"onOkClick",this,"_dlgGrp_onOkClick");
 			dojo.connect(dijit.byId("dlg_group"),"onGetPoint",this,"_onGetPointClick");
 			dojo.connect(dijit.byId("dlg_group"),"onZoomlevelClick",this,"_onZoomlevelClick");
+			
+			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onGetPoint",this,"_onGetPointClick");
+			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onZoomlevelClick",this,"_onZoomlevelClick");
+			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"_cb_createPoi",this,"_updateitem");
+			
+			//onDblClick
+			
 			this.senderdialog = null;        
         },
 		
@@ -57,11 +64,10 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		/**
-		 * gets the zoomlevel from the map and returns it to the sender
+		 * function to get a point from a map
 		 * @param {Object} sender
 		 */
 		_onGetPointClick: function(sender) {
-			console.debug(this);
 			this.senderdialog = sender;
 			var cb = {
 				func: this._cb_onGetPointClick,
@@ -70,10 +76,26 @@ dojo.declare("DijitClient2", Application2, {
 			this.getPoint(cb,sender,"Punkt","machen Sie einen Doppelklick einen Punkt");				
 		},
 		
+		/**
+		 * gets the zoomlevel from the map and returns it to the sender
+		 * @param {Object} sender
+		 */
 		_onZoomlevelClick: function(sender) {
 			var zoom = this.map.getZoom();
 			if (zoom) {
 				sender.setZoomlevel(zoom);
+			}
+		},
+		
+		/**
+		 * updates a item in the grouptree
+		 * @param {Object} response
+		 * @param {Object} ioArgs
+		 */
+		_updateitem: function(response, ioArgs) {
+			if (response != "msg.failed") {
+				var itm1 = response;
+				gl_groupmanager.getGroupTree().updateItem(itm1);
 			}
 		},
 		
@@ -125,31 +147,45 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} sender
 		 */
 		groupTreeOpenmenu: function(sender) {
-			console.debug("groupTreeOpenmenu");
 			this.disabledAllMenuItems();
-			var grpTree = gl_groupmanager.getGroupTree();
-			if (grpTree) {
-				var itm1 = grpTree.getSelectedItem();
-				if (itm1) {
-					switch(itm1.itemtype.toLowerCase()) {
-						case "group":
-							dijit.byId('itm_loaddata').attr("disabled",false);
-							dijit.byId('itm_edit').attr("disabled",false);
-							dijit.byId('itm_remove').attr("disabled",false);
-							dijit.byId('itm_manager').attr("disabled",false);
-							dijit.byId('itm_submenu_groups').attr("disabled",false);
-							dijit.byId('itm_createmaingroup').attr("disabled",false);
-							dijit.byId('itm_createsubgroup').attr("disabled",false);
-							dijit.byId('itm_deletegroup').attr("disabled",false);
-							dijit.byId('itm_updatetree').attr("disabled",false);
-							break;
-					}
+			
+			var itm1 = this.getSelectedItem();
+			if (itm1) {
+				switch(itm1.itemtype.toLowerCase()) {
+					case "poi":
+						console.debug("a");
+						dijit.byId('itm_loaddata').attr("disabled",false);
+						dijit.byId('itm_edit').attr("disabled",false);
+						dijit.byId('itm_remove').attr("disabled",false);
+						dijit.byId('itm_manager').attr("disabled",false);
+						dijit.byId('itm_updatetree').attr("disabled",false);
+						break;
+					case "group":
+						console.debug("b");
+						dijit.byId('itm_loaddata').attr("disabled",false);
+						dijit.byId('itm_edit').attr("disabled",false);
+						dijit.byId('itm_remove').attr("disabled",false);
+						dijit.byId('itm_manager').attr("disabled",false);
+						dijit.byId('itm_submenu_groups').attr("disabled",false);
+						dijit.byId('itm_createmaingroup').attr("disabled",false);
+						dijit.byId('itm_createsubgroup').attr("disabled",false);
+						dijit.byId('itm_deletegroup').attr("disabled",false);
+						dijit.byId('itm_updatetree').attr("disabled",false);
+						break;
 				}
 			}
 		},
+		
+		/**
+		 * enables private mode
+		 */
 		enablePrivatemode: function() {
 			
 		},
+		
+		/**
+		 * disables private mode
+		 */
 		disablePrivatemode: function() {
 			this.disabledAllMenuItems();
 		},
@@ -192,18 +228,36 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		/**
+		 * returns the selected item from the grouptree
+		 */
+		getSelectedItem: function() {
+			return gl_groupmanager.getGroupTree().getSelectedItem();	
+		},
+		
+		/**
 		 * shows a custom edit dialog for the selected item
 		 */
 		showEdit: function() {
-			console.debug("showedit")
-			var itm1 = gl_groupmanager.getGroupTree().getSelectedItem();
+			var itm1 = this.getSelectedItem();
 			if (itm1) {
-				console.debug(itm1);
 				switch(itm1.itemtype.toLowerCase()) {
 					case "group":
 						this.showGroupDialog(false,true);
 						break;
+					case "poi":
+						this.showPoiDialog(itm1);
+						break;
 				}
+			}
+		},
+		
+		/**
+		 * displays the selected item on the map
+		 */
+		displaySelected: function() {
+			var itm1 = this.getSelectedItem();
+			if (itm1) {
+				this.displayItem(itm1);
 			}
 		},
 		
@@ -223,6 +277,7 @@ dojo.declare("DijitClient2", Application2, {
 		showItemManager: function() {
 			var dlg1 = dijit.byId('dlg_itemmanager');
 			if (dlg1)  {
+				dlg1.clientapp = this;
 				dlg1.show();
 			}
 		},
@@ -236,7 +291,7 @@ dojo.declare("DijitClient2", Application2, {
 				if (isroot) {
 					dlg1.show(isupdate,isroot);
 				} else {
-					var itm1 = gl_groupmanager.getGroupTree().getSelectedItem();
+					var itm1 = this.getSelectedItem();
 					if (itm1) {
 					  if (isupdate) {
 					  	dlg1.setGroup(itm1);
@@ -264,10 +319,12 @@ dojo.declare("DijitClient2", Application2, {
 		/**
 		 * shows the poi dialog
 		 */
-		showPoiDialog: function() {
-			var dlg1 = dijit.byId('dlg_poi');
+		showPoiDialog: function(item) {
+			var dlg1 = dijit.byId('dlg_itemmanager');
 			if (dlg1)  {
-				dlg1.show();
+				dlg1.poidialog.prevWidget = null;
+				dlg1.poidialog.setPoi(item);
+				dlg1.poidialog.show(true);
 			}
 		},
 		

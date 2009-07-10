@@ -49,25 +49,7 @@ dojo.declare("Groupmanager", Serverconnection, {
 				console.error(e);	
 			}
 		},
-		
-		/**
-		 * standard callback, check if answer is not msg.failed an call custom callback if defined
-		 * @param {Object} response
-		 * @param {Object} ioArgs
-		 */
-		_cb_standard: function(response, ioArgs) {
-			try {		
-				if (response != "msg.failed")
-				{
-					if (this.callback != null) {
-						this.callback.func.apply(this.callback.target, [response, ioArgs]);
-					}
-					
-				}
-			} catch (e)
-			{console.error(e);}
-		},
-		
+						
 		/**
 		 * callback after createRootGroup and createSubGroup 
 		 * @param {Object} response

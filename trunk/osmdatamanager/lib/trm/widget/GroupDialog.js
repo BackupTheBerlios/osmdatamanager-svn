@@ -13,17 +13,9 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 	onOkClick: function(data) {
 		
 	},
-	onGetPoint: function(sender) {
-		
-	},
-	onZoomlevelClick: function(sender) {
-		
-	},
 	templatePath:    dojo.moduleUrl('trm.widget', 'GroupDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
-		this.domNode.setAttribute("class","trmGroupDialog_hidden trmDialog");
-		
 	},
 	_getProtection: function() {
 		var val = "private";
@@ -49,17 +41,8 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 		}
 		return true;
 	},
-	_zoomLevelClick: function() {
-		this.onZoomlevelClick(this);
-	},
-	_getPointClick: function() {
-		this.onGetPoint(this);
-	},
-	_cancelClick: function(e) {
-		this.hide();
-	},
 	_okClick: function(e) {
-		console.debug("_ok");
+		this.inherited(arguments);
 		if (this._dataOk()) {
 			var itemid = -1;
 			if (this.group)
@@ -119,11 +102,9 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 		this.dlgGrp_spinZoomlevel.attr("value",zoomlevel);	
 	},
 	show: function(update,root) {
-		//this.layout(this.node);
+		this.inherited(arguments);
 		this.isUpdate = update;
-		this.domNode.setAttribute("class","trmGroupDialog trmDialog");
-		this._position();
-		console.debug(this.group);
+				
 		if (this.isUpdate) {
 			this.dlgGrp_tblUpdate.setAttribute("class", "table_update");
 		}
@@ -135,10 +116,6 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 			
 			this.dlgGrp_tblUpdate.setAttribute("class", "table_update_hidden");
 		}
-	},
-	hide: function() {
-		//this._resetFields();
-		this.domNode.setAttribute("class","trmGroupDialog_hidden trmDialog");
 	}
 		
 });

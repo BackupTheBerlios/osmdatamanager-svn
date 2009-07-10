@@ -2,9 +2,17 @@
  * base class for server connections 
  */
 dojo.declare("Serverconnection", null, {
-        constructor: function(){
+        
+		constructor: function(){
                 
         },
+		
+		/**
+		 * 
+		 * @param {Object} targetfile
+		 * @param {Object} params
+		 * @param {Object} callBack
+		 */
 		loadFromServer: function(targetfile, params, callBack){
 			try {
 				dojo.xhrPost({ //
@@ -28,6 +36,24 @@ dojo.declare("Serverconnection", null, {
 			catch (e) {
 				console.error(e);
 			}
+		},
+		
+		/**
+		 * standard callback, check if answer is not msg.failed an call custom callback if defined
+		 * @param {Object} response
+		 * @param {Object} ioArgs
+		 */
+		_cb_standard: function(response, ioArgs) {
+			try {		
+				if (response != "msg.failed")
+				{
+					if (this.callback != null) {
+						this.callback.func.apply(this.callback.target, [response, ioArgs]);
+					}
+					
+				}
+			} catch (e)
+			{console.error(e);}
 		}
 		
 });
@@ -104,6 +130,7 @@ dojo.declare("Application2", Serverconnection, {
 				this.callback.func.apply(this.callback.target, [e]);
 			}	
 		},
+		
 				
 		/*******************************************************
 		 * 
@@ -181,6 +208,22 @@ dojo.declare("Application2", Serverconnection, {
 		},
 		
 		/**
+		 * 
+		 * @param {Object} child
+		 */
+		getIconname1: function(child) {
+			if (child.tags != null) {
+				for (var xx = 0; xx < child.tags.length; xx++) {
+					var tag1 = child.tags[xx];
+					if (tag1.tagname == child.tagname) {
+						return tag1.icon1;
+					}
+				}	
+			}
+			return "";
+		},
+		
+		/**
 		 * removes all layers with given layername from the map
 		 * @param {Object} layername
 		 */
@@ -252,6 +295,74 @@ dojo.declare("Application2", Serverconnection, {
 					alert(e);
 				}
 			}
+		},
+		
+		/**
+		 * loads childitems from a group 
+		 * @param {Object} group
+		 * @param {Object} cb
+		 */
+		getGroupItems: function(group, cb){			
+			var params = {
+				"action": "msg.getgrpitems",
+				"groupid": group.itemid,
+				"groupname": group.itemname
+			}
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php", params,this. _cb_standard);
+		},
+		
+		/**
+		 * displays a poi on the map
+		 * @param {Object} poi
+		 */
+		displayPoi: function(poi) {
+			var mm = new MarkerManager();
+			var lonLat = new OpenLayers.LonLat(poi.lon, poi.lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+			mm.addPoiMarker(lonLat, gl_markers, poi.description,this.getIconname1(poi));
+			this.centerMap(poi.lat, poi.lon, poi.zoomlevel);	
+		},
+		
+		/**
+		 * displays a item on the map
+		 * @param {Object} item
+		 */
+		displayItem: function(item) {
+			switch (item.itemtype.toLowerCase()) {
+				case "group":
+					this.displayGroupItems(item);
+					break;
+				case "poi":
+					this.displayPoi(item);
+					break;
+			}
+		},
+		
+		/**
+		 * 
+		 * @param {Object} itemist
+		 */
+		displayItemList: function(itemlist) {
+			var prnt = itemlist[0];
+			for (var i=1;i<itemlist.length;i++){
+				var itm1 = itemlist[i];
+				this.displayItem(itm1);
+			}
+			
+			if (prnt) {
+				this.centerMap(prnt.lat, prnt.lon, prnt.zoomlevel);		
+			}
+		},
+		
+		/**
+		 * 
+		 */
+		displayGroupItems: function(group) {
+			var cb = {
+				target: this,
+				func: this.displayItemList
+			}
+			this.getGroupItems(group,cb);
 		}
 		
 		

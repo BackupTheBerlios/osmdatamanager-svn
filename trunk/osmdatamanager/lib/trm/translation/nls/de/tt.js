@@ -17,5 +17,6 @@
 	"delete":"Löschen",
 	"clearmap":"Karte bereinigen",
 	"updatetree":"Baum aktualisieren",
-	"groups":"Gruppen trns"
+	"groups":"Gruppen trns",
+	"createpoi": "Poi erstellen"
 })

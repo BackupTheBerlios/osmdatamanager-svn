@@ -376,17 +376,19 @@ Array.prototype.remove = function(from, to) {
         try {
             if (isloading)
                 return;
-			            
-			console.debug("_nodeClicked 1");
-			
+						
 			if (clickednodeelem != null)
                 _unsetSelected();
             
 			clickednodeelem = sender;			
 			_setSelected();
 			isloading = false;
-			
-			console.debug("_nodeClicked 1");
+			/*
+			var itm1 = self.getSelectedItem();
+			if (itm1) {
+				self.onDblClick(itm1);	
+			}
+			*/
             
         } catch (e) {
             handleException(e);
@@ -400,35 +402,41 @@ Array.prototype.remove = function(from, to) {
 	 */
 	var _nodeDblClicked = function(sender){
 		try {
-			console.debug("loading: " + isloading);
-			console.debug(sender.nodeName);
 			if (isloading) 
 				return;
 		
-			if (!self.hasChildren(sender))
-				return;
+			var itm1 = self.getSelectedItem();
+			if (itm1) {
+				if (itm1.itemtype.toLowerCase() == "group") {
+					if (!self.hasChildren(sender)) 
+						return;
+					
+					isloading = true;
+					if (sender.getAttribute("expanded") == "false") {
+						sender.setAttribute("expanded", "true");
 						
-			isloading = true;		
-			console.debug(sender);
-			if (sender.getAttribute("expanded") == "false") {
-				sender.setAttribute("expanded","true");
-				
-				if (clickednodeelem != null) 
-					_unsetSelected();
-					
-				clickednodeelem = sender;						
-					
-				_setSelected();
-				_expandNode(sender);
-				_loadGroupItems();				
-			} else {
-				if (clickednodeelem != null) 
-					_unsetSelected();	
-				clickednodeelem = sender;
-				sender.setAttribute("expanded","false");
-				_unsetSelected();
-				_collapseNode(sender);
-				isloading = false;
+						if (clickednodeelem != null) 
+							_unsetSelected();
+						
+						clickednodeelem = sender;
+						
+						_setSelected();
+						_expandNode(sender);
+						_loadGroupItems();
+					}
+					else {
+						if (clickednodeelem != null) 
+							_unsetSelected();
+						clickednodeelem = sender;
+						sender.setAttribute("expanded", "false");
+						_unsetSelected();
+						_collapseNode(sender);
+						isloading = false;
+					}
+				}
+				else {
+					self.onDblClick(itm1);
+				}
 			}
 		} 
 		catch (e) {
@@ -538,37 +546,50 @@ Array.prototype.remove = function(from, to) {
 		return true;
 	}
 	
-	var _updateItem = function (parent,oldchild,newchild) {
-		alert("update");
+	var _updateItem = function (item) {
+		var nd1 = _getNodeByItemId(item.itemid,item.itemtype);
+		if (nd1) {
+			var nd2 = _getChildnode(nd1,"A");
+			if (nd2) {
+				nd2.innerHTML = item.itemname;
+			}
+		
+			var id = "tn_" + item.itemtype + "_" + item.itemid;
+			_removeObject(nd1);
+			_addObject(id,item);		    
+		}
 	}
 	
-	var _createChildnode = function(parent, child) {      
-        var e1 = dojo.doc.createElement("SPAN");				
+	var _createChildnode = function(parent, child){
+		var e1 = dojo.doc.createElement("SPAN");
 		//var a1 = document.createElement("DIV");
 		//var a1 = dojo.doc.createElement("div");
 		var a1 = dojo.doc.createElement("A");
 		
 		var i1 = dojo.doc.createElement("IMG");
-        
+		
 		var t1 = dojo.doc.createElement("TABLE");
 		var r1 = dojo.doc.createElement("TR");
 		var td1 = dojo.doc.createElement("TD");
 		var td2 = dojo.doc.createElement("TD");
 		try {
 			/*
-			var dnd = new dojo.dnd.Target(a1, {
-				accept: ["dnd_source"]
-			});
-			*/
+		 var dnd = new dojo.dnd.Target(a1, {
+		 accept: ["dnd_source"]
+		 });
+		 */
 			//td2.id = "td_" + treeobjects.length;
 			//td2.setAttribute("accept","dnd_source");
 			
-			var dnd = new dojo.dnd.Source(e1,{accept:["dnd_source"]});
+			var dnd = new dojo.dnd.Source(e1, {
+				accept: ["dnd_source"]
+			});
 			//dnd.parent = t1;
 			dojo.connect(dnd, "onDndDrop", this, _onDrop);
 			dnd.checkAcceptance = _check;
 		//	a1.setAttribute("accept","dnd_source");
-		} catch (e) {
+		} 
+		catch (e) {
 			alert(e);
 		}
 		
@@ -577,14 +598,34 @@ Array.prototype.remove = function(from, to) {
 		r1.appendChild(td1);
 		r1.appendChild(td2);
 		
-		var tn = new TreeNode(e1,a1,i1);
-					
+		var tn = new TreeNode(e1, a1, i1);
+		
 		e1.id = "tn_" + child.itemtype + "_" + child.itemid;
 		idx++;
 		
-		_addObject(e1.id,child);		    
-		a1.onclick = function() { _nodeClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
-		a1.onmouseover = function() {_mouseOver(this)};
+		_addObject(e1.id, child);
+		a1.onclick = function(){
+			_nodeClicked(this.parentNode.parentNode.parentNode.parentNode)
+		}; // a->td->tr->table->span
+		a1.ondblclick = function(){
+			_nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode)
+		}; // a->td->tr->table->span
+		a1.onmouseover = function(){
+			_mouseOver(this)
+		};
+		
+		
+		if (child.itemtype.toLowerCase() == "group") {
+			i1.onclick = function(){_nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
+			i1.ondblclick = function(){_nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
+		}
+		else {
+			i1.onclick = function(){_nodeClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
+			i1.ondblclick = function(){_nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
+		}
+		
+		//nd1.c_image.onclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
+		//nd1.c_href.ondblclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
 		
 		e1.appendChild(i1);
         e1.appendChild(a1);
@@ -629,8 +670,8 @@ Array.prototype.remove = function(from, to) {
 	{
 		var nd1 = _createChildnode(parent,child);
 							
-		nd1.c_image.onclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
-		nd1.c_href.ondblclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
+		//nd1.c_image.onclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) };   // img->td->tr->table->span
+		//nd1.c_href.ondblclick = function() { _nodeDblClicked(this.parentNode.parentNode.parentNode.parentNode) }; // a->td->tr->table->span
 		
 		nd1.destroy;
 	}
@@ -886,6 +927,14 @@ Array.prototype.remove = function(from, to) {
 				}
 			}
 		}
+	}
+	
+	this.updateItem = function(item) {
+		_updateItem(item);
+	}
+	
+	this.onDblClick = function(item) {
+		console.debug(item);
 	}
 	
 	this.deleteSelected = function() {

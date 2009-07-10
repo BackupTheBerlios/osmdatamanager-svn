@@ -8,7 +8,6 @@ dojo.require("dojo.parser");
 
 dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated], {
 	widgetsInTemplate: true,
-	grid: null,
 	templatePath:    dojo.moduleUrl('trm.widget', 'GroupDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);

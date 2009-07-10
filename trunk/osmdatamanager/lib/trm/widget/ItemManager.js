@@ -1,5 +1,6 @@
 dojo.provide("trm.widget.ItemManager");
 dojo.require("trm.widget._TrmWidget");
+dojo.require("trm.widget.PoiDialog");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 dojo.require("dojo.data.ItemFileReadStore");
@@ -9,46 +10,37 @@ dojo.require("dojox.grid.DataGrid");
 
 dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated], {
 	grid: null,
+	clientapp: null,
 	widgetsInTemplate: true,
 	templatePath:    dojo.moduleUrl('trm.widget', 'ItemManager.html'),
 	_gridStructure: [
-		{ field: "itemname", name: "Part Number", width: 'auto' },
+		{ field: "itemname", name: "Part Number", width: 'auto',cellStyles: 'padding-left:40px' },
 		{ field: "itemtype", name: "Minimum Temperature", width: "100px" }
 	],
 	_store: null,
 	postCreate: function() {
 		this.inherited(arguments);
-		this.domNode.setAttribute("class","trmItemManager_hidden trmDialog");
-		//this.grid = new dojox.grid.DataGrid(null,this.trmItemManagerGridNode);
-		
+				
 		this._store = null; //new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" }); 
-					
 		this.grid = new dojox.grid.DataGrid({
 					query: { itemname: '*' },
 					//store: this._store,
 					autoHeight: true,
 					onCellMouseOver: dojo.hitch(this,this._onCellMouseOver),
+					onCellContextMenu: dojo.hitch(this,this._onCellContextMenu),
+					onStyleRow: dojo.hitch(this,this._onStyleRow),
 					structure: this._gridStructure
 		}, this.trmItemManagerGridNode);
 		
 		this.popup.targetNodeIds = this.grid.domNode.id;
-		
-		//var jsonStore = new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" });
-		//this.grid.setStore(jsonStore);
 		this.grid.startup();
-		console.debug(this.grid.domNode);
 	},
 	_getIconname1: function(item) {
-		if (item.tags != null) {
-			
-			return item.tags[3].icon1;
-			
+		if (item.tags != null) {	
 			for (var x = 0; x < item.tags.length; x++) {
 				var tag1 = item.tags[x];
-				
-				console.debug(item.tags[x].tagname);
-				console.debug(item.tagname);
-				if (tag1.tagname == item.tagname) {
+								
+				if (tag1.tagname[0] == item.tagname[0]) {
 					return item.tags[x].icon1;
 				}
 			}	
@@ -56,11 +48,8 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		return "";
 	},
 	_onCellMouseOver: function(sender) {
-		console.debug(sender.target);
-		console.debug(this);
 		var c1 = dojo.coords(sender.target.parentNode,true);
 		if (c1) {
-			
 			var s1 = document.getElementById("dnd_source");
 			if (s1) {
 				s1.setAttribute("class","dnd_source_visible");
@@ -79,6 +68,12 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 			
 		}
 	},
+	_onStyleRow: function(inrow) {
+		this.popup.bindDomNode(inrow.node);
+	},
+	_onCellContextMenu: function(e) {
+		//_onCellContextMenu
+	},
 	hideDndSource: function() {
 		var src1 = document.getElementById("dnd_source");
 		if (src1) {
@@ -86,78 +81,48 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 			src1.setAttribute("className", "dnd_source_hidden");
 		}	
 	},
+	_crtPoiClick: function() {
+		this.poidialog.prevWidget = this;
+		this.hide();
+		
+		/*
+		if (this.clientapp) {
+			dojo.connect(this.poidialog,"onGetPoint",this.clientapp,"_onGetPointClick");
+			dojo.connect(this.poidialog,"onZoomlevelClick",this.clientapp,"_onZoomlevelClick");
+		}
+		*/
+		this.poidialog.show();	
+	},
+	_edtPoiClick: function() {
+	
+	},
 	loadPois: function() {
 		this.hideDndSource();
-		
-		/*
-		if (this._store != null)
-			this._store.destroy();
-		*/
-		
 		this._store = new dojo.data.ItemFileReadStore({ url: "poifunctions.php?action=msg.getpois" });
-		/*
-		this._store.url = "poifunctions.php?action=msg.getpois";
-		
-		this._store.fetch({
-			query: {
-				itemname: '*'
-			}
-		});
-		*/
-		
+				
 		if (this.grid != null) {
 			this.grid.setStore(this._store);
 			this.grid.update();
 		}
 	},
-	loadGpxFiles: function() {
-		console.debug("show");
-		console.debug(this.grid);
-		
-		this.hideDndSource();
-				
+	loadGpxFiles: function() {		
+		this.hideDndSource();		
 		this._store = new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" });
 		
-		/*
-		if (this._store != null)
-			this._store.destroy();
-		
-		
-		*/
-		/*
-		this._store.url = "filefunctions.php?action=msg.getfiles";
-		
-		
-		s1.fetch({
-			query: {
-				itemname: '*'
-			}
-		})
-		*/
-		//var grid = dijit.byId('dlgfilelist_tab_grid');
 		if (this.grid != null) {
 			this.grid.setStore(this._store);
 			this.grid.update();
-			//s1.destroy();
 		}
 	},
-	_cancelClick: function(e) {
-		this.hide();
-	},
 	_okClick: function(e) {
-		console.debug("_ok");
+		this.inherited(arguments);
 	},
 	show: function() {
-		console.debug("show");
-		this._position();
-		this.domNode.setAttribute("class","trmItemManager trmDialog");
-		console.debug(this.grid);
+		this.inherited(arguments);
 		this.loadGpxFiles();
 	},
-	hide: function() {
-		console.debug(this.domNode.getAttribute("class"));
+	hide:function() {
+		this.inherited(arguments);
 		this.hideDndSource();
-		this.domNode.setAttribute("class","trmItemManager_hidden trmDialog");
 	}
-		
 });

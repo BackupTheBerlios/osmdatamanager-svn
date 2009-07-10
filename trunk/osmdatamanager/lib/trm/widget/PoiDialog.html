@@ -1,40 +1,46 @@
-<div class="trmPoiDialog">
+<div class="trmDialog trmHidden">
 	<table>
-	    <input dojoType="dijit.form.TextBox" type="hidden" visible="false" name="tb_poi_poiid" id="tb_poi_poiid" />
+	    <input dojoType="dijit.form.TextBox" type="hidden" visible="false" />
 		<tr>
 	      <td><label for="name">Bezeichnung: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poidescription" id="tb_poidescription" /></td>
+	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbDescription"  type="text"  /></td>
 	    </tr>
 		<tr>
 	      <td><label for="name">Tagname:</label></td>
-	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="dlpoi_tb_tagname" id="dlpoi_tb_tagname" /></td>
+	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbTagname" /></td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Position: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lat" id="tb_poi_lat" /></td>
-		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lon" id="tb_poi_lon" /></td>
-		  <td><button dojoType="dijit.form.Button" id="dlgpoi_btn_selectpoint">...</button></td>	
+	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbLat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbLon" /></td>
+		  <td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _getPointClick">...</button></td>	
 	    </tr>
 		<tr>
-			<td><label for="loc">Zoomlevel:</label></td>
+			<td><label>Zoomlevel:</label></td>
 			<td><input dojoType="dijit.form.NumberSpinner"
 							    value="14"
 							    class="medium"
 							    constraints="{max:20,min:1,places:0}"
 							    name="dlgpoi_zommlevel"
-							    id="dlgpoi_zommlevel" />
+							    dojoAttachPoint="dlgPoi_spinZoomlevel"
+								/>
 			</td>
-			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_zoomlevel">Zoomlevel von Karte</button></td>	
+			<td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _zoomLevelClick">Zoomlevel von Karte</button></td>	
 		</tr> 
 		<tr>
-			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_showpiclist">[]</button></td>	
+			<td><button dojoType="dijit.form.Button" >[]</button></td>	
 		</tr>
 		<tr>
 			<td><label for="loc">Htmltext: </label></td>	 
-		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" style="max-width:320px" id="ta_poilongtext" name="ta_poilongtext"></textarea></td>
+		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" dojoAttachPoint="dlgPoi_tbHtmlText" style="max-width:320px" ></textarea></td>
 	    </tr>
-		<tr>
-			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_ok">Ok</button></td>
-		</tr>
-	  </table>
+		</table>
+		<hr/>
+		<table>
+			<tr>
+				<td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick:_okClick">Ok</button></td>
+				<td><button dojoType="dijit.form.Button"  dojoAttachEvent="onClick:_cancelClick">Abbrechen</button></td>	
+			</tr>
+		</table>
+	  
 </div>

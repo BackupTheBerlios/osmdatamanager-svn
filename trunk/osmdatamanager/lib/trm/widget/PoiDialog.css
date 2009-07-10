@@ -1,10 +1,4 @@
 .trmPoiDialog {
-	position:absolute;
-	display:block;
-	visibility: visible;
 }
 
-.trmPoiDialog_hidden {
-  display:none;
-  visibility:hidden;
-}
+

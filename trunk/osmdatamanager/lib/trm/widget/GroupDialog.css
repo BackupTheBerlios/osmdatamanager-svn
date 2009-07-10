@@ -1,11 +1,5 @@
 .trmGroupDialog {
-	position:absolute;
-	visibility:visible;
-}
-
-.trmGroupDialog_hidden {
- 	display:none;
-	visibility:hidden;	
+	
 }
 
 .trmGroupDialog .table_update {

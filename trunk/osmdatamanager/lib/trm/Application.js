@@ -449,7 +449,7 @@ TRM.ClientApplication = function(openlayersMap)
 			}	
 		}
 		return "";
-	}
+	},
 	
 	/**
 	 * 
