@@ -18,5 +18,7 @@
 	"clearmap":"Karte bereinigen",
 	"updatetree":"Baum aktualisieren",
 	"groups":"Gruppen trns",
-	"createpoi": "Poi erstellen"
+	"createpoi": "Poi erstellen",
+	"usersettings": "Benutzereinstellungen"
+	
 })

@@ -23,7 +23,7 @@
 	 * constants
 	 ****************************************************/ 
 	 
-	 //actions
+	 //group actions
 	 define ("msg_crtgrp","msg.crtgrp");
 	 define ("msg_delgrp","msg.delgrp");
 	 define ("msg_getgrps","msg.getgrps");
@@ -37,11 +37,15 @@
 	 define ("msg_getgrppoisrecursiv","msg.getgrppoisrecursiv");
 	 define ("msg_getgrpitems","msg.getgrpitems");
 	 define ("msg_getpublicgrpitems","msg.getpublicgrpitems");	
-				 
+     define ("msg_remgrpitm","msg.remgrpitm");
+	 
+	 //poi actions
 	 define ("msg_createpoi","msg.createpoi");
+	 define ("msg_deletepoi","msg.deletepoi");
 	 define ("msg_getpois","msg.getpois");
 	 define ("msg_getpoi","msg.getpoi");
 	 define ("msg_updatepoi","msg.updatepoi");
+	 //
 	 define ("msg_addgrppois","msg.addgrppois");	 
 	 define ("msg_remgrppois","msg.remgrppois");
 	 define ("msg_remgrpfiles","msg.remgrpfiles");
@@ -67,6 +71,7 @@
 	 //return values
 	 define ("msg_crtok","msg.crtok");
 	 define ("msg_addok","msg.addok");
+	 define ("msg_remok","msg.remok");
 	 define ("msg_delok","msg.delok");
 	 define ("msg_failed","msg.failed");
 	 define ("msg_none","msg.none");

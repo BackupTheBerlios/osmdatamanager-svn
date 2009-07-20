@@ -19,15 +19,18 @@
   
   $action    = $_REQUEST['action'];
   if (isset($action)) {  
-	  $username  = $_REQUEST['username'];  
+	  $username  = $_REQUEST['username'];
+	  $userid    = $_REQUEST['userid'];  
 	  $password  = $_REQUEST['password'];
 	  $email     = $_REQUEST['email'];
 	  $lat  	 = $_REQUEST['lat'];
 	  $lon  	 = $_REQUEST['lon'];
- 	  $about  	 = $_REQUEST['about'];
+ 	  $htmltext	 = $_REQUEST['htmltext'];
+	  $tagname	 = $_REQUEST['tagname'];
 	  $picture   = $_REQUEST['picture'];
 	  $deleteuser =  $_REQUEST['deleteuser'];
 	  $newpassword = $_REQUEST['newpassword'];
+	  $zoomlevel = $_REQUEST['zoomlevel'];
 	  
 	  global $gl_loglevel;
 	  $gl_loglevel 	= 1;
@@ -116,10 +119,28 @@
   if ($action == msg_updateuser)
   {
 	if (application_userisvalid()) {
-		if (application_updateactiveuser($username,$email,$lat,$lon,$about,$picture)) {
-			echo application_getMessage(msg_updateok);
-		} else {
-			echo application_getMessage(msg_failed);
+		$usr = application_gevaliduser();
+		if ($usr != null)
+		{
+		  if ($usr->itemid == $userid) {
+		  		$uf = new UserFactory();
+				if ($usr->itemname != $username) {
+		  			 if ($uf->userNameExists($username)) {
+						echo application_getMessage(msg_failed);
+						EXIT;
+					 }
+		  		}				
+				
+				if ($uf->updateUser($userid, $username, $lat, $lon,$zoomlevel, $htmltext, $tagname, $email, $picture)) {
+					$usr = $uf->getUserById($userid);
+					if ($usr != null) {
+						application_activateuser($usr);
+						echo application_getMessage($usr);
+					}
+				} else {
+					echo application_getMessage(msg_failed);
+				}
+		  }
 		}
 	}	
   }

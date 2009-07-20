@@ -28,7 +28,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], 
 		if (this.dlgPoi_tbLon.attr("value").trim() == "")
 				return false;
 		
-		if (this.dlgPoi_tbTagname.attr("value").trim() == "")
+		if (this._getTagname() == "")
 				return false;
 				
 		return true;
@@ -44,7 +44,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], 
 			var lat 		= this.dlgPoi_tbLat.attr("value");
 			var lon 		= this.dlgPoi_tbLon.attr("value");
 			var zoomlevel 	= this.dlgPoi_spinZoomlevel.attr("value");
-			var tagname 	=   this.dlgPoi_tbTagname.attr("value");
+			var tagname 	=   this._getTagname();
 			var htmltext 	=   this.dlgPoi_tbHtmlText.attr("value");
 			
 			if (this.storedata) {
@@ -84,20 +84,38 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], 
 		this.dlgPoi_tbLat.attr("value","");
 		this.dlgPoi_tbLon.attr("value","");
 		this.dlgPoi_spinZoomlevel.attr("value","");
-		this.dlgPoi_tbTagname.attr("value","");
 		this.dlgPoi_tbHtmlText.attr("value","");
+		//this.dlgPoi_tbTagname.attr("value","");
+		for (var i=(this.dlgPoi_cmbTagname.childNodes.length-1);i> -1;i--) {
+			var nd1 = this.dlgPoi_cmbTagname.childNodes[i];
+			this.dlgPoi_cmbTagname.removeChild(nd1);
+		}
+	},
+	_getTagname: function() {
+		return this.dlgPoi_cmbTagname[this.dlgPoi_cmbTagname.selectedIndex].value;	
 	},
 	_loadPoiData: function() {
 		if (this.poiitem == null)
 			return;
 		
-		console.debug(this.poiitem);
+		this._resetFields();
 		this.dlgPoi_tbDescription.attr("value",this.poiitem.itemname);
 		this.dlgPoi_tbLat.attr("value",this.poiitem.lat);
 		this.dlgPoi_tbLon.attr("value",this.poiitem.lon);
 		this.dlgPoi_spinZoomlevel.attr("value",this.poiitem.zoomlevel);
-		this.dlgPoi_tbTagname.attr("value",this.poiitem.tagname);
 		this.dlgPoi_tbHtmlText.attr("value",this.poiitem.description);
+		//this.dlgPoi_tbTagname.attr("value",this.poiitem.tagname);
+		this.dlgPoi_cmbTagname.setAttribute("value",this.poiitem.tagname);
+		for (var i=0;i<this.poiitem.tags.length;i++) {
+			var t1 = this.poiitem.tags[i];
+			var opt1 = document.createElement("option");
+			opt1.innerHTML = t1.tagname;
+			opt1.setAttribute("value",t1.tagname);
+			if (t1.tagname.toLowerCase() == this.poiitem.tagname.toLowerCase())
+			  opt1.setAttribute("selected","selected");
+			
+			this.dlgPoi_cmbTagname.appendChild(opt1);
+		}
 	},
 	setPoi: function(item) {
 		this.poiitem = item;

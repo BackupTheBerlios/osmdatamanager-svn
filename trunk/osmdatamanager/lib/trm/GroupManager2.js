@@ -9,9 +9,10 @@ dojo.declare("Groupmanager", Serverconnection, {
 				this.grouptree = new GroupTree(document.getElementById("treecontainer"),document.getElementById("treedata"));
 				this.dropitem = null;
         },
+		
 		/*********************************************************
 		 * 
-		 * callback function
+		 * callback functions
 		 * 
 		 *********************************************************/
 		
@@ -152,7 +153,7 @@ dojo.declare("Groupmanager", Serverconnection, {
 		 */
 		createSubGroup: function(parentgroupid, groupname,cb) {			
 			
-			params = {
+			var params = {
 				"action": "msg.crtgrp",
 				"groupname": groupname,
 				"parentgroupid": parentgroupid
@@ -174,7 +175,7 @@ dojo.declare("Groupmanager", Serverconnection, {
 		 */
 		updateGroup: function(groupid,groupname,protection,zommlevel,lat,lon,tagname,cb) {
 			
-			params = {
+			var params = {
 				"action": "msg.updategrp",
 				"groupid":groupid,
 				"groupname": groupname,
@@ -187,6 +188,36 @@ dojo.declare("Groupmanager", Serverconnection, {
 			}
 			this.callback = cb;
 			this.loadFromServer("groupfunctions.php", params, this._cb_standard);
+		},
+		
+		/**
+		 * deletes group with given groupid
+		 * @param {Object} groupid
+		 * @param {Object} cb
+		 */
+		deleteGroup: function(groupid,cb) {
+			var params = {
+				"action":"msg.delgrp",
+				"groupid":groupid
+			}
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php",params,this._cb_standard);
+		},
+		
+		/**
+		 * removes a child item from a group
+		 * @param {Object} groupid
+		 * @param {Object} itemid
+		 * @param {Object} cb
+		 */
+		removeGroupItem: function(groupid,itemid,cb) {
+			var params = {
+				"action":"msg.remgrpitm",
+				"groupid":groupid,
+				"grpitmid":itemid
+			}
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php",params,this._cb_standard);
 		}
 		
 });

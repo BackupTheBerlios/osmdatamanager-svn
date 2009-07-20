@@ -97,6 +97,17 @@
 				}
 			}
 			
+			//msg_remgrpitm
+			if ($action == msg_remgrpitm) {				
+				if (isset($groupid)) {
+					if ($fac->removeGroupItem($usr->getUid(), $groupid, $grpitmid)) {
+						echo application_getMessage(msg_remok);
+					} else {
+						echo application_getMessage(msg_failed);
+					}
+				}				
+			}
+			
 			//msg_getgrps
 			if ($action == msg_getgrps) {
 				$lst1 = null;

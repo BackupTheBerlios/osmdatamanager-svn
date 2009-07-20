@@ -745,14 +745,29 @@
 		*/
 		
 		/**
-		 * deletes data from tab_grp_item table
+		 * deletes all child items from the tab_grp_item table
 		 * @return 
 		 * @param $aUserId Object
-		 * @param $aTracegroupId Object
+		 * @param $aItemid Object
 		 */
-		function deletGroupItems($aUserId, $aTracegroupId) {
-			$delquery = "DELETE FROM `tab_grp_item` WHERE (usrid = $aUserId) AND (itemid = $aTracegroupId)";				
+		function deleteGroupItems($aUserId, $aItemid) {
+			$delquery = "DELETE FROM `tab_grp_item` WHERE (usrid = $aUserId) AND (itemid = $aItemid)";				
 			$this->executeQuery($delquery);
+		}
+		
+		/**
+		 * removes a child item from a group
+		 * @return 
+		 * @param $aUserId  Object
+		 * @param $aGroupId Object
+		 * @param $aItemid 	Object
+		 */
+		function removeGroupItem($aUserId, $aGroupId, $aItemid) {
+			$delquery = "DELETE FROM `tab_grp_item` WHERE (usrid = $aUserId) AND (itemid = $aGroupId) AND (childid = $aItemid)";				
+			if ($this->executeQuery($delquery))
+				return true;
+				
+			return false;
 		}
 		
 		/**
@@ -774,7 +789,7 @@
 				}
 			}
 			
-			$this->deletGroupItems($aUserId, $aGroupId);
+			$this->deleteGroupItems($aUserId, $aGroupId);
 			
 			$delquery = "DELETE FROM `tab_grp` WHERE (usrid = $aUserId) AND (itemid = $aGroupId)";				
 			$this->executeQuery($delquery);

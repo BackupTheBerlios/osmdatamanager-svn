@@ -14,6 +14,8 @@ dojo.declare("DijitClient2", Application2, {
 			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onZoomlevelClick",this,"_onZoomlevelClick");
 			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"_cb_createPoi",this,"_updateitem");
 			
+			dojo.connect(dijit.byId("dlg_user"),"onGetPoint",this,"_onGetPointClick");
+			dojo.connect(dijit.byId("dlg_user"),"onZoomlevelClick",this,"_onZoomlevelClick");
 			//onDblClick
 			
 			this.senderdialog = null;        
@@ -109,10 +111,8 @@ dojo.declare("DijitClient2", Application2, {
 			//this.updateFilelist();
 			
 			var usr = this.getActiveUser();
-			console.debug(usr);
-			console.debug(self);
 			if (usr != null) {
-				dijit.byId('btn_login').attr("label", "Logout [" + usr.username + "]");
+				dijit.byId('btn_login').attr("label", "Logout [" + usr.itemname + "]");
 				this.enablePrivatemode();
 				gl_groupmanager.getRootGroups();
 				this.centerHomebase();
@@ -124,6 +124,9 @@ dojo.declare("DijitClient2", Application2, {
 				dijit.byId('dlg_login').hide();
 			} else {
 				//self.disablePrivatemode();
+				var lat = 50.9350850727913;
+				var lon = 6.95356597872225;
+				this.centerMap(lat, lon, 6);
 			}		
 		},
 		
@@ -135,10 +138,70 @@ dojo.declare("DijitClient2", Application2, {
 		_cb_loginUser: function(response, ioArgs) {
 			var nls = dojo.i18n.getLocalization("trm.login", "Form");
 			console.debug(response);
+			if (response == "msg.logoutok") {
+				dijit.byId('btn_login').attr("label", "::Login::");
+				gl_groupmanager.getGroupTree().reset();
+				var lat = 50.9350850727913;
+				var lon = 6.95356597872225;
+				this.centerMap(lat, lon, 6);
+				return;
+			}
+			
 			if (response != "msg.loginfailed") {
 				this._cb_LoggedIn(response);
 			} else {
 				alert(nls["loginfailed"]);
+			}
+		},
+		
+		_cb_delete: function(response, ioArgs) {
+			if (response == "msg.delok") {
+				gl_groupmanager.getRootGroups();
+			}
+		},
+		
+		_cb_remove: function(response, ioArgs) {
+			if (response == "msg.remok") {
+				gl_groupmanager.getRootGroups();
+			}
+		},
+		
+		/**
+		 * deletes a group
+		 * @param {Object} item
+		 */
+		_deleteGroup: function(item) {
+			var cb = {
+				target: this,
+				func: this._cb_delete
+			}
+			
+			if (confirm("delete group " + item.itemname + " ?"))  //TODO mehrsprachig
+				gl_groupmanager.deleteGroup(item.itemid,cb);
+		},
+		
+		/**
+		 * deletes a group
+		 * @param {Object} item
+		 */
+		_deletePoi: function(item) {
+			
+		},
+		
+		/**
+		 * removes a poi from a group
+		 * @param {Object} item
+		 */
+		_removePoi: function(item) {
+			var grpid = gl_groupmanager.getGroupTree().getSelectedParentGroupId();
+			if (grpid) {
+				var cb = {
+					target: this,
+					func: this._cb_remove
+				}
+				
+				if (confirm(item.itemname + " aus Gruppe entfernen ?"))  //TODO mehrsprachig
+					gl_groupmanager.removeGroupItem(grpid,item.itemid,cb);	
 			}
 		},
 		
@@ -153,15 +216,14 @@ dojo.declare("DijitClient2", Application2, {
 			if (itm1) {
 				switch(itm1.itemtype.toLowerCase()) {
 					case "poi":
-						console.debug("a");
 						dijit.byId('itm_loaddata').attr("disabled",false);
 						dijit.byId('itm_edit').attr("disabled",false);
 						dijit.byId('itm_remove').attr("disabled",false);
 						dijit.byId('itm_manager').attr("disabled",false);
 						dijit.byId('itm_updatetree').attr("disabled",false);
+						dijit.byId('itm_removeall').attr("disabled",false);
 						break;
 					case "group":
-						console.debug("b");
 						dijit.byId('itm_loaddata').attr("disabled",false);
 						dijit.byId('itm_edit').attr("disabled",false);
 						dijit.byId('itm_remove').attr("disabled",false);
@@ -170,7 +232,16 @@ dojo.declare("DijitClient2", Application2, {
 						dijit.byId('itm_createmaingroup').attr("disabled",false);
 						dijit.byId('itm_createsubgroup').attr("disabled",false);
 						dijit.byId('itm_deletegroup').attr("disabled",false);
+						dijit.byId('itm_removeall').attr("disabled",false);
 						dijit.byId('itm_updatetree').attr("disabled",false);
+						break;
+					case "file":
+						dijit.byId('itm_loaddata').attr("disabled",false);
+						//dijit.byId('itm_edit').attr("disabled",false);
+						dijit.byId('itm_remove').attr("disabled",false);
+						dijit.byId('itm_manager').attr("disabled",false);
+						dijit.byId('itm_updatetree').attr("disabled",false);
+						dijit.byId('itm_removeall').attr("disabled",false);
 						break;
 				}
 			}
@@ -250,6 +321,38 @@ dojo.declare("DijitClient2", Application2, {
 				}
 			}
 		},
+
+		/**
+		 * deletes the selected item (and all children) from db
+		 */
+		doDelete: function() {
+			var itm1 = this.getSelectedItem();
+			if (itm1) {
+				switch(itm1.itemtype.toLowerCase()) {
+					case "group":
+						this._deleteGroup(itm1);
+						break;
+					case "poi":
+						this._deletePoi(itm1);
+						break;
+				}
+			}
+		},
+		
+		/**
+		 * removes a groupitem from a group
+		 */
+		doRemove: function() {
+			var itm1 = this.getSelectedItem();
+			if (itm1) {
+				switch(itm1.itemtype.toLowerCase()) {
+					case "poi":
+						this._removePoi(itm1);
+						break;
+				}
+			}
+		},
+		
 		
 		/**
 		 * displays the selected item on the map
@@ -267,6 +370,18 @@ dojo.declare("DijitClient2", Application2, {
 		showLogin: function() {
 			var dlg1 = dijit.byId('dlg_login');
 			if (dlg1)  {
+				if (this.activeuser) {
+					var val1 = dijit.byId('btn_login').attr("label");
+					
+					if (val1 == "Logout [" + this.activeuser.itemname + "]") {
+						var cb = {
+							target: this,
+							func: this._cb_loginUser
+						}
+						this.logoutUser(cb);
+						return;
+					}
+				}
 				dlg1.show();
 			}
 		},
@@ -333,6 +448,28 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		hidePoiDialog: function() {
 			var dlg1 = dijit.byId('dlg_poi');
+			if (dlg1)  {
+				dlg1.hide();
+			}
+		},
+		
+		/**
+		 * shows the user dialog
+		 */
+		showUserDialog: function(item) {
+			var dlg1 = dijit.byId('dlg_user');
+			if (dlg1)  {
+				dlg1.application = this;
+				dlg1.setUser(this.activeuser);
+				dlg1.show();
+			}
+		},
+		
+		/**
+		 * hides the user dialog
+		 */
+		hideUserDialog: function() {
+			var dlg1 = dijit.byId('dlg_user');
 			if (dlg1)  {
 				dlg1.hide();
 			}

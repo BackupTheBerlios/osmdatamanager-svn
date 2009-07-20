@@ -39,7 +39,8 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 		if (response != "msg.loginfailed") {
 			this.onLoggedIn(response);
 		} else {
-			alert(nls["loginfailed"]);
+			//alert(nls["loginfailed"]);
+			this.onLoggedIn(null);
 		}
 	},
 	_okClick: function(e) {

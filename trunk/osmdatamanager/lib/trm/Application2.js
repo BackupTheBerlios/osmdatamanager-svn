@@ -70,7 +70,10 @@ dojo.declare("Application2", Serverconnection, {
 				this.activeuser=null;
 				this.callback=null;
 				this.map = map;
-        },
+				this.docentermap = true; //call centerMap function in displayPoi when true  (used for group loading)
+				this.isgrouploading = false; //to avoid recursiv item loading with several calls
+				this.markermanager = null;
+        },	
 		
 		/*******************************************************
 		 * 
@@ -104,6 +107,11 @@ dojo.declare("Application2", Serverconnection, {
 				if (response == "msg.logout") {
 					this.activeuser = null;
 					return;
+				}
+				
+				if (response == "msg.logoutok") {
+					this.activeuser = null;
+					//return;
 				}
 				
 				if ((response != "msg.loginfailed") && (response != ""))
@@ -159,10 +167,23 @@ dojo.declare("Application2", Serverconnection, {
 		 */
 		checkUser: function(cb)
 		{
-			params = {
+			var params = {
 				"action":"msg.chklogin"
 			}
 			this.activeuser=null;
+			this.callback = cb;
+			this.loadFromServer("userfunctions.php",params,this._cb_checkUser);
+		},
+		
+		/**
+		 * logoutUser 
+		 */
+		logoutUser: function(cb)
+		{
+			var params = {
+				"action":"msg.logout"
+			}
+			this.activeuser=null;		
 			this.callback = cb;
 			this.loadFromServer("userfunctions.php",params,this._cb_checkUser);
 		},
@@ -172,10 +193,10 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} cb
 		 */
 		updateFileList: function(cb) {
-			params = {
+			var params = {
 				"action": "msg.updatefilelist"
 			}
-			callback = cb;
+			this.callback = cb;
 			loadFromServer("filefunctions.php",params,this._cb_updateFileList);
 		},
 		
@@ -183,19 +204,29 @@ dojo.declare("Application2", Serverconnection, {
 		 * removes all loaded items from the map
 		 */
 		clearMap: function() {
-			/*
+			
+			//var mm = new MarkerManager();
+			
 			for (var x = (this.map.layers.length - 1); x > -1; x--) {
 				var lyr = this.map.layers[x];
 				
+				/*
 				if (this.markermanager) {
 					if (lyr.name == "Markers") {
 						this.markermanager.removeMarkers(lyr);
 					}
 				}
 				
+				
+				if (lyr.name == "Markers") {
+					mm.removeMarkers(lyr);
+				}
+				*/
+				/*
 				if (this.picturecomparator) {
 					this.picturecomparator.resetPictures();
 				}
+				*/
 				
 				if ((lyr.name != "Mapnik") && (lyr.name != "CycleMap") && (lyr.name != "Osmarender")) {
 					this.map.removeLayer(lyr);
@@ -204,7 +235,7 @@ dojo.declare("Application2", Serverconnection, {
 					
 			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
 	    	this.map.addLayer(gl_markers);
-			*/
+			
 		},
 		
 		/**
@@ -258,9 +289,10 @@ dojo.declare("Application2", Serverconnection, {
 			var usr = this.getActiveUser();
 			if (usr != null)
 			{				
-				if ((usr.location_lat != null) && (usr.location_lat != "")) {
+				if ((usr.lat != null) && (usr.lon != "")) {
 					//this.createPoi(usr.location_lat, usr.location_lon, usr.abouthtml,gl_markers,"");
-					this.centerMap(usr.location_lat, usr.location_lon, 14);
+					//this.centerMap(usr.lat, usr.lon, usr.zoomlevel);
+					this.displayPoi(usr);
 				}
 				else {
 					var lat = 50.9350850727913;
@@ -268,6 +300,40 @@ dojo.declare("Application2", Serverconnection, {
 					this.centerMap(lat, lon, 6);
 				}
 			}
+		},
+		
+		/**
+		 * 
+		 * @param {Object} layername
+		 */
+		layerExists: function(layername) {
+			var lst1 = this.map.getLayersByName(layername);
+			if (lst1 != null) {
+				for (var x = 0; x < lst1.length; x++) {
+					var lyr1 = lst1[x];
+					if (lyr1.name == layername) {
+						return true;
+					}
+				}
+			}
+			return false;
+		},
+		
+		/**
+		 * _getLayer
+		 * @param {Object} layername
+		 */
+		getLayer: function(layername) {
+			var lst1 = this.map.getLayersByName(layername);
+			if (lst1 != null) {
+				for (var x = 0; x < lst1.length; x++) {
+					var lyr1 = lst1[x];
+					if (lyr1.name == layername) {
+						return lyr1;
+					}
+				}
+			}
+			return null;
 		},
 		
 		/**
@@ -313,14 +379,49 @@ dojo.declare("Application2", Serverconnection, {
 		},
 		
 		/**
+		 * 
+		 * @param {Object} description
+		 * @param {Object} filename
+		 */
+		displayGpxFile: function(description, filename){
+			if (!this.layerExists(description)) {
+				
+				// Track-style
+				var styleTrack = {
+				  strokeColor: "#ff00ff",
+				  strokeWidth: 3
+				};
+				var lgpx = new OpenLayers.Layer.GML(description, filename, {
+														format: OpenLayers.Format.GPX,
+														projection: this.map.displayProjection,
+														style: styleTrack
+													});
+										
+				this.map.addLayer(lgpx);
+				//workaround for firefox
+				lgpx.setZIndex(301);
+				return lgpx;
+			} else {
+				var lyr1 = this.getLayer(description);
+				  if (lyr1 != null) {
+				  	//lyr1.testloadURL(filename);
+				  }
+			}
+			return null;
+		},
+		
+		/**
 		 * displays a poi on the map
 		 * @param {Object} poi
 		 */
 		displayPoi: function(poi) {
-			var mm = new MarkerManager();
-			var lonLat = new OpenLayers.LonLat(poi.lon, poi.lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
-			mm.addPoiMarker(lonLat, gl_markers, poi.description,this.getIconname1(poi));
-			this.centerMap(poi.lat, poi.lon, poi.zoomlevel);	
+			if (this.markermanager) {
+				var mm = this.markermanager;
+				var lonLat = new OpenLayers.LonLat(poi.lon, poi.lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+				mm.addPoiMarker(lonLat, gl_markers, poi.description, this.getIconname1(poi));
+				if (this.docentermap) 
+					this.centerMap(poi.lat, poi.lon, poi.zoomlevel);
+			}
 		},
 		
 		/**
@@ -330,10 +431,15 @@ dojo.declare("Application2", Serverconnection, {
 		displayItem: function(item) {
 			switch (item.itemtype.toLowerCase()) {
 				case "group":
-					this.displayGroupItems(item);
+					if (!this.isgrouploading) {
+						this.displayGroupItems(item);
+					}
 					break;
 				case "poi":
 					this.displayPoi(item);
+					break;
+				case "file":
+					this.displayGpxFile(item.itemname,item.fullfilename);
 					break;
 			}
 		},
@@ -352,6 +458,7 @@ dojo.declare("Application2", Serverconnection, {
 			if (prnt) {
 				this.centerMap(prnt.lat, prnt.lon, prnt.zoomlevel);		
 			}
+			this.isgrouploading = false;
 		},
 		
 		/**
@@ -362,6 +469,7 @@ dojo.declare("Application2", Serverconnection, {
 				target: this,
 				func: this.displayItemList
 			}
+			this.isgrouploading = true;
 			this.getGroupItems(group,cb);
 		}
 		

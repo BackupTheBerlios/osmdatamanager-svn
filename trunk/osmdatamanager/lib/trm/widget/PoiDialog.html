@@ -6,8 +6,14 @@
 	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbDescription"  type="text"  /></td>
 	    </tr>
 		<tr>
-	      <td><label for="name">Tagname:</label></td>
-	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbTagname" /></td>
+	      	<td><label for="name">Tagname:</label></td>
+	      	<!-- <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbTagname" /></td>-->
+		 	<td>
+				<select name="tagname"
+	                value=""
+	   				dojoAttachPoint="dlgPoi_cmbTagname">
+	          	</select>
+			</td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Position: </label></td>

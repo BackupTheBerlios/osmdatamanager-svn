@@ -80,5 +80,21 @@ dojo.declare("PoiManager", Serverconnection, {
 				"poiid":  poiid
 			}
 			this.loadFromServer("poifunctions.php",params,this._cb_standard);
-		}	
+		},
+		
+		/**
+		 * loads poi from database
+		 * @param {Object} poiid
+		 * @param {Object} cb
+		 */
+		deletePoi: function(poiid, cb) {
+			this.callback = cb;
+			var params = {
+				"action": "msg.deletepoi",
+				"poiid":  poiid
+			}
+			this.loadFromServer("poifunctions.php",params,this._cb_standard);
+		}
+		
+			
 });

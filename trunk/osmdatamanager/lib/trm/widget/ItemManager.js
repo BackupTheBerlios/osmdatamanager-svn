@@ -26,6 +26,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 					query: { itemname: '*' },
 					//store: this._store,
 					autoHeight: true,
+					rowsPerPage: 2,
 					onCellMouseOver: dojo.hitch(this,this._onCellMouseOver),
 					onCellContextMenu: dojo.hitch(this,this._onCellContextMenu),
 					onStyleRow: dojo.hitch(this,this._onStyleRow),
@@ -50,8 +51,10 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	_onCellMouseOver: function(sender) {
 		var c1 = dojo.coords(sender.target.parentNode,true);
 		if (c1) {
+			
 			var s1 = document.getElementById("dnd_source");
 			if (s1) {
+				console.debug("mo");
 				s1.setAttribute("class","dnd_source_visible");
 				s1.setAttribute("className","dnd_source_visible");
 				s1.style.left = c1.x;

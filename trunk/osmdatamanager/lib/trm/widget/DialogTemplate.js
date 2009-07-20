@@ -1,35 +1,32 @@
 /*
-dojo.provide("trm.widget.GroupDialog");
+ * copy and paste code for a custom widget
+ * 
+ * 
+ * 
+dojo.provide("trm.widget.UserDialog");
 dojo.require("trm.widget._TrmWidget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 
 //dojo.requireLocalization("trm.translation", "tt");
 
-dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated], {
+dojo.declare("trm.widget.UserDialog", [trm.widget._TrmWidget, dijit._Templated], {
 	widgetsInTemplate: true,
-	templatePath:    dojo.moduleUrl('trm.widget', 'GroupDialog.html'),
+	templatePath:    dojo.moduleUrl('trm.widget', 'UserDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
-		this.domNode.setAttribute("class","trmGroupDialog_hidden");
 	},
 	_cancelClick: function(e) {
-		this.hide();
+		this.inherited(arguments);
 	},
 	_okClick: function(e) {
-		console.debug("_ok");
+		this.inherited(arguments);
 	},
 	show: function() {
-		console.debug("show");
-		this._position();
-		this.domNode.setAttribute("class","trmItemManager");
-		console.debug(this.grid);
-		this.loadGpxFiles();
+		this.inherited(arguments);
 	},
 	hide: function() {
-		console.debug(this.domNode.getAttribute("class"));
-		this.hideDndSource();
-		this.domNode.setAttribute("class","trmItemManager_hidden");
+		this.inherited(arguments);
 	}
 		
 });

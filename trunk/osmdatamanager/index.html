@@ -15,6 +15,7 @@
 		@import "lib/trm/widget/ItemManager.css";
 		@import "lib/trm/widget/GroupDialog.css";
 		@import "lib/trm/widget/PoiDialog.css";
+		@import "lib/trm/widget/UserDialog.css";
 	</style>
 	
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>			
@@ -62,6 +63,7 @@
 				dojo.require("trm.widget.ItemManager");
 				dojo.require("trm.widget.GroupDialog");
 				dojo.require("trm.widget.PoiDialog");	
+				dojo.require("trm.widget.UserDialog");	
 								
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
@@ -105,6 +107,7 @@
 		var gl_application=null;	//client application
 		var gl_idx = 0;
 		var gl_moveable=null;
+		var gl_markermanager = null;
 				
 		//TRM.TargetPrefix = "";
 		
@@ -145,7 +148,8 @@
 			//Groupmanager
 			gl_groupmanager = new Groupmanager(gl_application);	
 			//gl_application.initGroupmanager(gl_groupmanager);
-			
+			gl_markermanager = new MarkerManager();
+			gl_application.markermanager = gl_markermanager;
 						
 			//check if users is already logged in
 			var cb = {
@@ -340,7 +344,7 @@
 							
 				<div class="custombutton1">								
 					<button dojoType="trm.Button.TrmButton" id="btn_login" onclick="gl_application.showLogin()" field="login">Login</button>
-					<button dojoType="trm.Button.TrmButton" onclick="alert('hello')" id="btn_centerhomebase" field="showhomebase">Heimatort anzeigen</button><br/>
+					<button dojoType="trm.Button.TrmButton" onclick="gl_application.centerHomebase()" field="showhomebase">Heimatort anzeigen</button><br/>
 				</div>
 				
 				<div>
@@ -413,6 +417,7 @@
 	
   
   	<!-- admin dialog -->
+	<!--
 	<div class="nihilo" dojoType="dijit.Dialog" id="dlg_admin" title="Admin"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
@@ -423,8 +428,9 @@
 	    </tr>		
 	  </table>
   </div>
+  -->
   
-  	<!-- change password dialog -->
+  	<!-- change password dialog 
 	<div class="nihilo" dojoType="dijit.Dialog" id="dlg_changepassword" title="Login"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
@@ -445,8 +451,9 @@
 		</tr>
 	  </table>
   </div>
+  -->
   
-  <!-- user settings dialog -->
+  <!-- user settings dialog 
 	<div class="soria" dojoType="dijit.Dialog" id="dlg_usersettings" title="Einstellungen"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
@@ -482,8 +489,9 @@
 		</tr>
 	  </table>
   </div>
+  -->
   
-  <!-- register dialog -->
+  <!-- register dialog 
 	<div class="soria" dojoType="dijit.Dialog" id="dlg_register" title="Login"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
@@ -514,6 +522,7 @@
 		</tr>
 	  </table>
   </div> 
+  -->
   
   <!-- FileList Dialog -->
   <!-- <div dojoType="dijit.Dialog" id="dlg_filelist" title="Dateiliste" onLoad="alert('x')" style="width:640px" 
@@ -558,7 +567,9 @@
 		-->
   </div>
   
-  <!-- FileEdit Dialog -->
+  <div dojoType="trm.widget.UserDialog" id="dlg_user"></div>
+  
+  <!-- FileEdit Dialog 
 	<div class="soria" dojoType="dijit.Dialog"  id="dlg_fileedit" title="Eigenschaften ändern"
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	  <table>
@@ -575,6 +586,7 @@
 		</tr>
 	  </table>
   </div>
+  -->
   
   <!-- Picture Dialog -->
   <div class="soria" dojoType="dijit.Dialog"  id="dlg_picturelist" title="Bild selektieren" closeable="false"
@@ -584,7 +596,7 @@
     
   <!-- POI Dialog -->
   
-  <!-- poilist -->
+  <!-- poilist 
   <div dojoType="dijit.Dialog" id="dlg_poilist" title="POI Liste" onLoad="alert('x')" 
     	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
 	
@@ -595,11 +607,10 @@
 		</div>
 		<button dojoType="dijit.form.Button" id="dlgpoilist_btn_ok">Ok</button>	
   </div>
+  -->
   
     <!-- create group dialog -->
-	<div dojoType="trm.widget.GroupDialog" id="dlg_group">
-		
-	</div>
+	<div dojoType="trm.widget.GroupDialog" id="dlg_group"></div>
 	
 	<!--
 	<div class="soria" dojoType="dijit.Dialog" id="dlg_creategroup" title="Gruppe"
@@ -701,7 +712,7 @@
   <div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="roundeddiv" style="display: none;" >
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_loaddata" field="display" onClick="gl_application.displaySelected()">Anzeigen</div> 
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_edit" field="edit" onClick="gl_application.showEdit()">Bearbeiten</div>		
-	  	<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_remove" field="remove" >Entfernen</div>
+	  	<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_remove" field="remove" onClick="gl_application.doRemove()" >Entfernen</div>
 		<div dojoType="dijit.MenuSeparator"></div>	
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_manager" field="manager" onClick="gl_application.showItemManager()">Item Manager</div>
 		<div dojoType="dijit.MenuSeparator"></div>	
@@ -713,7 +724,7 @@
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createmaingroup" field="createrootgroup" onClick="gl_application.showGroupDialog(true,false)">Hauptgruppe hinzuf&uuml;gen</div>
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createsubgroup" field="createsubgroup" onClick="gl_application.showGroupDialog(false,false)">Untergruppe hinzuf&uuml;gen</div>
 				<div dojoType="dijit.MenuSeparator"></div>	
-				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_deletegroup" field="deletegroup" onClick="gl_groupmanager.deleteGroup()">Gruppe l&ouml;schen</div>		
+				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_deletegroup" field="deletegroup" onClick="gl_application.doDelete()">Gruppe l&ouml;schen</div>		
 			</div>
 		</div>
 		<div dojoType="dijit.MenuSeparator"></div>	
@@ -721,8 +732,16 @@
 		<div dojoType="dijit.MenuSeparator"></div>	
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_removeall" field="clearmap" onClick="gl_application.clearMap()">Karte bereinigen</div>
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_updatetree" field="updatetree" onClick="gl_groupmanager.getRootGroups()">Baum aktualisieren</div>				
+		<div dojoType="dijit.MenuSeparator"></div>	
+		
+		<div dojoType="dijit.PopupMenuItem" id="itm_submenu_settings">
+			<span>Einstellungen</span>
+			<div dojoType="dijit.Menu" id="submenu_settings">
+				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_usersettings" field="usersettings" onClick="gl_application.showUserDialog()">Benutzereinstellungen</div>
+			</div>
+		</div>
+		
   </div>
-  
       
 	<!--
 	<div dojoType="dijit.Menu" id="dlgfileedit_popup" onOpen="" contextMenuForWindow="false" targetNodeIds="dlgfilelist_tab_grid" style="display: none;" >

@@ -24,30 +24,24 @@
   /**
    * User
    */
-  class User
+  class User extends GroupItem
   {
-  	var $uid;
-	var $username;
 	var $email;
 	var $homepage;
-	var $location_lat;
-	var $location_lon;
-	var $abouthtml;
+	var $description;
 	var $picture;
 	var $isadmin;
 	
-	function User($uid, $username, $email,$homepage, $latlon, $abouthtml, $picture)
+	function User()
 	{
-		$this->uid = $uid;
-		$this->username = $username;
-		$this->email = $email;
-		$this->homepage = $homepage;
-		$this->abouthtml = $abouthtml;
-		$this->picture = $picture;
-		$this->parseLocation($latlon);
-		$this->isadmin = false;		
+		parent::GroupItem("User");
+		$this->zoomlevel=null;
+		$this->lat=null;
+		$this->lon=null;
+		$this->isadmin=false;
 	}
 	
+	/*
 	function parseLocation($latlon)
 	{
 		$tmp = split(";",$latlon);
@@ -60,23 +54,23 @@
 			}
 		}
 	}
+	*/
 	
 	function getUid() {
-		return $this->uid;
+		return $this->itemid;
 	}
 	
 	function getLocation()
 	{
-		return $this->location_lat.";".$this->location_lon;
+		return $this->lat.";".$this->lon;
 	}
 	
 	function getUsername() {
-		return $this->username;
+		return $this->itemname;
 	}
 	
 	function isAdmin() {
-		//TODO
-		return false;
+		return $this->isadmin;
 	}
 	
   }
@@ -84,39 +78,109 @@
   /**
    * Userfactory
    */
-  class Userfactory extends DatabaseAccess
+  class Userfactory extends ItemParser
   {
   		
 	function Userfactory()
 	{
-		parent::DatabaseAccess();		
+		parent::ItemParser();		
 	}
-				
+	
+	/**
+	 * 
+	 * @return 
+	 * @param $aRow Object
+	 * @param $aResult Object
+	 */
+	function parse_User(&$aItem, $aRow, $aResult) {
+		$this->parseFieldnames($aResult);
+		
+		$this->parse_GroupItem($aItem, $aRow, $aResult);
+		for ($i=0;$i<count($this->fieldnames);$i++) {
+			$fn1 = $this->fieldnames[$i];
+			switch ($fn1) {
+				case "description":
+					$aItem->description = $aRow[$i];
+					break;
+				case "picture":
+					$aItem->picture = $aRow[$i];
+					break;
+				case "homepage":
+					$aItem->picture = $aRow[$i];
+					break;
+				case "email":
+					$aItem->email = $aRow[$i];
+					break;
+				case "admin":
+					if ($aRow[$i] == "1")
+						$aItem->isadmin = true;
+					else
+						$aItem->isadmin = false;
+					break;
+			}
+		}
+	}
+		
+	/**	
+	 * 
+	 * @return 
+	 * @param $username Object
+	 */
 	function getUser($username)
 	{
-		$qry = "SELECT * FROM `tab_usr` WHERE username = '$username'";
+		$qry = "SELECT * FROM `tab_usr` WHERE itemname = '$username'";
 		$result = $this->executeQuery($qry);
 				
 		if ($result != NULL) 
 		{   
 			$row = mysql_fetch_row($result);
 			if ($row != null){
-				$usr = new User($row[0],$row[1],$row[3],$row[4],$row[5],$row[6],$row[7]);
+				$usr = new User();
+				$this->parse_User($usr,$row,$result);
 				return $usr;
 			}
 		}
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return 
+	 * @param $userid Object
+	 */
+	function getUserById($userid)
+	{
+		$qry = "SELECT * FROM `tab_usr` WHERE itemid = $userid";
+		$result = $this->executeQuery($qry);
+				
+		if ($result != NULL) 
+		{   
+			$row = mysql_fetch_row($result);
+			if ($row != null){
+				$usr = new User();
+				$this->parse_User($usr,$row,$result);
+				return $usr;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * updates user data
+	 * @return 
+	 * @param $user Object
+	 */
+	/*
 	function updateUser($user) {		 
 		 $qry1   =  "UPDATE `tab_usr` SET ";
 		 //$qry1 = $qry1 + "`username`='".$aVal1."' ";
 		 $qry1 = $qry1."`email`='".$user->email."' ";
 		 $qry1 = $qry1.", `homepage`='".$user->homepage."' ";
-		 $qry1 = $qry1.", `location`='".$user->getLocation()."' ";
-		 $qry1 = $qry1.", `abouthtml`='".$user->abouthtml."' ";
+		 $qry1 = $qry1.", `lat`='".$user->lat."' ";
+		 $qry1 = $qry1.", `lon`='".$user->lon."' ";
+		 $qry1 = $qry1.", `description`='".$user->description."' ";
 		 $qry1 = $qry1.", `picture`='".$user->picture."' ";
-		 $qry1 = $qry1." WHERE `id` = ".$user->uid."";
+		 $qry1 = $qry1." WHERE `itemid` = ".$user->itemid."";
 		 
 		 $result = $this->executeQuery($qry1);
 		 if ($result != null)
@@ -125,13 +189,52 @@
 			return false;
 		 //, `password`='".$aVal2."       ' WHERE `wd_id_es` = ".$id1;
 	}
-		
+	*/
+	
+	/**
+	 * 
+	 * @return 
+	 * @param $userid Object
+	 * @param $username Object
+	 * @param $lat Object
+	 * @param $lon Object
+	 * @param $htmltext Object
+	 * @param $tagname Object
+	 * @param $email Object
+	 * @param $picture Object
+	 */
+	function updateUser($userid, $username, $lat, $lon,$zoomlevel, $htmltext, $tagname, $email, $picture) {		 		 
+		 $qry1   =  "UPDATE `tab_usr` SET ";
+		 //$qry1 = $qry1 + "`username`='".$aVal1."' ";
+		 $qry1 = $qry1."`email`='".$email."' ";
+		 $qry1 = $qry1.", `itemname`='".$username."' ";
+		 $qry1 = $qry1.", `lat`='".$lat."' ";
+		 $qry1 = $qry1.", `lon`='".$lon."' ";
+		 $qry1 = $qry1.", `zoomlevel`= ".$zoomlevel." ";
+		 $qry1 = $qry1.", `tagname`='".$tagname."' ";
+		 $qry1 = $qry1.", `description`='".$htmltext."' ";
+		 $qry1 = $qry1.", `picture`='".$picture."' ";
+		 $qry1 = $qry1." WHERE `itemid` = ".$userid."";
+		 
+		 $result = $this->executeQuery($qry1);
+		 if ($result != null)
+		 	return true;
+		else
+			return false;
+		 //, `password`='".$aVal2."       ' WHERE `wd_id_es` = ".$id1;
+	}
+	
+	/**
+	 * returns true if a user with given username exists
+	 * @return 
+	 * @param $username Object
+	 */	
 	function userNameExists($username)
 	{
 		if ($username == "")
 			return false;
 		
-		$qry = "SELECT * FROM `tab_usr` WHERE username = '$username'";
+		$qry = "SELECT * FROM `tab_usr` WHERE itemname = '$username'";
 		$result = $this->executeQuery($qry);
 				
 		if ($result != NULL) 
@@ -146,12 +249,17 @@
 		return false;
 	}
 	
+	/**
+	 * returns the itemid from given username
+	 * @return 
+	 * @param $username Object
+	 */
 	function getUserId($username)
 	{
 		if ($username == "")
 			return -1;
 		
-		$qry = "SELECT * FROM `tab_usr` WHERE username = '$username'";
+		$qry = "SELECT * FROM `tab_usr` WHERE itemname = '$username'";
 		$result = $this->executeQuery($qry);
 				
 		if ($result != NULL) 
@@ -164,10 +272,14 @@
 		return -1;
 	}
 	
-	
+	/**
+	 * returns encrypted password from user with given username
+	 * @return 
+	 * @param $username Object
+	 */
 	function getPassword($username)
 	{
-		$qry = "SELECT * FROM `tab_usr` WHERE username = '$username'";
+		$qry = "SELECT * FROM `tab_usr` WHERE itemname = '$username'";
 		$result = $this->executeQuery($qry);
 				
 		if ($result != NULL) 
@@ -182,7 +294,12 @@
 		return false;
 	}
 	
-	
+	/**
+	 * login in a user (check password an return the user object if successful)
+	 * @return 
+	 * @param $username Object
+	 * @param $password Object
+	 */
 	function loginUser($username, $password)
 	{
 		$pwd = $this->getPassword($username);
@@ -196,6 +313,11 @@
 		return null;
 	}
 	
+	/**
+	 * deletes a user an all his data
+	 * @return 
+	 * @param $username Object
+	 */
 	function deleteUser($username) {
 		$usr = $this->getUser($username);
 		if ($usr != null) {
@@ -217,7 +339,7 @@
 				$delquery = "DELETE FROM `tab_poi` WHERE (usrid = $usrid)";				
 				$this->executeQuery($delquery);	
 				
-				$delquery = "DELETE FROM `tab_usr` WHERE (id = $usrid)";				
+				$delquery = "DELETE FROM `tab_usr` WHERE (itemid = $usrid)";				
 				$this->executeQuery($delquery);	
 				
 				$this->addLogMessage("User $usrid-$username deleted","INFO");
@@ -271,7 +393,7 @@
 				
 				$qry1   =  "UPDATE `tab_usr` SET ";
 		 		$qry1 = $qry1."`password`='".$cryptpwd."' ";
-		 		$qry1 = $qry1." WHERE `username` = '".$username."'";
+		 		$qry1 = $qry1." WHERE `itemname` = '".$username."'";
 								
 				if ($this->executeQuery($qry1) == null)
 				{
@@ -297,7 +419,7 @@
 		if (! $this->userNameExists(trim($username)))
 		{
 			$cryptpwd = crypt($password);
-			$insquery = "INSERT INTO `tab_usr` (`username`,`password`,`email`) VALUES ('$username', '$cryptpwd','$email')";
+			$insquery = "INSERT INTO `tab_usr` (`itemname`,`password`,`email`) VALUES ('$username', '$cryptpwd','$email')";
 			if ($this->executeQuery($insquery) == null)
 			{
 				return false;

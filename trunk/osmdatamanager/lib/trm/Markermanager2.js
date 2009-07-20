@@ -224,7 +224,7 @@ dojo.declare("MarkerManager", Serverconnection, {
 		 * @param {Object} iconname
 		 */
 		updatePoiMarker: function(latlon, layer, description,iconname) {
-			var popupClass = AutoSizeAnchoredBubble2;
+			var popupClass = this.AutoSizeAnchoredBubble2;
 			var popupContentHTML = "<p>"+description+"</p>";
 					
 			var m1 = this.getMarker(latlon);

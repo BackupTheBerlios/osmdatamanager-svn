@@ -1,0 +1,51 @@
+<div class="trmUserDialog trmDialog trmHidden" dojoAttachPoint="node">
+	<table>
+	    <tr>
+	      <td><label for="name">Name:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgUsr_tbName" /></td>
+		</tr>
+		<tr>
+	      <td><label for="loc">Position: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgUsr_tbLat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgUsr_tbLon" /></td>
+		  <td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _getPointClick">...</button></td>	
+	    </tr> 
+		<tr>
+			<td><label for="loc">Zoomlevel:</label></td>
+			<td><input dojoType="dijit.form.NumberSpinner"
+							    value="14"
+							    class="medium"
+							    constraints="{max:20,min:1,places:0}"
+							    name="dlgcreatgroup_zommlevel"
+							    dojoAttachPoint="dlgUsr_spinZoomlevel" />
+			</td>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlgUsr_btnZoomlevel" dojoAttachEvent="onClick: _zoomLevelClick">Zoomlevel von Karte</button></td>	
+		</tr>
+		<tr>
+	      <td><label for="name">Tagname:</label></td>
+	      <!-- <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgUsr_tbTagname" /></td> -->
+		  <td>
+				<select name="tagname"
+	                value=""
+	   				dojoAttachPoint="dlgUsr_cmbTagname">
+	          	</select>
+		  </td>
+	    </tr>
+		<tr>
+	      <td><label for="name">eMail:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgUsr_tbEmail" /></td>
+	    </tr>
+		<tr>
+			<td><label for="loc">Htmltext: </label></td>	 
+		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" dojoAttachPoint="dlgUsr_tbHtmlText" style="max-width:320px" ></textarea></td>
+	    </tr>		
+	</table>
+	
+	<hr/>	
+	<table>
+		<tr>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlgGrp_btnOk" dojoAttachEvent="onClick: _okClick">Ok</button></td>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlgGrp_btnCacnel" dojoAttachEvent="onClick:_cancelClick">Abbrechen</button></td>
+		</tr> 
+	</table>
+</div>
