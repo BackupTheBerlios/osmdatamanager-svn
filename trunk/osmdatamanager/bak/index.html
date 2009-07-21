@@ -1,0 +1,765 @@
+<html>
+<head>
+	<title>OSM Datamanager</title>
+	
+	<style type="text/css">
+		@import "styles.css";
+		@import "lib/dojo/dijit/themes/tundra/tundra.css";	
+		@import "lib/dojo/dojox/image/resources/image.css";
+		@import "lib/dojo/dojox/widget/SortList/SortList.css";	
+		@import "lib/dojo/dojox/grid/resources/Grid.css";
+    	@import "lib/dojo/dojox/grid/resources/nihiloGrid.css";
+		
+		@import "lib/trm/trm.css";
+		@import "lib/trm/login/Form.css";
+		@import "lib/trm/widget/ItemManager.css";
+		@import "lib/trm/widget/GroupDialog.css";
+		@import "lib/trm/widget/PoiDialog.css";
+		@import "lib/trm/widget/UserDialog.css";
+	</style>
+	
+	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>			
+	<script type="text/javascript">	
+		  dojo.require("dojo.parser");
+                    
+		  
+		  dojo.addOnLoad(function(){
+				dojo.registerModulePath("trm","../../trm");		
+				dojo.requireLocalization("trm", "popupmenu");
+						
+				dojo.require("dojox.widget.SortList");
+				dojo.require("dijit.layout.ContentPane");
+			  	dojo.require("dijit.layout.BorderContainer");
+				dojo.require("dijit.form.Button");
+				dojo.require("dijit.Dialog");
+				dojo.require("dijit.Menu");
+				dojo.require("dijit.form.TextBox");
+				dojo.require("dijit.form.ValidationTextBox");
+		   		dojo.require("dojox.validate.regexp");
+		   		dojo.require("dojo.parser");
+				dojo.require("dojo.data.ItemFileReadStore"); 
+				dojo.require("dojox.image.ThumbnailPicker");
+				dojo.require("dijit.form.CheckBox");
+				dojo.require("dijit.form.NumberSpinner");	
+				dojo.require("dijit.form.Textarea");
+				
+				dojo.require("dojox.grid.DataGrid");
+				dojo.require("dojox.grid.compat.Grid");
+				dojo.require("dojox.data.CsvStore");
+				dojo.require("dojox.grid.compat._data.model");
+				dojo.require("dojo.dnd.Source"); 
+				dojo.require("dojo.string");
+				
+				dojo.require("dojo.dnd.Mover");
+  				dojo.require("dojo.dnd.Moveable");
+  				dojo.require("dojo.dnd.move");
+				
+				//trm widgets
+				//dojo.require("trm.login.Form");
+				dojo.require("trm.login.Form");
+				dojo.require("trm.translation.tt");
+				dojo.require("trm.Button.TrmButton");
+				dojo.require("trm.MenuItem.TrmMenuItem");
+				dojo.require("trm.widget.ItemManager");
+				dojo.require("trm.widget.GroupDialog");
+				dojo.require("trm.widget.PoiDialog");	
+				dojo.require("trm.widget.UserDialog");	
+								
+				dojo.parser.parse();   
+                dojo.fadeOut({ 
+                      node:"overlay",
+                      onEnd: function(){ 
+                             // hide it completely after fadeout
+                             dojo.style("overlay","display","none");
+                      }
+                }).play();
+				init();
+          });
+
+		
+	</script>
+	
+	
+	<script src="http://openlayers.org/api/OpenLayers.js"></script>
+	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>	
+		
+	<!-- Project Files -->
+	<script src="lib/trm/openlayers_extensions.js"></script>
+	<script src="lib/trm/Application2.js"></script>
+	<script src="lib/trm/DijitClient2.js"></script>
+	<script src="lib/trm/GroupTree.js"></script>
+	<script src="lib/trm/GroupManager2.js"></script>
+	<script src="lib/trm/PoiManager2.js"></script>
+	<script src="lib/trm/Markermanager2.js"></script>
+	<!--
+	<script src="lib/trm/GroupManager.js"></script>
+	
+		
+	-->
+
+	<script src="json2.js"></script>		
+	<script type="text/javascript">
+				
+		var gl_map;  				//openlayers map
+		var gl_markers;				//marker layer
+		//var gl_groupmanager = null; 
+		var gl_dblclick = null;
+		var gl_application=null;	//client application
+		var gl_idx = 0;
+		var gl_moveable=null;
+		var gl_markermanager = null;
+				
+		//TRM.TargetPrefix = "";
+		
+		//Initialise the 'map' object
+		function init() {
+			
+			//Main Map
+			gl_map = new OpenLayers.Map("map", {
+			controls: [
+				//new OpenLayers.Control.KeyboardDefaults(),
+				new OpenLayers.Control.MouseDefaults(),
+				new OpenLayers.Control.LayerSwitcher(),
+				new OpenLayers.Control.PanZoomBar()],
+			maxExtent:
+                new OpenLayers.Bounds(-20037508.34,-20037508.34,
+                                       20037508.34, 20037508.34),
+			numZoomLevels: 18,
+            maxResolution: 156543,
+            units: 'meters',
+            projection: "EPSG:4326"} );
+			
+			layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+			gl_map.addLayer(layerMapnik);
+									
+			layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
+			gl_map.addLayer(layerCycleMap);
+			gl_map.addControl(new OpenLayers.Control.MousePosition());
+					
+			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
+    		gl_map.addLayer(gl_markers);
+			
+			var pm = new PoiManager();
+									
+			//Client Application
+			gl_application = new DijitClient2("osmdatamanager",gl_map);			
+			//gl_application.disablePrivatemode();
+						
+			//Groupmanager
+			gl_groupmanager = new Groupmanager(gl_application);	
+			//gl_application.initGroupmanager(gl_groupmanager);
+			gl_markermanager = new MarkerManager();
+			gl_application.markermanager = gl_markermanager;
+						
+			//check if users is already logged in
+			var cb = {
+				func:gl_application._cb_loginUser,
+				target:gl_application
+			}
+			gl_application.checkUser(cb);
+			
+			
+			//dojo.connect(dojo.byId("dnd_source"), "onDndDrop", onDrop);
+						
+			dojo.subscribe("/dnd/drop", function(source,nodes,iscopy){
+  				
+				var t = dojo.dnd.manager().target;
+				//ClearMsg();	
+				if(t == source) return;
+				
+				if (t) {
+					
+				}
+				
+				if (source) {
+					console.debug(nodes[0].innerHTML);
+					console.debug(iscopy);
+					console.debug(source);
+					//document.removeChild(nodes[0]);
+				}
+				
+				dojo.dnd.manager().canDrop(false);
+				console.debug("drop");
+				//alert("xxx");
+				//if(t == cart)AddItems(t,nodes);
+				//if(t == shelf)SubstractItems(t,nodes);
+				});
+				
+			dojo.subscribe("/dnd/source/over", function(source){
+			  if (dojo.dnd.manager().target) {
+			  //code to perform some action	
+			  	//var t = dojo.dnd.manager().target;
+			  	//console.debug(t.parent.innerHTML);
+				//alert(dojo.dnd.manager().target.innerHTML);
+			  }
+			});
+			
+			//dlg_filelist
+			gl_moveable = new dojo.dnd.Moveable("dlg_filelist");
+		}		
+		
+		/*
+		function onDrop(sender) {
+			console.debug("onDrop");
+			console.debug(sender);
+		}
+		
+		function onStyleRow(inRow) {
+			//alert(inRow.innerHTML);
+			with (inRow) {
+		      var i = index % 10;
+		      var special = (i > 2 && i < 6);
+		      if (odd)
+		        customStyles += ' color: orange;';
+		      if (selected)
+		        customClasses += ' selectedRow';
+		      if (special)
+		        customClasses += ' specialRow';
+		      if (over)
+		        customClasses += ' overRow';
+		      if (!over && !selected)
+		        //dojox.Grid.prototype.onStyleRow.apply(this, arguments);
+				dojox.grid.DataGrid.prototype.onStyleRow.apply(this, arguments);
+		    }
+		}
+		
+		function foo() {
+			alert("");
+		}
+		
+		function test(e) {
+			//alert(e.target.parentNode.innerHTML);
+			//alert(e.screenPoint.x);
+			var c1 = dojo.coords(e.target.parentNode);
+			if (c1) {
+				//alert(c1.x);
+				
+				
+				var s1 = document.getElementById("dnd_source");
+				if (s1) {
+					s1.style.left = c1.x;
+					s1.style.top = c1.y;
+				}
+			}
+		}
+		*/
+		
+		/*
+		function formatType(value){
+			
+			/*
+			switch(value){
+				case 0:
+					return "<img src='images/gasket_ring.png' alt='Ring' width='64' height='64'/>";
+				case 1:
+					return "<img src='images/gasket_full_face.png' alt='Full Face' width='64' height='64'/>";
+			}
+			
+			//jsId="c1"
+			//alert(value);
+			//return "<div dojoType=\"dojo.dnd.Source\"  class=\"source\"> <div class=\"dojoDndItem\" dndType=\"blue\"><div class=\"bluesquare1\">BLUE</div></div></div>";
+			//var node = dojo.doc().createElement("div");
+			//node.innerHTML = value;	
+			try {
+				return value;
+				
+				/*
+				var p1= dojo.doc.createElement("div");
+				var div= dojo.doc.createElement("div");
+				
+				p1.appendChild(div);
+				
+				var c1 = new dojo.dnd.Source(div);
+				c1.insertNodes(false, [{
+					data: "Wrist watch",
+					type: ["inStock"]
+				}]);
+				
+				//alert(div.outerHTML);
+				return new dijit.form.Button({label: "hello world", onClick: foo});
+
+				//return p1.innerHTML;
+				
+				var x1 = document.getElementById("dnd_"+gl_idx);
+				if (x1) {
+					alert(x1.outerHTML);
+					return x1.outerHTML;	
+				} else {
+					return "empty";
+				}
+				
+				
+				alert(c1.containerNode.outerHTML);
+				return c1.containerNode.outerHTML;
+				*//*
+				
+			} catch (e) {
+				alert(e);
+				return "";
+			}
+			
+		}
+
+		function OnCellFocus(sender,rowindex) {
+			console.debug(sender);
+			console.debug(rowindex);
+			
+			var d1 = dijit.byId("dlgfilelist_tab_grid");
+			if (d1) {
+				console.debug(d1);
+				var x1 = d1.getItem(rowindex);
+				console.debug("sas");
+				console.debug(x1);
+			}
+			
+		}
+		*/
+		
+	</script>
+	
+	
+
+</head>
+
+<body class="tundra" >
+	  <div id="overlay"><div class="innerOverlay">Loading please wait...</div></div>
+
+	  <div dojoType="dijit.layout.BorderContainer" class="maincontent" design="sidebar" id="borderContainer">
+	    	
+		<!-- TOP Menu (general map options)  -->
+		<div dojoType="dijit.layout.ContentPane" region="top" class="topmenu">						
+				<button dojoType="dijit.form.Button" onclick="window.open('http://osmdatamanager.berlios.de/')">.:Project Page:.</button>
+		</div>	
+		
+		<!-- MAIN MAP -->
+		<div dojoType="dijit.layout.ContentPane" region="center" id="map">
+		</div>
+		
+		<!-- LEFT MENU (user options or login) -->
+		<div dojoType="dijit.layout.ContentPane" region="left" class="soria" id="mainmenu">
+			<!-- <img src="images/bg_street_small.png"></img> -->
+			<img src="images/logo4a.png" />
+			
+			<div style="width: 210px; height:400px; padding-top:8px;background-color:#fdd13a;" id="roundeddiv">
+							
+				<div class="custombutton1">								
+					<button dojoType="trm.Button.TrmButton" id="btn_login" onclick="gl_application.showLogin()" field="login">Login</button>
+					<button dojoType="trm.Button.TrmButton" onclick="gl_application.centerHomebase()" field="showhomebase">Heimatort anzeigen</button><br/>
+				</div>
+				
+				<div>
+					<div id="treecontainer" >
+					</div>
+				</div>
+			</div>	
+			
+			<div style="margin-top:20px; font-size:10px; text-align:center;">
+				powerd by
+				<a href="http://developer.berlios.de" target="_blank" title="BerliOS Developer"> <img src="http://developer.berlios.de/bslogo.php?group_id=10678" style="margin-left:50px; padding:0px;" width="124px" height="32px" border="0" alt="BerliOS Developer Logo" /></a>
+				<br/>
+				
+				<a href="http://www.openstreetmap.org" target="_blank">Openstreetmap<img src="images/Mag_map-120x120.png" style="cursor:pointer; margin-left:50px; border-style:none;" /></a>
+			</div>
+		</div>						
+	  </div>  
+	
+	<div id="coords"></div>
+
+	<!-- DIALOGS -->
+	
+	<!-- about dialog -->
+	<div dojoType="dijit.Dialog" id="dlg_about" closable="false" title="About OSM Datamanager">
+		<table>
+			<tr>
+				<td><b>About this Project:</b></td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+			</tr>
+			
+		</table>
+		<button dojoType="dijit.form.Button" id="dlgabout_ok">Ok</button><br/>
+	</div>	
+	
+	<!-- loading dialog -->
+	<div dojoType="dijit.Dialog" class="soria" id="dialog_loading" closable="false" title="please wait">loading your gpx traces..</div>
+	
+	<!-- info dialog -->
+	<div dojoType="dijit.Dialog" id="dialog_info" closable="false" title="">
+		<div id="dlginfo_text">info</div>
+		<button dojoType="dijit.form.Button" onclick="gl_application.hideMessageDialog()" id="btn_dlginfo_ok">Ok</button><br/>
+	</div>
+			
+	<!-- login dialog -->
+	<!--
+	<div class="nihilo" dojoType="dijit.Dialog" id="dlg_login" title="Login"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+		<tr>
+	      <td><label for="name">Benutzername:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="username" id="username" /></td>
+	    </tr>
+	    <tr>
+	      <td><label for="loc">Passwort: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="password" id="password" /></td>
+	    </tr>
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="btn_dlglogin_ok">Ok</button></td>	
+			<td><button dojoType="dijit.form.Button" onclick="DijitClient.RegisterDialog.show()">Registrieren</button></td> 
+		</tr>
+	  </table>
+  </div>
+  -->
+  
+ 	<!-- login dialog -->
+ 	<div dojoType="trm.login.Form" id="dlg_login"></div> 
+	
+  
+  	<!-- admin dialog -->
+	<!--
+	<div class="nihilo" dojoType="dijit.Dialog" id="dlg_admin" title="Admin"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+	    <tr>
+	      <td><label for="name">Benutzer l&ouml;schen: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgadmin_tb_username" id="dlgadmin_tb_username" /></td>
+		  <td><button dojoType="dijit.form.Button" id="dlgadmin_btn_deluser">L&ouml;schen</button></td>	
+	    </tr>		
+	  </table>
+  </div>
+  -->
+  
+  	<!-- change password dialog 
+	<div class="nihilo" dojoType="dijit.Dialog" id="dlg_changepassword" title="Login"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+	    <tr>
+	      <td><label for="name">Altes Passwort: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="oldpassword" id="dlgchangepassword_tb_oldpassword" /></td>
+	    </tr>
+	    <tr>
+	      <td><label for="loc">Neues Passwort: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="password1" id="dlgchangepassword_tb_password1" /></td>
+	    </tr>
+		<tr>
+	      <td><label for="loc">Passwort wiederholen: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" name="password2" id="dlgchangepassword_tb_password2" /></td>
+	    </tr>
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="dlgchangepassword_btn_ok">Ok</button></td>	
+		</tr>
+	  </table>
+  </div>
+  -->
+  
+  <!-- user settings dialog 
+	<div class="soria" dojoType="dijit.Dialog" id="dlg_usersettings" title="Einstellungen"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+	    <tr>
+	      <td><label for="name">Benutzername: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" disabled="disabled" name="tb_usrpref_name" id="tb_usrpref_name" /></td>
+		  <td><button dojoType="dijit.form.Button" onclick="DijitClient.ChangePasswordDialog.show()">Passwort &auml;ndern</button></td>
+	    </tr>
+		<tr>
+				
+		</tr>
+	    <tr>
+	      <td><label for="loc">eMail: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_email" id="tb_usrpref_email" /></td>
+	    </tr>
+		<tr>
+	      <td><label for="loc">Heimatort: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_lat" disabled="disabled" id="tb_usrpref_lat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_lon" disabled="disabled" id="tb_usrpref_lon" /></td>
+		  <td><button dojoType="dijit.form.Button" id="btn_usrpref_sethomebase">...</button></td>	
+	    </tr>
+		<tr>
+	      <td><label for="loc">Info: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_info" id="tb_usrpref_info" /></td>
+	    </tr>
+		<tr>
+	      <td><label for="loc">Bild: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_usrpref_picture" id="tb_usrpref_picture" /></td>
+	    </tr>	
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="btn_usrpref_save">Speichern</button></td>	
+			<td><button dojoType="dijit.form.Button" id="btn_usrpref_cancel">Abbrechen</button></td>
+		</tr>
+	  </table>
+  </div>
+  -->
+  
+  <!-- register dialog 
+	<div class="soria" dojoType="dijit.Dialog" id="dlg_register" title="Login"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+	    <tr>
+	      <td><label for="name">Benutzername: </label></td>
+	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Username."  type="text" required="true" trim="true" name="reg_username" id="reg_username" /></td>
+	    </tr>
+	    <tr>
+	      <td><label for="loc">Passwort: </label></td>
+	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Password." type="password" required="true" trim="true" name="reg_password" id="reg_password" /></td>
+	    </tr>
+		<tr>
+	      <td><label for="loc">Passwort wiederholen: </label></td>
+	      <td><input dojoType="dijit.form.ValidationTextBox" invalidMessage="Invalid Password." type="password" required="true" name="reg_password2" id="reg_password2" /></td>
+	    </tr>
+		<tr>
+			<td><label for="loc">eMail: </label></td>
+	      	<td><input dojoType="dijit.form.ValidationTextBox" type="text" 
+		  			name="reg_email" 
+					trim="true"
+    				required="true"
+    				invalidMessage="Invalid Email Address." 
+					id="reg_email" />
+			</td>
+		</tr>
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="btn_dlgregister_ok">Abschicken</button></td>
+		</tr>
+	  </table>
+  </div> 
+  -->
+  
+  <!-- FileList Dialog -->
+  <!-- <div dojoType="dijit.Dialog" id="dlg_filelist" title="Dateiliste" onLoad="alert('x')" style="width:640px" 
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));"> -->
+  <div dojoType="trm.widget.ItemManager" id="dlg_itemmanager">
+		<!--
+		<div id="filecontainer" >
+			
+			<ul dojoType="dojox.widget.SortList" title="SortList From Markup" id="filelist"
+  				sortable="true" style="width:420px; height:200px;">
+			</ul>
+			
+		</div>
+		
+		<div id="dlgfilelist_buttons">
+			 <button dojoType="dijit.form.Button" id="dlgfilelist_btn_pois">
+			 	<img src="images/flag.png" border="0" /> 
+			 </button>
+			 <button dojoType="dijit.form.Button" id="dlgfilelist_btn_gpx">
+			 	<img src="images/gpx_small.png" border="0" /> 
+			 </button>
+		</div>
+		
+		<table id="dlgfilelist_tab_grid" jsId="dlgfilelist_grid" dojoType="dojox.grid.DataGrid" onCellMouseOver="test" columnReordering="true" onStyleRow="onStyleRow"
+	       query="{ filename: '*' }" >
+			<thead>
+				<tr>
+					<th field="itemname" width="300px;" formatter="formatType" editor="dojox.grid.editors.ComboBox" dndType="blue">Name</th>
+					<!-- <th field="itemname" width="250px;">Beschreibung</th> -->
+					<!--
+					<th field="itemtype" width="40px;">Typ</th>
+				</tr>
+			</thead>
+		</table>
+		
+		<table>
+			<tr>
+				<td><button dojoType="dijit.form.Button" id="dlgfilelist_btn_ok">Ok</button></td>
+				<td><button dojoType="dijit.form.Button" id="dlgfilelist_btn_close">Close</button></td>	
+			</tr>
+		</table>
+		-->
+  </div>
+  
+  <div dojoType="trm.widget.UserDialog" id="dlg_user"></div>
+  
+  <!-- FileEdit Dialog 
+	<div class="soria" dojoType="dijit.Dialog"  id="dlg_fileedit" title="Eigenschaften ändern"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+	    <tr>
+	      <td><label for="name">Dateiname: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="tb_filename" id="tb_filename" /></td>
+	    </tr>
+	    <tr>
+	      <td><label for="loc">Beschreibung: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_filedescription" id="tb_filedescription" /></td>
+	    </tr>
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="dlgfileedit_btn_ok">Ok</button></td>	
+		</tr>
+	  </table>
+  </div>
+  -->
+  
+  <!-- Picture Dialog -->
+  <div class="soria" dojoType="dijit.Dialog"  id="dlg_picturelist" title="Bild selektieren" closeable="false"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+		<div id="thumbPicker1" dojoType="dojox.image.ThumbnailPicker"></div>
+  </div>
+    
+  <!-- POI Dialog -->
+  
+  <!-- poilist 
+  <div dojoType="dijit.Dialog" id="dlg_poilist" title="POI Liste" onLoad="alert('x')" 
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	
+		<div id="poicontainer" >
+			<ul dojoType="dojox.widget.SortList" title="SortList From Markup" id="poilist"
+  				sortable="true" style="width:420px; height:200px;">
+			</ul>
+		</div>
+		<button dojoType="dijit.form.Button" id="dlgpoilist_btn_ok">Ok</button>	
+  </div>
+  -->
+  
+    <!-- create group dialog -->
+	<div dojoType="trm.widget.GroupDialog" id="dlg_group"></div>
+	
+	<!--
+	<div class="soria" dojoType="dijit.Dialog" id="dlg_creategroup" title="Gruppe"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+	    <tr>
+	      <td><label for="name">Bezeichnung: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_groupname" id="tb_groupname" /></td>
+		</tr>
+		<tr>
+	      <td><label for="loc">Position: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lat" id="dlgcreategroup_tb_poi_lat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_poi_lon" id="dlgcreategroup_tb_poi_lon" /></td>
+		  <td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_selectpoint">...</button></td>	
+	    </tr> 
+		<tr>
+			<td><label for="loc">Zoomlevel:</label></td>
+			<td><input dojoType="dijit.form.NumberSpinner"
+							    value="14"
+							    class="medium"
+							    constraints="{max:20,min:1,places:0}"
+							    name="dlgcreatgroup_zommlevel"
+							    id="dlgcreatgroup_zommlevel" />
+			</td>
+			<td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_zoomlevel">Zoomlevel von Karte</button></td>	
+		</tr>
+		<tr>
+	      <td><label for="name">Tagname:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="dlgcreategroup_tb_tagname" id="dlgcreategroup_tb_tagname" /></td>
+	    </tr>
+
+		<tr>
+			<td><label for="loc">Schutz:</label></td>
+			<td>
+				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" id="dlgcreategroup_rd_private" value="private" checked="true" />
+				<label for="dlgcreategroup_rd_private">Privat</label>
+				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" id="dlgcreategroup_rd_protected" value="protected" />
+				<label for="dlgcreategroup_rd_protected">Gesch&uuml;tzt</label>
+				<input dojoType="dijit.form.RadioButton" type="radio" name="g1" id="dlgcreategroup_rd_public" value="public" />
+				<label for="dlgcreategroup_rd_public">&Ouml;ffentlich</label>
+			 </td>
+		</tr>
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="dlgcreategroup_btn_ok">Ok</button></td>
+		</tr> 
+	  </table>
+  	</div>
+	-->
+  
+  <!-- Point Of Interest dialog -->
+	
+	<div dojoType="trm.widget.PoiDialog" id="dlg_poi"></div>
+	
+	<!--
+	<div class="soria" dojoType="dijit.Dialog" id="dlg_poi" title="Point Of Interest"
+    	execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	  <table>
+	    <input dojoType="dijit.form.TextBox" type="hidden" visible="false" name="tb_poi_poiid" id="tb_poi_poiid" />
+		<tr>
+	      <td><label for="name">Bezeichnung: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poidescription" id="tb_poidescription" /></td>
+	    </tr>
+		<tr>
+	      <td><label for="name">Tagname:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" disabled="disabled" type="text" name="dlpoi_tb_tagname" id="dlpoi_tb_tagname" /></td>
+	    </tr>
+		<tr>
+	      <td><label for="loc">Position: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lat" id="tb_poi_lat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" name="tb_poi_lon" id="tb_poi_lon" /></td>
+		  <td><button dojoType="dijit.form.Button" id="dlgpoi_btn_selectpoint">...</button></td>	
+	    </tr>
+		<tr>
+			<td><label for="loc">Zoomlevel:</label></td>
+			<td><input dojoType="dijit.form.NumberSpinner"
+							    value="14"
+							    class="medium"
+							    constraints="{max:20,min:1,places:0}"
+							    name="dlgpoi_zommlevel"
+							    id="dlgpoi_zommlevel" />
+			</td>
+			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_zoomlevel">Zoomlevel von Karte</button></td>	
+		</tr> 
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_showpiclist">[]</button></td>	
+		</tr>
+		<tr>
+			<td><label for="loc">Htmltext: </label></td>	 
+		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" style="max-width:320px" id="ta_poilongtext" name="ta_poilongtext"></textarea></td>
+	    </tr>
+		<tr>
+			<td><button dojoType="dijit.form.Button" id="dlgpoi_btn_ok">Ok</button></td>
+		</tr>
+	  </table>
+  	</div>
+	-->
+  
+  <!-- Tracemanager Popup -->
+  <div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="roundeddiv" style="display: none;" >
+		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_loaddata" field="display" onClick="gl_application.displaySelected()">Anzeigen</div> 
+		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_edit" field="edit" onClick="gl_application.showEdit()">Bearbeiten</div>		
+	  	<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_remove" field="remove" onClick="gl_application.doRemove()" >Entfernen</div>
+		<div dojoType="dijit.MenuSeparator"></div>	
+		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_manager" field="manager" onClick="gl_application.showItemManager()">Item Manager</div>
+		<div dojoType="dijit.MenuSeparator"></div>	
+		
+		<!-- Groups -->  
+		<div dojoType="dijit.PopupMenuItem" id="itm_submenu_groups">
+			<span>Gruppen</span>
+			<div dojoType="dijit.Menu" id="submenu_groups">
+				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createmaingroup" field="createrootgroup" onClick="gl_application.showGroupDialog(true,false)">Hauptgruppe hinzuf&uuml;gen</div>
+				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createsubgroup" field="createsubgroup" onClick="gl_application.showGroupDialog(false,false)">Untergruppe hinzuf&uuml;gen</div>
+				<div dojoType="dijit.MenuSeparator"></div>	
+				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_deletegroup" field="deletegroup" onClick="gl_application.doDelete()">Gruppe l&ouml;schen</div>		
+			</div>
+		</div>
+		<div dojoType="dijit.MenuSeparator"></div>	
+		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_delete" field="delete" onClick="">Entfernen</div>
+		<div dojoType="dijit.MenuSeparator"></div>	
+		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_removeall" field="clearmap" onClick="gl_application.clearMap()">Karte bereinigen</div>
+		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_updatetree" field="updatetree" onClick="gl_groupmanager.getRootGroups()">Baum aktualisieren</div>				
+		<div dojoType="dijit.MenuSeparator"></div>	
+		
+		<div dojoType="dijit.PopupMenuItem" id="itm_submenu_settings">
+			<span>Einstellungen</span>
+			<div dojoType="dijit.Menu" id="submenu_settings">
+				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_usersettings" field="usersettings" onClick="gl_application.showUserDialog()">Benutzereinstellungen</div>
+			</div>
+		</div>
+		
+  </div>
+      
+	<!--
+	<div dojoType="dijit.Menu" id="dlgfileedit_popup" onOpen="" contextMenuForWindow="false" targetNodeIds="dlgfilelist_tab_grid" style="display: none;" >
+		<div dojoType="dijit.MenuItem" id="dlgfileedit_itm_loadpois" onClick="gl_application.loadGroupData()">POI's anzeigen</div> 
+	</div>
+	-->
+	
+	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source_hidden" copyOnly="true" dndType="dnd_source">
+		<span class="dojoDndItem nodespan" dndType="red,darkred">
+			<table>
+				<tr>
+					<td><img id="dnd_source_image" src="images/folder.png"></img></td>
+					<td><!--<a id="dnd_source_text">please wait...</a>--></td>
+				</tr>
+			</table>
+		</span>
+	</div>
+	
+		
+</body>
+</html>
