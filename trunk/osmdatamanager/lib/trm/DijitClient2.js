@@ -19,6 +19,7 @@ dojo.declare("DijitClient2", Application2, {
 			//onDblClick
 			
 			this.senderdialog = null;        
+			this.privatemode  = false;
         },
 		
 		/**
@@ -108,7 +109,7 @@ dojo.declare("DijitClient2", Application2, {
 		_cb_LoggedIn: function(user){
 			this.setActiveUser(user);
 			this.disablePrivatemode();
-			//this.updateFilelist();
+			this.updateFileList();
 			
 			var usr = this.getActiveUser();
 			if (usr != null) {
@@ -141,6 +142,8 @@ dojo.declare("DijitClient2", Application2, {
 			if (response == "msg.logoutok") {
 				dijit.byId('btn_login').attr("label", "::Login::");
 				gl_groupmanager.getGroupTree().reset();
+				this.clearMap();
+				this.disablePrivatemode();
 				var lat = 50.9350850727913;
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
@@ -179,20 +182,12 @@ dojo.declare("DijitClient2", Application2, {
 			if (confirm("delete group " + item.itemname + " ?"))  //TODO mehrsprachig
 				gl_groupmanager.deleteGroup(item.itemid,cb);
 		},
-		
-		/**
-		 * deletes a group
-		 * @param {Object} item
-		 */
-		_deletePoi: function(item) {
-			
-		},
-		
+						
 		/**
 		 * removes a poi from a group
 		 * @param {Object} item
 		 */
-		_removePoi: function(item) {
+		_removeItem: function(item) {
 			var grpid = gl_groupmanager.getGroupTree().getSelectedParentGroupId();
 			if (grpid) {
 				var cb = {
@@ -212,6 +207,13 @@ dojo.declare("DijitClient2", Application2, {
 		groupTreeOpenmenu: function(sender) {
 			this.disabledAllMenuItems();
 			
+			if (! this.privatemode)
+				return;
+			
+			dijit.byId('itm_submenu_groups').attr("disabled",false);
+			dijit.byId('itm_createmaingroup').attr("disabled",false);
+			dijit.byId('itm_submenu_settings').attr("disabled",false);
+			
 			var itm1 = this.getSelectedItem();
 			if (itm1) {
 				switch(itm1.itemtype.toLowerCase()) {
@@ -226,7 +228,7 @@ dojo.declare("DijitClient2", Application2, {
 					case "group":
 						dijit.byId('itm_loaddata').attr("disabled",false);
 						dijit.byId('itm_edit').attr("disabled",false);
-						dijit.byId('itm_remove').attr("disabled",false);
+						//dijit.byId('itm_remove').attr("disabled",false);
 						dijit.byId('itm_manager').attr("disabled",false);
 						dijit.byId('itm_submenu_groups').attr("disabled",false);
 						dijit.byId('itm_createmaingroup').attr("disabled",false);
@@ -251,13 +253,14 @@ dojo.declare("DijitClient2", Application2, {
 		 * enables private mode
 		 */
 		enablePrivatemode: function() {
-			
+			this.privatemode = true;	
 		},
 		
 		/**
 		 * disables private mode
 		 */
 		disablePrivatemode: function() {
+			this.privatemode = false;
 			this.disabledAllMenuItems();
 		},
 		
@@ -279,6 +282,7 @@ dojo.declare("DijitClient2", Application2, {
 			
 			dijit.byId('itm_removeall').attr("disabled","disabled");
 			dijit.byId('itm_updatetree').attr("disabled","disabled");
+			dijit.byId('itm_submenu_settings').attr("disabled","disabled");
 		},
 		
 		/**
@@ -332,9 +336,6 @@ dojo.declare("DijitClient2", Application2, {
 					case "group":
 						this._deleteGroup(itm1);
 						break;
-					case "poi":
-						this._deletePoi(itm1);
-						break;
 				}
 			}
 		},
@@ -347,12 +348,26 @@ dojo.declare("DijitClient2", Application2, {
 			if (itm1) {
 				switch(itm1.itemtype.toLowerCase()) {
 					case "poi":
-						this._removePoi(itm1);
+						this._removeItem(itm1);
+						break;
+					case "file":
+						this._removeItem(itm1);
 						break;
 				}
 			}
 		},
 		
+		/**
+		 * deletes a poi
+		 * @param {Object} item
+		 * @param {Object} callback
+		 */
+		deletePoi: function(item, callback) {
+			if (confirm(item.itemname + " aus löschen ?")) { //TODO mehrsprachig
+				var pm = new PoiManager();										
+				pm.deletePoi(item.itemid, callback);
+			}
+		},
 		
 		/**
 		 * displays the selected item on the map

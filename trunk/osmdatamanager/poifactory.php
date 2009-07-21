@@ -268,6 +268,33 @@
 			return false;
 		}
 		
+		/**
+		 * deletes poi with given poiid
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aPoiId Object
+		 */
+		function deletePoi($aUsrId,	$aPoiId) {
+			$delquery = "DELETE FROM `tab_poi` WHERE (itemid = $aPoiId) AND (usrid = $aUsrId)";
+			if ($this->executeQuery($delquery) == null)
+			{
+				return false;
+			}
+			return true;							
+		}
+		
+		/**
+		 * updates poi data
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aPoiId Object
+		 * @param $aPoiName Object
+		 * @param $aDescription Object
+		 * @param $aLat Object
+		 * @param $aLon Object
+		 * @param $aZoomlevel Object
+		 * @param $aTagname Object
+		 */
 		function updatePoi($aUsrId,	$aPoiId, $aPoiName, $aDescription, $aLat, $aLon,$aZoomlevel,$aTagname) {		 
 			$qry1   =  "UPDATE `tab_poi` SET ";
 						

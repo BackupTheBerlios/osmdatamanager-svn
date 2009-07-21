@@ -86,11 +86,11 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} response
 		 * @param {Object} ioArgs
 		 */
-		_cb_updateFileList: function(response, ioArgs){
+		_cb_updateFileList: function(response, ioArgs){ //TODO kann raus (_cb_standard)
 			try {
 				if ((response != "msg.failed") && (response != "")) {
-					if (callback != null) {
-						callback.func.apply(callback.target, [response, ioArgs]);
+					if (this.callback != null) {
+						this.callback.func.apply(this.callback.target, [response, ioArgs]);
 					}
 				}
 			} catch (e)
@@ -197,7 +197,21 @@ dojo.declare("Application2", Serverconnection, {
 				"action": "msg.updatefilelist"
 			}
 			this.callback = cb;
-			loadFromServer("filefunctions.php",params,this._cb_updateFileList);
+			this.loadFromServer("filefunctions.php",params,this._cb_standard);
+		},
+		
+		/**
+		 * 
+		 * @param {Object} file
+		 * @param {Object} cb
+		 */
+		deleteFile: function(file, cb) {
+			var params = {
+				"action": "msg.updatefilelist"
+			}
+			//TODO
+			//this.callback = cb;
+			//this.loadFromServer("filefunctions.php",params,this._cb_updateFileList);
 		},
 		
 		/**

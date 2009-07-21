@@ -66,7 +66,7 @@
 		*/
 		
 		function getGroupId() {
-			return $this->groupid;
+			return $this->itemid;
 		}	
 	}
 	

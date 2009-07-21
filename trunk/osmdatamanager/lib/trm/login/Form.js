@@ -12,14 +12,15 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 	templatePath:    dojo.moduleUrl('trm.login', 'Form.html'),
 	templateCssPath: dojo.moduleUrl('trm.login', 'Form.css'),  //TODO does not work, you have to include the css in your html page
 	baseClass: dojo.moduleUrl('trm.login', 'Form.css'),
+	widgetsInTemplate: true,
 	postCreate: function() {
 		this.inherited(arguments);
 		//Now, we need to get the translations
 		var nls = dojo.i18n.getLocalization("trm.login", "Form");
 		this.trmLoginLabelUserNode.textContent=nls.username;
 		this.trmLoginLabelPasswordNode.textContent=nls.password;
-		this.trmLoginBtnOkNode.textContent     = nls.ok;
-		this.trmLoginBtnCancelNode.textContent = nls.cancel;
+		this.trmLoginBtnOkNode.attr("label")     = nls.ok;
+		this.trmLoginBtnCancelNode.attr("label") = nls.cancel;
 		this.domNode.setAttribute("class","trmLoginForm_hidden trmDialog");
 	},
 	startup: function() {
@@ -40,8 +41,14 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 			this.onLoggedIn(response);
 		} else {
 			//alert(nls["loginfailed"]);
+			this._resetFields();
 			this.onLoggedIn(null);
+			alert("login failed"); //TODO mehrsprachig
 		}
+	},
+	_resetFields: function() {
+		this.trmLoginInputUserNode.setAttribute("value","");
+		this.trmLoginInputPasswordNode.setAttribute("value","");
 	},
 	_okClick: function(e) {
 		console.debug("okclick");
@@ -83,6 +90,9 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 	show: function() {
 		console.debug("show");
 		this._position();
+		this._resetFields();
+		this.trmLoginInputUserNode.focus();
+		this.trmLoginInputUserNode.selected = true;
 		this.domNode.setAttribute("class","trmLoginForm trmDialog");
 	},
 	hide: function() {

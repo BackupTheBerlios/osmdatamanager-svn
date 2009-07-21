@@ -11,7 +11,9 @@ dojo.require("dojox.grid.DataGrid");
 dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated], {
 	grid: null,
 	clientapp: null,
+	currentItem: null,
 	widgetsInTemplate: true,
+	viewMode: "",
 	templatePath:    dojo.moduleUrl('trm.widget', 'ItemManager.html'),
 	_gridStructure: [
 		{ field: "itemname", name: "Part Number", width: 'auto',cellStyles: 'padding-left:40px' },
@@ -49,12 +51,12 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		return "";
 	},
 	_onCellMouseOver: function(sender) {
+		this.currentItem = null;
 		var c1 = dojo.coords(sender.target.parentNode,true);
 		if (c1) {
 			
 			var s1 = document.getElementById("dnd_source");
 			if (s1) {
-				console.debug("mo");
 				s1.setAttribute("class","dnd_source_visible");
 				s1.setAttribute("className","dnd_source_visible");
 				s1.style.left = c1.x;
@@ -64,11 +66,10 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 			var img  = document.getElementById("dnd_source_image");
 			var itm1 = this.grid.getItem(sender.rowIndex);
 			if ((itm1) && (img)) {
-				console.debug(itm1);
+				this.currentItem = itm1;
 				img.setAttribute("src",this._getIconname1(itm1));
 				gl_groupmanager.setDropitem(itm1);
-			}
-			
+			}	
 		}
 	},
 	_onStyleRow: function(inrow) {
@@ -87,20 +88,37 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	_crtPoiClick: function() {
 		this.poidialog.prevWidget = this;
 		this.hide();
-		
-		/*
-		if (this.clientapp) {
-			dojo.connect(this.poidialog,"onGetPoint",this.clientapp,"_onGetPointClick");
-			dojo.connect(this.poidialog,"onZoomlevelClick",this.clientapp,"_onZoomlevelClick");
-		}
-		*/
 		this.poidialog.show();	
 	},
 	_edtPoiClick: function() {
 	
 	},
+	_cb_delete: function() {
+		if (this.viewMode.toLowerCase() == "file") {
+			this.loadGpxFiles();
+		}
+		if (this.viewMode.toLowerCase() == "poi") {
+			this.loadPois();
+		}
+	},
+	_delClick: function() {
+		if ((this.currentItem) && (this.clientapp)) {
+			var cb = {
+				target: this,
+				func: this._cb_delete
+			}
+			console.debug(this.currentItem[0]);
+			if (this.currentItem.itemtype[0].toLowerCase() == "poi") {
+				this.clientapp.deletePoi(this.currentItem,cb);
+			}
+			if (this.currentItem.itemtype[0].toLowerCase() == "file") {
+				this.clientapp.deleteFile(this.currentItem,cb);
+			}
+		}
+	},
 	loadPois: function() {
 		this.hideDndSource();
+		this.viewMode = "poi";
 		this._store = new dojo.data.ItemFileReadStore({ url: "poifunctions.php?action=msg.getpois" });
 				
 		if (this.grid != null) {
@@ -110,6 +128,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	},
 	loadGpxFiles: function() {		
 		this.hideDndSource();		
+		this.viewMode = "file";
 		this._store = new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" });
 		
 		if (this.grid != null) {
@@ -127,5 +146,6 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	hide:function() {
 		this.inherited(arguments);
 		this.hideDndSource();
+		this.currentItem = null;
 	}
 });

@@ -83,7 +83,11 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 		}
 	},
 	_getTagname: function() {
-		return this.dlgGrp_cmbTagname[this.dlgGrp_cmbTagname.selectedIndex].value;	
+		if (this.isUpdate) {
+			return this.dlgGrp_cmbTagname[this.dlgGrp_cmbTagname.selectedIndex].value;
+		} else {
+			return "";
+		}
 	},
 	_loadGroupData: function() {
 		if (this.group == null)

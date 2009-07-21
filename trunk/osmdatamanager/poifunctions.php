@@ -72,6 +72,15 @@
 				}
 			}
 			
+			//msg_deletepoi
+			if ($action == msg_deletepoi) {
+				if ($pof->deletePoi($usr->getUid(),$poiid)) {
+					echo application_getMessage(msg_delok);	
+				} else {
+					echo application_getMessage(msg_failed);	
+				}
+			}
+			
 			//msg_getpois
 			if ($action == msg_getpois) {
 				$lst1 = $pof->getPois($usr->getUid());

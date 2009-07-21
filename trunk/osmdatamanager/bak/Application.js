@@ -811,7 +811,16 @@ TRM.ClientApplication = function(openlayersMap)
 		}
 		callback = cb;
 		loadFromServer("filefunctions.php",params,_cb_updateFileList);
-	}
+	},
+	
+	this.deleteFile = function(file,cb) {
+		params = {
+			"action": "msg.updatefilelist"
+		}
+		callback = cb;
+		loadFromServer("filefunctions.php",params,_cb_updateFileList);
+	},
+	
 	
 	/**
 	 * deletes a user in database (and all data from this user)

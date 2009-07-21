@@ -3,14 +3,14 @@
 	<table>
 		<tr>
 			<td><div class="trmLoginLabelUser" dojoAttachPoint="trmLoginLabelUserNode"></div></td>
-			<td><div class="trmLoginInputUser"><input type="text" dojoAttachPoint="trmLoginInputUserNode" /></div></td>
+			<td><div class="trmLoginInputUser"><input type="text" dojoType="dijit.form.TextBox" dojoAttachPoint="trmLoginInputUserNode" /></div></td>
 		</tr>
 		<tr>
 			<td><div class="trmLoginLabelPassword" dojoAttachPoint="trmLoginLabelPasswordNode"></div></td>
-			<td><div class="trmLoginInputPassword"><input type="password" dojoAttachPoint="trmLoginInputPasswordNode" /></td></div>	
+			<td><div class="trmLoginInputPassword"><input type="password" dojoType="dijit.form.TextBox" dojoAttachPoint="trmLoginInputPasswordNode" /></td></div>	
 		</tr>
 	</table>
 	<hr/>
-	<button dojoType="dijit.form.button" dojoAttachPoint="trmLoginBtnCancelNode" dojoAttachEvent="ondijitclick:_cancelClick">_cancel_</button>
-	<button dojoType="dijit.form.button" dojoAttachPoint="trmLoginBtnOkNode" dojoAttachEvent="ondijitclick:_okClick">_ok_</button>
+	<button dojoType="dijit.form.Button" dojoAttachPoint="trmLoginBtnCancelNode" dojoAttachEvent="onClick:_cancelClick">_cancel_</button>
+	<button dojoType="dijit.form.Button" dojoAttachPoint="trmLoginBtnOkNode" dojoAttachEvent="onClick:_okClick">_ok_</button>
 </div>
