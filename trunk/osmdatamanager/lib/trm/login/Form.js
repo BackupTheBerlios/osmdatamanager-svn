@@ -19,8 +19,8 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 		var nls = dojo.i18n.getLocalization("trm.login", "Form");
 		this.trmLoginLabelUserNode.textContent=nls.username;
 		this.trmLoginLabelPasswordNode.textContent=nls.password;
-		this.trmLoginBtnOkNode.attr("label")     = nls.ok;
-		this.trmLoginBtnCancelNode.attr("label") = nls.cancel;
+		this.trmLoginBtnOkNode.attr("label",nls.ok);
+		this.trmLoginBtnCancelNode.attr("label",nls.cancel);
 		this.domNode.setAttribute("class","trmLoginForm_hidden trmDialog");
 	},
 	startup: function() {
@@ -92,7 +92,7 @@ dojo.declare("trm.login.Form", [trm.widget._TrmWidget, dijit._Templated], {
 		this._position();
 		this._resetFields();
 		this.trmLoginInputUserNode.focus();
-		this.trmLoginInputUserNode.selected = true;
+		//this.trmLoginInputUserNode.selected = true;
 		this.domNode.setAttribute("class","trmLoginForm trmDialog");
 	},
 	hide: function() {

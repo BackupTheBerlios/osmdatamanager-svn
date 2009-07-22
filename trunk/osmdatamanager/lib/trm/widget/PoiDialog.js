@@ -1,13 +1,12 @@
 dojo.provide("trm.widget.PoiDialog");
-dojo.require("trm.widget._TrmWidget");
+dojo.require("trm.widget._TrmBaseDialog");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 
 //dojo.requireLocalization("trm.translation", "tt");
+//dijit._Templated
 
-dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], {
-	poiitem: null,
-	widgetsInTemplate: true,
+dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 	storedata: true,
 	templatePath:    dojo.moduleUrl('trm.widget', 'PoiDialog.html'),
 	onOkClick: function(data) {
@@ -17,6 +16,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], 
 		this.inherited(arguments);
 		//this.domNode.setAttribute("class","trmPoiDialog_hidden trmDialog");
 	},
+	/*
 	_dataOk: function() {
 		
 		if (this.dlgPoi_tbDescription.attr("value").trim() == "")
@@ -32,7 +32,10 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], 
 				return false;
 				
 		return true;
+		
+		return true;
 	},
+	*/
 	_cb_createPoi: function(response, ioArgs) {
 		this.hide();	
 	},
@@ -79,22 +82,11 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], 
 			}
 	  }
 	},
-	_resetFields: function() {
-		this.dlgPoi_tbDescription.attr("value","");
-		this.dlgPoi_tbLat.attr("value","");
-		this.dlgPoi_tbLon.attr("value","");
-		this.dlgPoi_spinZoomlevel.attr("value","");
-		this.dlgPoi_tbHtmlText.attr("value","");
-		//this.dlgPoi_tbTagname.attr("value","");
-		for (var i=(this.dlgPoi_cmbTagname.childNodes.length-1);i> -1;i--) {
-			var nd1 = this.dlgPoi_cmbTagname.childNodes[i];
-			this.dlgPoi_cmbTagname.removeChild(nd1);
-		}
-	},
-	_getTagname: function() {
-		return this.dlgPoi_cmbTagname[this.dlgPoi_cmbTagname.selectedIndex].value;	
-	},
-	_loadPoiData: function() {
+	
+	_loadData: function() {
+		this.inherited(arguments);
+		
+		/*
 		if (this.poiitem == null)
 			return;
 		
@@ -116,19 +108,10 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmWidget, dijit._Templated], 
 			
 			this.dlgPoi_cmbTagname.appendChild(opt1);
 		}
+		*/
+		
 	},
-	setPoi: function(item) {
-		this.poiitem = item;
-		this._loadPoiData();
-	},
-	setPoint: function(latlon) {
-		this.showPrevWidget = true;
-		this.dlgPoi_tbLat.attr("value",latlon.lat);
-		this.dlgPoi_tbLon.attr("value",latlon.lon);
-	},
-	setZoomlevel: function(zoomlevel) {
-		this.dlgPoi_spinZoomlevel.attr("value",zoomlevel);	
-	},
+	
 	show: function(isupdate) {
 		if (!isupdate) {
 			this._resetFields();

@@ -44,7 +44,6 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 				});
 			} 
 			catch (e) {
-				//alert(e);
 				console.error(e);
 			}
 	},

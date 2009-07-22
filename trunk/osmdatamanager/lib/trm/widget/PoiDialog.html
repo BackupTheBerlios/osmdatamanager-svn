@@ -1,24 +1,26 @@
 <div class="trmDialog trmHidden">
+	<!--
 	<table>
 	    <input dojoType="dijit.form.TextBox" type="hidden" visible="false" />
 		<tr>
 	      <td><label for="name">Bezeichnung: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbDescription"  type="text"  /></td>
+	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlg_tbItemname"  type="text"  /></td>
 	    </tr>
 		<tr>
 	      	<td><label for="name">Tagname:</label></td>
 	      	<!-- <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbTagname" /></td>-->
-		 	<td>
+		 	<!--
+			<td>
 				<select name="tagname"
 	                value=""
-	   				dojoAttachPoint="dlgPoi_cmbTagname">
+	   				dojoAttachPoint="dlg_cmbTagname">
 	          	</select>
 			</td>
 	    </tr>
 		<tr>
 	      <td><label for="loc">Position: </label></td>
-	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbLat" /></td>
-		  <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbLon" /></td>
+	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlg_tbLat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlg_tbLon" /></td>
 		  <td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _getPointClick">...</button></td>	
 	    </tr>
 		<tr>
@@ -28,7 +30,7 @@
 							    class="medium"
 							    constraints="{max:20,min:1,places:0}"
 							    name="dlgpoi_zommlevel"
-							    dojoAttachPoint="dlgPoi_spinZoomlevel"
+							    dojoAttachPoint="dlg_spinZoomlevel"
 								/>
 			</td>
 			<td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _zoomLevelClick">Zoomlevel von Karte</button></td>	
@@ -38,7 +40,7 @@
 		</tr>
 		<tr>
 			<td><label for="loc">Htmltext: </label></td>	 
-		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" dojoAttachPoint="dlgPoi_tbHtmlText" style="max-width:320px" ></textarea></td>
+		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" dojoAttachPoint="dlgPoi_taLongText" style="max-width:320px" ></textarea></td>
 	    </tr>
 		</table>
 		<hr/>
@@ -48,5 +50,5 @@
 				<td><button dojoType="dijit.form.Button"  dojoAttachEvent="onClick:_cancelClick">Abbrechen</button></td>	
 			</tr>
 		</table>
-	  
+	  -->
 </div>
