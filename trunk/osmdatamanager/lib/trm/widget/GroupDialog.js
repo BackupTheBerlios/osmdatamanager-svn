@@ -5,11 +5,7 @@ dojo.require("dojo.parser");
 
 //dojo.requireLocalization("trm.translation", "tt");
 
-dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated], {
-	isUpdate: false,
-	group: null,
-	parentgroup: null,
-	widgetsInTemplate: true,
+dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
 	onOkClick: function(data) {
 		
 	},
@@ -32,18 +28,29 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 		return val;	
 	},
 	_dataOk: function() {
-		if (this.isUpdate) {
-			if (this.dlgGrp_tbDescription.attr("value").trim() == "")
+		this.inherited(arguments);
+		if (this.dlg_tbItemname) {
+			if (this.dlg_tbItemname.attr("value").trim() == "")
 				return false;
-		} else {
-			if (this.dlgGrp_tbDescription.attr("value").trim() == "")
-				return false;
-		}
+		}		
 		return true;
 	},
 	_okClick: function(e) {
 		this.inherited(arguments);
+		
+		
+		var data = this.getData();
+		alert(data.itemid);
+		alert(data.parentid);
+		console.debug(data);
+		return;
 		if (this._dataOk()) {
+			var data = this.getData();
+			console.debug(data);
+			//this.onOkClick(data);
+			
+			
+			/*
 			var itemid = -1;
 			if (this.group)
 				itemid = this.group.itemid;
@@ -69,27 +76,15 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 				"protection": protection,
 				"tagname": tagname
 			});
-		}
-	},
-	_resetFields: function() {
-		this.dlgGrp_tbDescription.attr("value","");
-		this.dlgGrp_tbLat.attr("value","");
-		this.dlgGrp_tbLon.attr("value","");
-		this.dlgGrp_spinZoomlevel.attr("value","");
-		this.dlgGrp_cmbTagname.setAttribute("value","");
-		for (var i=(this.dlgGrp_cmbTagname.childNodes.length-1);i> -1;i--) {
-			var nd1 = this.dlgGrp_cmbTagname.childNodes[i];
-			this.dlgGrp_cmbTagname.removeChild(nd1);
-		}
-	},
-	_getTagname: function() {
-		if (this.isUpdate) {
-			return this.dlgGrp_cmbTagname[this.dlgGrp_cmbTagname.selectedIndex].value;
+			*/
 		} else {
-			return "";
+			if (this.nls) {
+		 		alert(this.nls["entervaliddata"]);
+		 	}
 		}
 	},
 	_loadGroupData: function() {
+		/*
 		if (this.group == null)
 			return;
 		
@@ -110,24 +105,30 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 			
 			this.dlgGrp_cmbTagname.appendChild(opt1);
 		}
-		
+		*/
 	},
+	/*
 	setGroup: function(group) {
 		this.group = group;
 		this._loadGroupData();
 	},
-	setParentGroup: function(group) {
-		this.parentgroup = group;
-	},
-	setPoint: function(latlon) {
-		this.dlgGrp_tbLat.attr("value",latlon.lat);
-		this.dlgGrp_tbLon.attr("value",latlon.lon);
-	},
-	setZoomlevel: function(zoomlevel) {
-		this.dlgGrp_spinZoomlevel.attr("value",zoomlevel);	
-	},
+	*/
+	
 	show: function(update,root) {
 		this.inherited(arguments);
+		
+		if (update) {
+			this._loadData();
+			this.dlgGrp_tblUpdate.setAttribute("class", "table_update");
+		} else {
+			this._resetFields();
+			this.dataitem = null;
+			this.dlgGrp_tblUpdate.setAttribute("class", "table_update_hidden");
+			if (root)
+				this.parentgroup = null;
+		}
+		
+		/*
 		this.isUpdate = update;
 				
 		if (this.isUpdate) {
@@ -141,6 +142,7 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmWidget, dijit._Templated]
 			
 			this.dlgGrp_tblUpdate.setAttribute("class", "table_update_hidden");
 		}
+		*/
 	}
 		
 });

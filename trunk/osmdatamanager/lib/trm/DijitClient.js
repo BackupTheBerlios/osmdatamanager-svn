@@ -42,7 +42,7 @@ dojo.declare("DijitClient2", Application2, {
 					target: gl_groupmanager.getGroupTree(),
 					func: gl_groupmanager.getGroupTree().addGroups
 				}
-			
+				
 				if (data.parentid != -1) {
 					gl_groupmanager.createSubGroup(data.parentid, data.itemname, cb);
 				}
@@ -424,10 +424,10 @@ dojo.declare("DijitClient2", Application2, {
 					var itm1 = this.getSelectedItem();
 					if (itm1) {
 					  if (isupdate) {
-					  	dlg1.setGroup(itm1);
+					  	dlg1.setDataItem(itm1);
 					  }
 					  else {
-					  	dlg1.setParentGroup(itm1);
+					  	dlg1.setParentItem(itm1);
 					  }
 					  
 					  dlg1.show(isupdate,isroot);
@@ -453,7 +453,7 @@ dojo.declare("DijitClient2", Application2, {
 			var dlg1 = dijit.byId('dlg_itemmanager');
 			if (dlg1)  {
 				dlg1.poidialog.prevWidget = null;
-				dlg1.poidialog.setPoi(item);
+				dlg1.poidialog.setDataItem(item);
 				dlg1.poidialog.show(true);
 			}
 		},

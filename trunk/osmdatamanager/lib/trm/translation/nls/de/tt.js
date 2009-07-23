@@ -3,8 +3,8 @@
 	"hallo": "Username:",
 	"password": "Password:",
 	"invalidUsername": "The username \"%s\" is not valid",
-	"cancel": "cancel",
-	"ok":"ok",
+	"cancel": "Abbrechen",
+	"ok":"Ok",
 	"login":"Login",
 	"showhomebase":"Heimatort",
 	"display":"Anzeigen",
@@ -19,6 +19,12 @@
 	"updatetree":"Baum aktualisieren",
 	"groups":"Gruppen trns",
 	"createpoi": "Poi erstellen",
-	"usersettings": "Benutzereinstellungen"
-	
+	"usersettings": "Benutzereinstellungen",
+	"entervaliddata": "Bitte geben Sie gültige Daten ein",
+	"itemname": "Bezeichnung",
+	"zoomlevelfrommap": "Zoomlevel von Karte",
+	"zoomlevel": "Zoomlevel",
+	"position": "Position",
+	"longtext": "Langtext",
+	"tagname": "Tagname"
 })

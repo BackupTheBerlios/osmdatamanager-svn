@@ -1,15 +1,15 @@
 <div class="trmDialog trmHidden">
-	<!--
+	
 	<table>
 	    <input dojoType="dijit.form.TextBox" type="hidden" visible="false" />
 		<tr>
-	      <td><label for="name">Bezeichnung: </label></td>
+	      <td><label dojoAttachPoint="dlg_lblItemname">_Bezeichnung: </label></td>
 	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlg_tbItemname"  type="text"  /></td>
 	    </tr>
 		<tr>
-	      	<td><label for="name">Tagname:</label></td>
+	      	<td><label dojoAttachPoint="dlg_lblTagname">_Tagname:</label></td>
 	      	<!-- <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlgPoi_tbTagname" /></td>-->
-		 	<!--
+		 	
 			<td>
 				<select name="tagname"
 	                value=""
@@ -18,13 +18,13 @@
 			</td>
 	    </tr>
 		<tr>
-	      <td><label for="loc">Position: </label></td>
+	      <td><label dojoAttachPoint="dlg_lblPosition">_Position: </label></td>
 	      <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlg_tbLat" /></td>
 		  <td><input dojoType="dijit.form.TextBox" dojoAttachPoint="dlg_tbLon" /></td>
 		  <td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _getPointClick">...</button></td>	
 	    </tr>
 		<tr>
-			<td><label>Zoomlevel:</label></td>
+			<td><label dojoAttachPoint="dlg_lblZoomlevel">_Zoomlevel:</label></td>
 			<td><input dojoType="dijit.form.NumberSpinner"
 							    value="14"
 							    class="medium"
@@ -33,22 +33,22 @@
 							    dojoAttachPoint="dlg_spinZoomlevel"
 								/>
 			</td>
-			<td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _zoomLevelClick">Zoomlevel von Karte</button></td>	
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnZoomLevelFromMap" dojoAttachEvent="onClick: _zoomLevelClick">_Zoomlevel von Karte</button></td>	
 		</tr> 
 		<tr>
 			<td><button dojoType="dijit.form.Button" >[]</button></td>	
 		</tr>
 		<tr>
-			<td><label for="loc">Htmltext: </label></td>	 
-		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" dojoAttachPoint="dlgPoi_taLongText" style="max-width:320px" ></textarea></td>
+			<td><label dojoAttachPoint="dlg_lblLongText">_Htmltext: </label></td>	 
+		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" dojoAttachPoint="dlg_taLongText" style="max-width:320px" ></textarea></td>
 	    </tr>
 		</table>
 		<hr/>
 		<table>
 			<tr>
-				<td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick:_okClick">Ok</button></td>
-				<td><button dojoType="dijit.form.Button"  dojoAttachEvent="onClick:_cancelClick">Abbrechen</button></td>	
+				<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnOk" dojoAttachEvent="onClick:_okClick">_Ok</button></td>
+				<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnCancel" dojoAttachEvent="onClick:_cancelClick">_Abbrechen</button></td>	
 			</tr>
 		</table>
-	  -->
+	  
 </div>
