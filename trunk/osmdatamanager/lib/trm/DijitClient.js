@@ -27,7 +27,7 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} data
 		 */
 		_dlgGrp_onOkClick: function(data) {
-			console.debug(data);
+			//console.debug(data);
 									
 			if (data.itemid != -1) {
 				var cb = {

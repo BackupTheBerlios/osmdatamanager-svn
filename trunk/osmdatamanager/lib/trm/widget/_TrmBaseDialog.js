@@ -247,9 +247,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			
 			if (this.parentitem)
 				parentid = this.parentitem.itemid;
-						
-			alert(parentid);
-			
+								
 			if (this.dlg_tbItemname) {
 				itemname = this.dlg_tbItemname.attr("value");
 			}
@@ -272,7 +270,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			
 			var result = {
 				"itemid": itemid,
-				"parentid:": parentid,
+				"parentid": parentid,
 				"itemname":  itemname,
 				"lat":  lat,
 				"lon":  lon,
@@ -281,8 +279,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 				"tagname":  tagname,
 				"protection": protection
 			};
-			
-			console.debug(result);
+	
 			return result;
 	},
 	
