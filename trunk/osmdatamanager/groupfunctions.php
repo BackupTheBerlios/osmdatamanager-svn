@@ -122,6 +122,23 @@
 				}
 			}
 			
+			//msg_gettree
+			if ($action == msg_gettree) {
+				$lst1 = null;
+				/*
+				if ($parentgroupid == -1) {
+					$lst1 = $fac->getRootGroups($usr->getUid());
+				}
+				
+				if ($lst1 != null) {
+					echo application_getMessage($lst1);
+				} else {
+					echo application_getMessage(msg_failed);
+				}
+				*/
+			}
+			
+			
 			//msg_addgrpfiles
 			if ($action == msg_addgrpfiles) {							
 				//$fac->addMessage("msg_addgrpfiles");				

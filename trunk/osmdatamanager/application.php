@@ -38,7 +38,8 @@
 	 define ("msg_getgrpitems","msg.getgrpitems");
 	 define ("msg_getpublicgrpitems","msg.getpublicgrpitems");	
      define ("msg_remgrpitm","msg.remgrpitm");
-	 
+	 define ("msg_gettree","msg.gettree");
+	 	 
 	 //poi actions
 	 define ("msg_createpoi","msg.createpoi");
 	 define ("msg_deletepoi","msg.deletepoi");

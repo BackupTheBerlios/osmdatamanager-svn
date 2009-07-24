@@ -18,7 +18,9 @@
 		@import "lib/trm/widget/UserDialog.css";
 	</style>
 	
+	<script type="test/javascript">djConfig = { isDebug: true };</script> 
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>			
+			
 	<script type="text/javascript">	
 		  dojo.require("dojo.parser");
                     
@@ -27,20 +29,22 @@
 				dojo.registerModulePath("trm","../../trm");		
 				dojo.requireLocalization("trm", "popupmenu");
 						
-				dojo.require("dojox.widget.SortList");
+				
+						
+				//dojo.require("dojox.widget.SortList");
 				dojo.require("dijit.layout.ContentPane");
 			  	dojo.require("dijit.layout.BorderContainer");
 				dojo.require("dijit.form.Button");
 				dojo.require("dijit.Dialog");
 				dojo.require("dijit.Menu");
 				dojo.require("dijit.form.TextBox");
-				dojo.require("dijit.form.ValidationTextBox");
+				//dojo.require("dijit.form.ValidationTextBox");
 		   		dojo.require("dojox.validate.regexp");
 		   		dojo.require("dojo.parser");
 				dojo.require("dojo.data.ItemFileReadStore"); 
 				dojo.require("dojox.image.ThumbnailPicker");
 				dojo.require("dijit.form.CheckBox");
-				dojo.require("dijit.form.NumberSpinner");	
+				//dojo.require("dijit.form.NumberSpinner");	
 				dojo.require("dijit.form.Textarea");
 				
 				dojo.require("dojox.grid.DataGrid");
@@ -53,6 +57,11 @@
 				dojo.require("dojo.dnd.Mover");
   				dojo.require("dojo.dnd.Moveable");
   				dojo.require("dojo.dnd.move");
+				
+				dojo.require("dojo.data.ItemFileWriteStore");
+  				dojo.require("dijit.tree.ForestStoreModel");
+  				dojo.require("dijit._tree.dndSource");
+  				dojo.require("dijit.Tree");
 				
 				//trm widgets
 				//dojo.require("trm.login.Form");
@@ -79,7 +88,6 @@
 		
 	</script>
 	
-	
 	<script src="http://openlayers.org/api/OpenLayers.js"></script>
 	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>	
 		
@@ -87,12 +95,41 @@
 	<script src="lib/trm/openlayers_extensions.js"></script>
 	<script src="lib/trm/Application.js"></script>
 	<script src="lib/trm/DijitClient.js"></script>
-	<script src="lib/trm/GroupTree.js"></script>
+	<!-- <script src="lib/trm/GroupTree.js"></script> -->
 	<script src="lib/trm/GroupManager.js"></script>
 	<script src="lib/trm/PoiManager.js"></script>
 	<script src="lib/trm/Markermanager.js"></script>
 	
 	<script src="json2.js"></script>		
+	
+	
+	<script type="text/javascript" language="Javascript">
+		dojo.provide("my.ForestStoreModel");
+		dojo.require("dijit.Tree");
+		
+		dojo.declare("my.ForestStoreModel", dijit.tree.ForestStoreModel, {
+			getChildren: function(parentItem, complete_cb, error_cb) {
+				//alert(parentItem);
+				console.debug(parentItem);
+				if (parentItem.root == true) {
+					// get top level nodes for this plugin id 
+					pid = 5;
+				}
+				else {
+					pid = this.store.getValue(parentItem, 'itemid');
+				}
+				this.store.fetch({ query: {itemid: pid}, 
+								   onComplete: complete_cb, 
+								   onError: error_cb});
+	 
+				// Call superclasses' getChildren
+				return this.inherited(arguments);
+			}
+		});
+		dojo.require("my.ForestStoreModel");
+	</script>
+	
+	
 	<script type="text/javascript">
 				
 		var gl_map;  				//openlayers map
@@ -155,7 +192,7 @@
 			
 			
 			//dojo.connect(dojo.byId("dnd_source"), "onDndDrop", onDrop);
-						
+			/*		
 			dojo.subscribe("/dnd/drop", function(source,nodes,iscopy){
   				
 				var t = dojo.dnd.manager().target;
@@ -175,20 +212,33 @@
 				
 				dojo.dnd.manager().canDrop(false);
 				});
-				
-			/*
-			dojo.subscribe("/dnd/source/over", function(source){
-			  if (dojo.dnd.manager().target) {
-			  //code to perform some action	
-			  	//var t = dojo.dnd.manager().target;
-			  	//console.debug(t.parent.innerHTML);
-				//alert(dojo.dnd.manager().target.innerHTML);
-			  }
-			});
 			*/
 			
 			//dlg_filelist
-			gl_moveable = new dojo.dnd.Moveable("dlg_filelist");
+			//gl_moveable = new dojo.dnd.Moveable("dlg_filelist");
+			
+			
+			//tree test
+			var store = new dojo.data.ItemFileReadStore({
+		        url: "countries.json"
+				//url: "filefunctions.php?action=msg.getfiles"
+		    });
+		
+		    //var treeModel = new dijit.tree.ForestStoreModel({
+			var treeModel = new my.ForestStoreModel({
+		        store: store,
+		        query: {"plugin_id":  '*' },
+		        rootId: "root",
+		        rootLabel: "Company",
+		        childrenAttrs: ["children"]
+		    });
+		
+		    new dijit.Tree({
+		        model: treeModel,
+		        dndController: "dijit._tree.dndSource"
+		    }, "treeThree");
+
+			
 		}		
 		
 	</script>
@@ -220,9 +270,11 @@
 					<button dojoType="trm.Button.TrmButton" onclick="gl_application.centerHomebase()" field="showhomebase">Heimatort anzeigen</button><br/>
 				</div>
 				
-				<div>
+				<div><!--
 					<div id="treecontainer" >
 					</div>
+					-->
+					<div id="treeThree"></div>
 				</div>
 			</div>	
 			

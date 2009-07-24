@@ -6,7 +6,8 @@ dojo.declare("Groupmanager", Serverconnection, {
 		 */
 		constructor: function(app){
                 this.application = app
-				this.grouptree = new GroupTree(document.getElementById("treecontainer"),document.getElementById("treedata"));
+				//this.grouptree = new GroupTree(document.getElementById("treecontainer"),document.getElementById("treedata"));
+				this.grouptree = null;
 				this.dropitem = null;
         },
 		

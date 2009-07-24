@@ -1,10 +1,12 @@
+/**
+*
+* DijitClient -> connection between dijit and the base application
+*
+*/
 dojo.declare("DijitClient2", Application2, {
         
-		/**
-         * DijitClient -> connection between dijit and the base application
-         */
 		constructor: function(name,map){
-                // remember, Person constructor is called automatically
+
         	dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_LoggedIn");
 			dojo.connect(dijit.byId("dlg_group"),"onOkClick",this,"_dlgGrp_onOkClick");
 			dojo.connect(dijit.byId("dlg_group"),"onGetPoint",this,"_onGetPointClick");
@@ -16,8 +18,7 @@ dojo.declare("DijitClient2", Application2, {
 			
 			dojo.connect(dijit.byId("dlg_user"),"onGetPoint",this,"_onGetPointClick");
 			dojo.connect(dijit.byId("dlg_user"),"onZoomlevelClick",this,"_onZoomlevelClick");
-			//onDblClick
-			
+						
 			this.senderdialog = null;        
 			this.privatemode  = false;
         },
@@ -26,9 +27,7 @@ dojo.declare("DijitClient2", Application2, {
 		 * called when ok click on the groupdialog is fired
 		 * @param {Object} data
 		 */
-		_dlgGrp_onOkClick: function(data) {
-			//console.debug(data);
-									
+		_dlgGrp_onOkClick: function(data) {									
 			if (data.itemid != -1) {
 				var cb = {
 					target: gl_groupmanager.getGroupTree(),
@@ -62,7 +61,9 @@ dojo.declare("DijitClient2", Application2, {
 			console.debug(lonlat.lon);
 			if (this.senderdialog) {
 				this.senderdialog.setPoint(lonlat);
+				this.senderdialog.onlyshow = true;
 				this.senderdialog.show(true);
+				this.senderdialog.onlyshow = false;
 			}
 		},
 		
@@ -115,7 +116,7 @@ dojo.declare("DijitClient2", Application2, {
 			if (usr != null) {
 				dijit.byId('btn_login').attr("label", "Logout [" + usr.itemname + "]");
 				this.enablePrivatemode();
-				gl_groupmanager.getRootGroups();
+				//gl_groupmanager.getRootGroups();
 				this.centerHomebase();
 				/*
 				self.updateFileList(null);
@@ -157,12 +158,22 @@ dojo.declare("DijitClient2", Application2, {
 			}
 		},
 		
+		/**
+		 * calback after a delete call
+		 * @param {Object} response
+		 * @param {Object} ioArgs
+		 */
 		_cb_delete: function(response, ioArgs) {
 			if (response == "msg.delok") {
 				gl_groupmanager.getRootGroups();
 			}
 		},
 		
+		/**
+		 * callback after a remove call
+		 * @param {Object} response
+		 * @param {Object} ioArgs
+		 */
 		_cb_remove: function(response, ioArgs) {
 			if (response == "msg.remok") {
 				gl_groupmanager.getRootGroups();
@@ -475,7 +486,7 @@ dojo.declare("DijitClient2", Application2, {
 			var dlg1 = dijit.byId('dlg_user');
 			if (dlg1)  {
 				dlg1.application = this;
-				dlg1.setUser(this.activeuser);
+				dlg1.setDataItem(this.activeuser);
 				dlg1.show();
 			}
 		},

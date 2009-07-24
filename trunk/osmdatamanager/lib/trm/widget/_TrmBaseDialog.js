@@ -24,6 +24,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	parentitem: null,
 	isupdate: false,
 	nls: null,
+	onlyshow: false,
 	postCreate: function() {
 		this.inherited(arguments);
 		this.nls = dojo.i18n.getLocalization("trm.translation", "tt");
@@ -230,7 +231,6 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	/**
 	 * returns the formula data
 	 */
-	
 	getData: function() {
 			var itemname = null;
 			var itemid = -1;
@@ -316,6 +316,8 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * @param {Object} latlon
 	 */
 	setPoint: function(latlon) {
+		//console.debug("setPoint");
+		//console.debug(latlon);
 		this.showPrevWidget = true;
 		this.dlg_tbLat.attr("value",latlon.lat);
 		this.dlg_tbLon.attr("value",latlon.lon);

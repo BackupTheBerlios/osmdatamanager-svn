@@ -50,6 +50,11 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 	},
 	
 	show: function(isupdate) {
+		if (this.onlyshow) {
+			this.inherited(arguments);
+			return;
+		}
+		
 		if (isupdate) {
 			this._loadData();
 		} else {

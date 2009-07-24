@@ -47,6 +47,9 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
 	},
 	show: function(update,root) {
 		this.inherited(arguments);
+		if (this.onlyshow) {
+			return;
+		}
 		
 		if (update) {
 			this.parentitem = null;
