@@ -34,14 +34,19 @@
 				//dojo.require("dojox.widget.SortList");
 				dojo.require("dijit.layout.ContentPane");
 			  	dojo.require("dijit.layout.BorderContainer");
-				dojo.require("dijit.form.Button");
 				dojo.require("dijit.Dialog");
+				dojo.require("dojo.dnd.Source"); 
+				//dojo.require("dijit.form.Button");
+				
+				/*
+				
 				dojo.require("dijit.Menu");
 				dojo.require("dijit.form.TextBox");
 				//dojo.require("dijit.form.ValidationTextBox");
 		   		dojo.require("dojox.validate.regexp");
 		   		dojo.require("dojo.parser");
-				dojo.require("dojo.data.ItemFileReadStore"); 
+				dojo.require("dojo.data.ItemFileReadStore");
+				//dojo.require("dojox.data.QueryReadStore");
 				dojo.require("dojox.image.ThumbnailPicker");
 				dojo.require("dijit.form.CheckBox");
 				//dojo.require("dijit.form.NumberSpinner");	
@@ -61,18 +66,27 @@
 				dojo.require("dojo.data.ItemFileWriteStore");
   				dojo.require("dijit.tree.ForestStoreModel");
   				dojo.require("dijit._tree.dndSource");
-  				dojo.require("dijit.Tree");
+  				*/
+				
+				//dojo.require("dojox.data.demos.stores.LazyLoadJSIStore");
+								
 				
 				//trm widgets
 				//dojo.require("trm.login.Form");
-				dojo.require("trm.login.Form");
 				dojo.require("trm.translation.tt");
 				dojo.require("trm.Button.TrmButton");
 				dojo.require("trm.MenuItem.TrmMenuItem");
+				/*
+				dojo.require("trm.login.Form");
+				
+				
+				
 				dojo.require("trm.widget.ItemManager");
 				dojo.require("trm.widget.GroupDialog");
 				dojo.require("trm.widget.PoiDialog");	
-				dojo.require("trm.widget.UserDialog");	
+				*/
+				//dojo.require("trm.widget.UserDialog");
+				
 								
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
@@ -101,35 +115,6 @@
 	<script src="lib/trm/Markermanager.js"></script>
 	
 	<script src="json2.js"></script>		
-	
-	
-	<script type="text/javascript" language="Javascript">
-		dojo.provide("my.ForestStoreModel");
-		dojo.require("dijit.Tree");
-		
-		dojo.declare("my.ForestStoreModel", dijit.tree.ForestStoreModel, {
-			getChildren: function(parentItem, complete_cb, error_cb) {
-				//alert(parentItem);
-				console.debug(parentItem);
-				if (parentItem.root == true) {
-					// get top level nodes for this plugin id 
-					pid = 5;
-				}
-				else {
-					pid = this.store.getValue(parentItem, 'itemid');
-				}
-				this.store.fetch({ query: {itemid: pid}, 
-								   onComplete: complete_cb, 
-								   onError: error_cb});
-	 
-				// Call superclasses' getChildren
-				return this.inherited(arguments);
-			}
-		});
-		dojo.require("my.ForestStoreModel");
-	</script>
-	
-	
 	<script type="text/javascript">
 				
 		var gl_map;  				//openlayers map
@@ -140,6 +125,7 @@
 		var gl_idx = 0;
 		var gl_moveable=null;
 		var gl_markermanager = null;
+		var gl_tree = null;
 				
 		//TRM.TargetPrefix = "";
 		
@@ -216,29 +202,7 @@
 			
 			//dlg_filelist
 			//gl_moveable = new dojo.dnd.Moveable("dlg_filelist");
-			
-			
-			//tree test
-			var store = new dojo.data.ItemFileReadStore({
-		        url: "countries.json"
-				//url: "filefunctions.php?action=msg.getfiles"
-		    });
-		
-		    //var treeModel = new dijit.tree.ForestStoreModel({
-			var treeModel = new my.ForestStoreModel({
-		        store: store,
-		        query: {"plugin_id":  '*' },
-		        rootId: "root",
-		        rootLabel: "Company",
-		        childrenAttrs: ["children"]
-		    });
-		
-		    new dijit.Tree({
-		        model: treeModel,
-		        dndController: "dijit._tree.dndSource"
-		    }, "treeThree");
-
-			
+					
 		}		
 		
 	</script>
@@ -295,34 +259,10 @@
 	<!-- loading dialog -->
 	<div dojoType="dijit.Dialog" class="soria" id="dialog_loading" closable="false" title="please wait">loading your gpx traces..</div>
 	
-	<!-- info dialog -->
-	<div dojoType="dijit.Dialog" id="dialog_info" closable="false" title="">
-		<div id="dlginfo_text">info</div>
-		<button dojoType="dijit.form.Button" onclick="gl_application.hideMessageDialog()" id="btn_dlginfo_ok">Ok</button><br/>
-	</div>
-			
-	  
- 	<!-- login dialog -->
- 	<div dojoType="trm.login.Form" id="dlg_login"></div> 
-  
-	<!-- Item Manager -->
-	<div dojoType="trm.widget.ItemManager" id="dlg_itemmanager"></div>
-	
-	<!-- User Dialog -->
-	<div dojoType="trm.widget.UserDialog" id="dlg_user"></div>
+	<div id="dlg_login"></div> 
+	<div id="dlg_itemmanager"></div>
 	
 	
-	<!-- Picture Dialog -->
-	<div class="soria" dojoType="dijit.Dialog"  id="dlg_picturelist" title="Bild selektieren" closeable="false"
-		execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
-		<div id="thumbPicker1" dojoType="dojox.image.ThumbnailPicker"></div>
-	</div>
-	
-	<!-- create group dialog -->
-	<div dojoType="trm.widget.GroupDialog" id="dlg_group"></div>
-	  
-	<!-- Point Of Interest dialog -->
-	<div dojoType="trm.widget.PoiDialog" id="dlg_poi"></div>
 	
 	<!-- Popup -->
 	<div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="roundeddiv" style="display: none;" >
@@ -359,16 +299,32 @@
 	</div>
       
 	<!-- Dnd Source -->
-	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source_hidden" copyOnly="true" dndType="dnd_source">
-		<span class="dojoDndItem nodespan" dndType="red,darkred">
-			<table>
-				<tr>
-					<td><img id="dnd_source_image" src="images/folder.png"></img></td>
-					<td><!--<a id="dnd_source_text">please wait...</a>--></td>
-				</tr>
-			</table>
-		</span>
+	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source_visible" copyOnly="true" dndType="dnd_source">
+		<div class="dojoDndItem" id="2009_odysee_im_warpkern" itemname="serpentim" ><img src="images/folder_blue.png"></img>Apple</div>
 	</div>
+	
+	<p>List of Items to be categorized</p>
+
+				<div dojoType="dojo.dnd.Source" id="source2"  jsId="c2" copyOnly="true" selfCopy="true" class="container" style="height: 100px; overflow: auto">
+				<div class="dojoDndItem" itemname="hallo">Apple</div>
+				<div class="dojoDndItem" >Orange</div>
+				<div class="dojoDndItem" id="1003" name="house music" itemtype="Group">Banana</div>
+				<div class="dojoDndItem" id="1004">Tomato</div>
+				<div class="dojoDndItem" id="1005">Pepper</div>
+
+				<div class="dojoDndItem" id="1006">Wheat</div>
+				<div class="dojoDndItem" id="1007">Corn</div>
+				<div class="dojoDndItem" id="1008">Spinach</div>
+				<div class="dojoDndItem" id="1009">Cucumber</div>
+				<div class="dojoDndItem" id="1010">Carrot</div>
+				<div class="dojoDndItem" id="1011">Potato</div>
+
+				<div class="dojoDndItem" id="1012">Grape</div>
+				<div class="dojoDndItem" id="1013">Lemon</div>
+				<div class="dojoDndItem" id="1014">Lettuce</div>
+				<div class="dojoDndItem" id="1015">Peanut</div>
+			</div>
+
 	
 </body>
 </html>

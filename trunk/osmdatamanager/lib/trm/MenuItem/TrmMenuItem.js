@@ -1,6 +1,7 @@
 dojo.provide("trm.MenuItem.TrmMenuItem");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
+dojo.require("dijit.Menu");
 //dojo.require("dijit.form.Button");
 dojo.require("dojo.parser");
 

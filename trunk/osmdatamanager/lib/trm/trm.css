@@ -14,3 +14,23 @@
 	visibility: visible;
 	position: absolute;
 }
+
+.tundra .standard {
+	background-image: url(../../images/folder_blue.png);
+}
+
+.tundra .standard_open {
+	background-image: url(../../images/folder_blue_open.png);
+}
+
+.tundra .standard_poi {
+	background-image: url(../../images/flag.png);
+}
+
+.tundra .file_gpx {
+	background-image: url(../../images/gpx.png);
+}
+
+.tundra .user {
+	background-image: url(../../images/user.png);
+}

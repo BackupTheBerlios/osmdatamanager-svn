@@ -31,6 +31,7 @@
 		*/
 		var $files;
 		var $haschildren;	
+		
 				
 		function Group() {
 			parent::GroupItem("Group");
@@ -67,7 +68,14 @@
 		
 		function getGroupId() {
 			return $this->itemid;
-		}	
+		}
+		
+		/*
+		function setName($aName) {
+			$this->name = $aName;
+		}
+		*/
+			
 	}
 	
 	/**
@@ -122,6 +130,26 @@
 		}
 	}
 	*/
+	
+	/**
+	 * GroupContainer
+	 */
+	class GroupContainer {
+		
+		var $items;
+		var $identifier;
+		var $label;
+		
+		function GroupContainer($aIdentifier,$aLabel) {
+			$this->items = array();
+			$this->identifier = $aIdentifier;
+			$this->label = $aLabel;
+		}
+		
+		function addGroup($aGroup) {
+			array_push($this->items, $aGroup);	
+		}
+	}
 	
 	/**
 	 * Groupfactory
@@ -609,6 +637,32 @@
 			}
 			return null;
 		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserid Object
+		 */
+		function getAllGroups($aUserid) {
+			$groups = array();
+			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) ORDER BY itemname";
+			$result = $this->executeQuery($qry);
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$grp = new Group();
+						$this->parse_Group($grp,$row,$result);
+						array_push($groups, $grp);
+						
+					}
+				}
+				return $groups;
+			}
+			return null;
+		}
+		
 		
 		/**
 		 * returns all child groups from user with given userid and given parentgroupid

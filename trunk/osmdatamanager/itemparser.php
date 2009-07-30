@@ -102,7 +102,9 @@
 						break;
 				}
 			}
-			$this->parse_Tags($aItem);
+			
+			if ($aItem->itemtype == "User")
+				$this->parse_Tags($aItem);
 		}
 		
 		/**

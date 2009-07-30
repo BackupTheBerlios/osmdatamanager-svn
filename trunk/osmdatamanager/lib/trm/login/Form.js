@@ -1,8 +1,10 @@
 dojo.provide("trm.login.Form");
 //dojo.require("dijit._Widget");
+dojo.require("dijit.form.TextBox");
 dojo.require("trm.widget._TrmWidget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
+
 
 dojo.requireLocalization("trm.login", "Form");
 

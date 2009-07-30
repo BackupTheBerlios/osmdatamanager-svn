@@ -463,6 +463,9 @@
 			var $usrid;
 			var $itemname;
 			var $tags;
+			var $name;  //the same value as itemname, used for the tree
+			var $id;    //unique id for the tree
+			var $children;
 			
 			function GroupItem($aItemtype)
 			{
@@ -476,9 +479,26 @@
 				$this->usrid    = -1;				
 				$this->itemname = "new item";
 				$this->tags = null;
+				$this->children = array();
+				$this->id = "";
 			}
 			
-			
+			/**
+			 * 
+			 * @return 
+			 */
+			function prepareForTree($aParentId) {
+				$this->name = $this->itemname;
+				//array_push($this->children, "__Dummy");
+				$this->parentid = $aParentId;
+				$this->id = "__grpitm__".$aParentId."_".$this->itemname;
+				/*
+				if ($this->haschildren) {
+					$this->id = "__grpitm__".$aParentId."_".$this->itemname;
+				}
+				*/
+				//echo $this->id;
+			}
 			
 			/**
 			 * set's a new filename for the expanded icon displayed in the tree

@@ -3,6 +3,10 @@ dojo.require("trm.widget._TrmWidget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 dojo.requireLocalization("trm.translation", "tt");
+dojo.require("dijit.form.TextBox");
+dojo.require("dijit.form.NumberSpinner");
+dojo.require("dijit.form.Textarea");
+
 
 /*
  * contains functions for all general components

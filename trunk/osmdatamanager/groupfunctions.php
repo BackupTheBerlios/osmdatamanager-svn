@@ -35,6 +35,7 @@
 		$tagname       	= $_REQUEST['tagname'];
 		$grpitmid       = $_REQUEST['grpitmid'];
 		$itemtype       = $_REQUEST['itemtype'];
+		$treedata       = $_REQUEST['treedata'];
 		global $gl_loglevel;
 		$gl_loglevel 	= 1;
 	} else {
@@ -125,6 +126,25 @@
 			//msg_gettree
 			if ($action == msg_gettree) {
 				$lst1 = null;
+				$gc = new GroupContainer("id","name");
+				
+				if ($parentgroupid == -1) {
+					$lst1 = $fac->getRootGroups($usr->getUid());
+				} else {
+					
+				}
+					
+				if ($lst1 != null)
+				{
+					for ($i=0;$i<count($lst1);$i++) {
+							$grp = $lst1[$i];
+							$grp->prepareForTree(-1);
+							$gc->addGroup($grp);
+					}
+				}
+				
+								
+				echo application_getMessage($gc);
 				/*
 				if ($parentgroupid == -1) {
 					$lst1 = $fac->getRootGroups($usr->getUid());
@@ -321,10 +341,26 @@
 						array_push($items,$poi1);
 					}
 				}
-				*/
-								
+				*/		
 				if (count($items) > 0) {
-					echo application_getMessage($items);	
+						
+					if (isset($treedata)) {
+						$gc = new GroupContainer("id","name");
+																
+						if ($lst1 != null)
+						{
+							for ($i=1;$i<count($items);$i++) {
+									$itm = $items[$i];
+									$itm->prepareForTree($groupid);
+									$gc->addGroup($itm);
+							}
+						}
+										
+						echo application_getMessage($gc);
+					} else {
+						echo application_getMessage($items);
+					}
+				
 				} else {
 					echo application_getMessage(msg_failed);	
 				}
