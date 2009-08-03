@@ -99,6 +99,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 						var dndsrc = this._getChildnode(s1,"DIV");
 						if (dndsrc) {
 							//dndsrc.setAttribute("id", "__dnd__" + this.currentItem.itemid);	
+							dndsrc.innerHTML = this.currentItem.itemname;
 						}
 						
 						

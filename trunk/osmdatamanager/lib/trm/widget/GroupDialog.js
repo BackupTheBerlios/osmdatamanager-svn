@@ -1,5 +1,5 @@
 dojo.provide("trm.widget.GroupDialog");
-dojo.require("trm.widget._TrmWidget");
+dojo.require("trm.widget._TrmBaseDialog");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 

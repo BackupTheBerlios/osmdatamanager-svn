@@ -10,6 +10,7 @@ dojo.require("dijit._tree.dndSource");
 dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 	tags: null,
 	selectedItem: {},
+	selectedTreeItem: null,
 	postCreate: function() {
 		this.inherited(arguments);
 		//this.tags = new Array();
@@ -19,7 +20,8 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		
 		try {
 			if (item.root != true) {
-				//console.debug(item);
+				console.debug("getIconClass");
+				console.debug(item);
 				//console.debug(this.model.store.getValue(item, 'tagname'));
 				if (opened) {
 					return this.model.store.getValue(item, 'tagname') + "_open";
@@ -42,7 +44,7 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		this.selectedItem = item;
 		this.inherited(arguments);
 		this.selectedItem = {};
-		
+		this.selectedTreeItem = item;
 		for (var key in item) {
 			//console.debug(key);
 			var val = item[key][0];

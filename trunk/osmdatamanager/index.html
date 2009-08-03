@@ -169,12 +169,16 @@
 			gl_markermanager = new MarkerManager();
 			gl_application.markermanager = gl_markermanager;
 						
-			//check if users is already logged in
+			//check if user is already logged in
 			var cb = {
 				func:gl_application._cb_loginUser,
 				target:gl_application
 			}
-			gl_application.checkUser(cb);
+			gl_application.loginUser("Testuser2","Testuser",cb);
+			
+			//gl_application.checkUser(cb);
+			
+			
 			
 			
 			//dojo.connect(dojo.byId("dnd_source"), "onDndDrop", onDrop);
@@ -261,7 +265,7 @@
 	
 	<div id="dlg_login"></div> 
 	<div id="dlg_itemmanager"></div>
-	
+	<div id="dlg_group"></div> 
 	
 	
 	<!-- Popup -->
@@ -299,8 +303,8 @@
 	</div>
       
 	<!-- Dnd Source -->
-	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source_visible" copyOnly="true" dndType="dnd_source">
-		<div class="dojoDndItem" id="2009_odysee_im_warpkern" itemname="serpentim" ><img src="images/folder_blue.png"></img>Apple</div>
+	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source_hidden" copyOnly="true" dndType="dnd_source">
+		<div class="dojoDndItem" id="dnd_itm">_Dnd_Item</div>
 	</div>
 	
 	<p>List of Items to be categorized</p>

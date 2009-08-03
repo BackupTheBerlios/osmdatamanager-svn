@@ -29,7 +29,7 @@
 		var $groupname;
 		var $parentgroup;
 		*/
-		var $files;
+		//var $files;
 		var $haschildren;	
 		
 				
@@ -41,7 +41,7 @@
 			$this->parentgroup = null;
 			$this->groupname = null;
 			*/
-			$this->files = array();
+			//$this->files = array();
 			$this->haschildren=false;
 			$this->protection=null;
 			$this->zoomlevel=null;
@@ -146,7 +146,7 @@
 			$this->label = $aLabel;
 		}
 		
-		function addGroup($aGroup) {
+		function addGroup(&$aGroup) {
 			array_push($this->items, $aGroup);	
 		}
 	}
@@ -638,6 +638,54 @@
 			return null;
 		}
 		
+		function parseItems($aUserid, &$aGroup) {
+			echo "<br>===getGroupItems====<br>";
+			$lst1 = $this->getGroupItems($aUserid,$aGroup->itemid);
+			echo "<br>===end getGroupItems====<br>";
+			if ($lst1 != null) {
+				
+				echo $aGroup->itemid."<br>";
+				echo $aGroup->id."<br>";
+				echo(count($lst1));
+				for ($i=0;$i<count($lst1);$i++) {
+						echo "get";
+						$itm1 = $lst1[$i];
+						//$itm1->prepareForTree(-1);
+						echo $itm1->itemtype;
+						$aGroup->addChild($itm1);
+						
+						//array_push($aGroup->children,$itm1);
+						echo "::".count($aGroup->children);
+						//$this->parseChildren($aUserid,$itm1);
+					}	
+			}
+			echo "<br>ende......<br>";
+		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aGroup Object
+		 */
+		function parseChildren($aUserid, &$aGroup) {
+			echo ":::::::::::::::::::::::::<br>";
+			$this->parseItems($aUserid,$aGroup);
+			$lst1 = $this->getChildGroups($aUserid,$aGroup->itemid);
+			if ($lst1 != null) {
+				for ($i=0;$i<count($lst1);$i++) {
+						$itm1 = $lst1[$i];
+						$itm1->prepareForTree(-1);
+						//array_push($aGroup->children,$itm1);
+						echo "bac<br>";
+						$aGroup->addChild($itm1);
+						echo "eac<br>";
+						$this->parseChildren($aUserid,$itm1);
+					}	
+			}
+			echo "<br>==================================";
+		}
+		
+		
 		/**
 		 * 
 		 * @return 
@@ -771,6 +819,8 @@
 			$lst1 = $this->getChildGroups($aUserid, $aItemId);
 			if ($lst1 != null)
 				return true;
+				
+			return false;
 		}
 			
 		/**

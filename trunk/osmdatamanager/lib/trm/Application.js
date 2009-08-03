@@ -189,6 +189,22 @@ dojo.declare("Application2", Serverconnection, {
 		},
 		
 		/**
+		 * loginUser
+		 * @param {Object} username
+		 * @param {Object} password
+		 * @param {Object} cb
+		 */
+		loginUser: function(username, password, cb) {
+			params = {
+				"action": "msg.login",
+				"username":username,
+				"password":password
+			}
+			this.callback = cb;
+			this.loadFromServer("userfunctions.php",params,this._cb_checkUser);	
+		},
+		
+		/**
 		 * updates the filelist database table
 		 * @param {Object} cb
 		 */

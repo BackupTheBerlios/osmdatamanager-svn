@@ -69,7 +69,14 @@
 			if ($action == msg_crtgrp) {
 				if ($fac->createGroup($usr->getUid(),$groupname,$parentgroupid)) {
 					//echo application_getMessage(msg_crtok);	
-					//$grp = $fac->getGroup($usr->getUid(),$groupname);
+					$grp = $fac->getGroup($usr->getUid(),$fac->lastid);
+					if ($grp != null) {
+						$grp->prepareForTree($parentgroupid);
+						echo application_getMessage($grp);
+					} else {
+						echo application_getMessage(msg_failed);
+					}
+					/*
 					$lst1 = null;
 					if ($parentgroupid == -1) {
 						$lst1 = $fac->getRootGroups($usr->getUid());
@@ -82,6 +89,7 @@
 					} else {
 						echo application_getMessage(msg_failed);
 					}
+					*/
 				}	else {
 					echo application_getMessage(msg_failed);
 				}
@@ -138,6 +146,8 @@
 				{
 					for ($i=0;$i<count($lst1);$i++) {
 							$grp = $lst1[$i];
+							$fac->parseChildren($usr->getUid(),$grp);
+							//$fac->parseItems($usr->getUid(),$grp);
 							$grp->prepareForTree(-1);
 							$gc->addGroup($grp);
 					}
@@ -160,6 +170,8 @@
 			
 			
 			//msg_addgrpfiles
+			//TODO weg
+			/*
 			if ($action == msg_addgrpfiles) {							
 				//$fac->addMessage("msg_addgrpfiles");				
 				if (isset($files))
@@ -189,6 +201,7 @@
 					echo application_getMessage(msg_failed);
 				}
 			}
+			*/
 			
 			//msg_remgrpfiles
 			if ($action == msg_remgrpfiles) {							
@@ -282,6 +295,17 @@
 				}
 			}
 			
+			//msg_addgrpitm
+			if ($action == msg_addgrpitm) {
+				//addGroupItem($aGroupId, $aUsrId, $aItemid,$aItemType) {
+				if ($fac->addGroupItem($parentgroupid, $usr->getUid(),$grpitmid,$itemtype)) {
+					echo application_getMessage(msg_addok);
+				} else {
+					echo application_getMessage(msg_failed);
+				}
+			}
+			
+			
 			//msg_getgrpitems
 			if ($action == msg_getgrpitems) {
 				$items = array();
@@ -347,7 +371,7 @@
 					if (isset($treedata)) {
 						$gc = new GroupContainer("id","name");
 																
-						if ($lst1 != null)
+						if ($items != null)
 						{
 							for ($i=1;$i<count($items);$i++) {
 									$itm = $items[$i];

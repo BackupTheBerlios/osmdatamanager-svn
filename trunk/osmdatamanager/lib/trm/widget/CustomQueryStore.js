@@ -10,6 +10,8 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 		this.requestMethod = "get";
 		this._arrayOfAllItems = [];
 		this._rootcall = true;
+		this.id_offset = 1;
+		this.dofetch = true;
 	},
 	
 	_fetchItems_2: function(request, fetchHandler, errorHandler){
@@ -26,7 +28,7 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 			if (this._loadFinished)
 				this._rootcall = false;
 			
-			this._loadFinished = false;
+			//this._loadFinished = false;
 			if ((this.url != null) && (this.url != "")) 
 				this._jsonFileUrl = this.url;
 			
@@ -39,11 +41,31 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 		}
 	},
 	
+	beforeNewItem: function(/* Object? */ keywordArgs, /* Object? */ parentInfo) {
+		
+	},
+	
 	newItem: function(/* Object? */ keywordArgs, /* Object? */ parentInfo){
+		
 		console.debug("newItem");
 		console.debug(keywordArgs);
 		console.debug(parentInfo);
-		return this.inherited(arguments);
+		/*
+		var id1 = keywordArgs.id;
+		keywordArgs.id = id1 + "_" + this.id_offset;
+		keywordArgs["tagname"] = "Group";
+		this.id_offset++;
+		
+		this._loadFinished = true;
+		*/
+		
+		this.beforeNewItem(keywordArgs, /* Object? */ parentInfo);
+				
+		//console.debug(keywordArgs);
+		var val = this.inherited(arguments);
+		console.debug(val);
+		console.debug("::: end newItem");
+		return val;
 	},
 	
 	_getItemsArray: function(/*object?*/queryOptions){
@@ -51,8 +73,11 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 		//		Internal function to determine which list of items to search over.
 		//	queryOptions: The query options parameter, if any.
 		console.debug("_getItemsArray");
-		return this._arrayOfAllItems; 
+		return this.inherited(arguments);
+		
 		console.debug(queryOptions);
+		return this._arrayOfAllItems; 
+		
 		if(queryOptions && queryOptions.deep) {
 			return this._arrayOfAllItems; 
 		}
@@ -62,6 +87,16 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 	_fetchItems: function(	/* Object */ keywordArgs, 
 							/* Function */ findCallback, 
 							/* Function */ errorCallback){
+		
+		/*
+		if (!this.dofetch)
+			return;
+		*/
+			
+		console.debug("_fetchItems");
+		console.debug(keywordArgs);
+		console.debug(findCallback);
+		return this.inherited(arguments);
 		
 		if (this._loadFinished)
 				this._rootcall = false;
@@ -75,10 +110,10 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 		//		See dojo.data.util.simpleFetch.fetch()
 		var self = this;
 		var filter = function(requestArgs, arrayOfItems){
-			var items = [];
 			console.debug("filter");
-			console.debug(arrayOfItems.length);
-			console.debug(requestArgs.query);
+			var rslt = false;
+			
+			var items = [];
 			if(requestArgs.query){
 				var ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : false; 
 
@@ -95,6 +130,7 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 				for(var i = 0; i < arrayOfItems.length; ++i){
 					var match = true;
 					var candidateItem = arrayOfItems[i];
+					console.debug(candidateItem);
 					if(candidateItem === null){
 						match = false;
 					}else{
@@ -106,13 +142,18 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 						}
 					}
 					if(match){
+						console.debug("match");
 						items.push(candidateItem);
-						console.debug("candidateItem");
-						console.debug(candidateItem);
+						rslt = true;
 					}
 				}
-				findCallback(items, requestArgs);
+				if (rslt) {
+					findCallback(items, requestArgs);
+				}
+				return rslt;
 			}else{
+				console.debug("no query");
+				
 				// We want a copy to pass back in case the parent wishes to sort the array. 
 				// We shouldn't allow resort of the internal list, so that multiple callers 
 				// can get lists and sort without affecting each other.  We also need to
@@ -128,8 +169,9 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 			}
 		};
 
-		if(this._loadFinished){
-			filter(keywordArgs, this._getItemsArray(keywordArgs.queryOptions));
+		//if(this._loadFinished){
+		if (filter(keywordArgs, this._getItemsArray(keywordArgs.queryOptions))) {
+			return;
 		}else{
 
 			if(this._jsonFileUrl){
@@ -137,8 +179,10 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 				//a load is in progress, we have to defer the fetching to be 
 				//invoked in the callback.
 				if(this._loadInProgress){
+					console.debug("_loadInProgress")
 					this._queuedFetches.push({args: keywordArgs, filter: filter});
 				}else{
+					console.debug("not _loadInProgress")
 					this._loadInProgress = true;
 					var getArgs = {
 							url: self._jsonFileUrl, 
@@ -166,6 +210,7 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 				}
 			}else if(this._jsonData){
 				try{
+					console.debug("_jsonData");
 					this._loadFinished = true;
 					this._getItemsFromLoadedData(this._jsonData);
 					this._jsonData = null;
@@ -180,6 +225,8 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 	},
 	
 	_getItemsFromLoadedData: function(/* Object */ dataObject){
+		
+		console.debug("_getItemsFromLoadedData");
 		//	summary:
 		//		Function to parse the loaded data into item format and build the internal items array.
 		//	description:
@@ -192,7 +239,7 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 		//		Array of items in store item format.
 		
 		// First, we define a couple little utility functions...
-		
+				
 		function valueIsAnItem(/* anything */ aValue){
 			// summary:
 			//		Given any sort of value that could be in the raw json data,
@@ -220,10 +267,6 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 			return isItem;
 		}
 		
-		console.debug("_getItemsFromLoadedData");
-		console.debug(dataObject);
-		console.debug(this._arrayOfAllItems.length);
-		
 		var self = this;
 		function addItemAndSubItemsToArrayOfAllItems(/* Item */ anItem){
 			self._arrayOfAllItems.push(anItem);
@@ -245,6 +288,17 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 					}
 				}
 			}
+		}
+		
+		function _itemLoaded(item) {
+			for (var i=0;i<self._arrayOfAllItems.length;++i) {
+				var itm1 = self._arrayOfAllItems[i];
+				if (itm1.id === item.id) {
+					console.debug("_itemLoaded");
+					return true;
+				}
+			}
+			return false;
 		}
 
 		this._labelAttr = dataObject.label;
@@ -269,12 +323,13 @@ dojo.declare("trm.widget.CustomQueryStore", [dojo.data.ItemFileWriteStore], {
 				item[this._rootItemPropName] = true;
 			}
 		} else {
-			console.debug("childcall");
 			try {
 				for (var i = 0; i < dataObject.items.length; ++i) {
 					item = dataObject.items[i];
-					addItemAndSubItemsToArrayOfAllItems(item);
-					item[this._rootItemPropName] = true;
+					if (!_itemLoaded(item)) {
+						addItemAndSubItemsToArrayOfAllItems(item);
+						item[this._rootItemPropName] = true;
+					}
 				}
 			} catch (e) {
 				console.error(e);

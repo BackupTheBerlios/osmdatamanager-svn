@@ -27,9 +27,10 @@
 	 define ("msg_crtgrp","msg.crtgrp");
 	 define ("msg_delgrp","msg.delgrp");
 	 define ("msg_getgrps","msg.getgrps");
-	 define ("msg_addgrpfiles","msg.addgrpfiles");
+	 //define ("msg_addgrpfiles","msg.addgrpfiles");
 	 define ("msg_updategrp","msg.updategrp");
-	 	 	 
+	 define ("msg_addgrpitm","msg.addgrpitm");	
+		 	 
 	 define ("msg_getchildgrps","msg.getchildgrps");
 	 define ("msg_getgrpfiles","msg.getgrpfiles");
 	 define ("msg_getgrppois","msg.getgrppois");
@@ -47,7 +48,7 @@
 	 define ("msg_getpoi","msg.getpoi");
 	 define ("msg_updatepoi","msg.updatepoi");
 	 //
-	 define ("msg_addgrppois","msg.addgrppois");	 
+	 //define ("msg_addgrppois","msg.addgrppois");	 
 	 define ("msg_remgrppois","msg.remgrppois");
 	 define ("msg_remgrpfiles","msg.remgrpfiles");
 	 
@@ -193,6 +194,7 @@
 			var $domessage;
 			var $readonly;
 			var $fieldnames;
+			var $lastid;
 									
 			function DatabaseAccess()
 			{
@@ -211,6 +213,7 @@
 				$this->errors = "";
 				$this->domessage = true;
 				$this->fieldnames = null;
+				$this->lastid = -1;
 			}
 			
 			function addLogMessage($aMessage, $aLevel) {
@@ -301,6 +304,8 @@
 			function executeQuery($aQuery)
 			{  
 				//check if read only mode (no insert, update and delete allowed)
+				$this->lastid = -1;
+				
 				if ($this->readonly) {
 					$ro = strpos(strtolower($aQuery), "insert");
 					if ($ro !== false) {
@@ -356,6 +361,8 @@
 					  }
 				  }
 				}
+				
+				$this->lastid = mysql_insert_id($con1);
 				mysql_close($con1);
 				
 				/*
@@ -481,6 +488,11 @@
 				$this->tags = null;
 				$this->children = array();
 				$this->id = "";
+				echo "<br>->".$aItemtype."<br>";
+			}
+			
+			function addChild(&$aItem) {
+				array_push($this->children,$aItem);
 			}
 			
 			/**
@@ -491,7 +503,7 @@
 				$this->name = $this->itemname;
 				//array_push($this->children, "__Dummy");
 				$this->parentid = $aParentId;
-				$this->id = "__grpitm__".$aParentId."_".$this->itemname;
+				$this->id = "__grpitm__".$aParentId."_".$this->itemid;
 				/*
 				if ($this->haschildren) {
 					$this->id = "__grpitm__".$aParentId."_".$this->itemname;

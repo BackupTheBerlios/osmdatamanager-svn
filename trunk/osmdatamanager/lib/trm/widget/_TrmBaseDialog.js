@@ -6,6 +6,7 @@ dojo.requireLocalization("trm.translation", "tt");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.NumberSpinner");
 dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.RadioButton");
 
 
 /*

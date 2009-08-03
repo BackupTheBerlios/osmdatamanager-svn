@@ -7,8 +7,8 @@ dojo.declare("Groupmanager", Serverconnection, {
 		constructor: function(app){
                 this.application = app
 				//this.grouptree = new GroupTree(document.getElementById("treecontainer"),document.getElementById("treedata"));
-				this.grouptree = null;
-				this.dropitem = null;
+				//this.grouptree = null;
+				//this.dropitem = null;
         },
 		
 		/*********************************************************
@@ -28,7 +28,7 @@ dojo.declare("Groupmanager", Serverconnection, {
 							
 				if ((response != "msg.failed") && (response != ""))
 				{
-					this.grouptree.addRootGroups(response);
+					//this.grouptree.addRootGroups(response);
 				}
 				
 			} catch (e)
@@ -80,9 +80,11 @@ dojo.declare("Groupmanager", Serverconnection, {
 		/**
 		 * sets the dropitem
 		 */
+		/*
 		setDropitem: function(item) {
 			this.dropitem = item;
 		},
+		*/
 		
 		
 		/**
@@ -94,7 +96,7 @@ dojo.declare("Groupmanager", Serverconnection, {
 				"parentgroupid":"-1"
 			}
 			this.dropitem = null;
-			this.grouptree.reset();
+			//this.grouptree.reset();
 			this.loadFromServer("groupfunctions.php",params,this._cb_getRootGroups);	
 		},
 		
@@ -127,9 +129,11 @@ dojo.declare("Groupmanager", Serverconnection, {
 		/**
 		 * returns the grouptree object
 		 */
+		/*
 		getGroupTree: function() {
 			return this.grouptree;
 		},
+		*/
 		
 		/**
 		 * creates a new rootgroup
@@ -142,7 +146,7 @@ dojo.declare("Groupmanager", Serverconnection, {
 				"groupname":groupname,
 				"parentgroupid":"-1"
 			}
-			this.grouptree.reset();
+			//this.grouptree.reset();
 			this.callback = cb;
 			this.loadFromServer("groupfunctions.php",params, this._cb_standard);		
 		},
@@ -158,6 +162,23 @@ dojo.declare("Groupmanager", Serverconnection, {
 				"action": "msg.crtgrp",
 				"groupname": groupname,
 				"parentgroupid": parentgroupid
+			}
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php", params, this._cb_standard);
+		},
+		
+		/**
+		 * 
+		 * @param {Object} parentgroupid
+		 * @param {Object} itemid
+		 * @param {Object} cb
+		 */
+		addGroupItem: function(parentgroupid,itemid,itemtype,cb) {
+			var params = {
+				"action": "msg.addgrpitm",
+				"parentgroupid": parentgroupid,
+				"grpitmid": itemid,
+				"itemtype": itemtype
 			}
 			this.callback = cb;
 			this.loadFromServer("groupfunctions.php", params, this._cb_standard);
