@@ -1,5 +1,3 @@
-# --------------------------------------------------------
-
 #
 # Tabellenstruktur für Tabelle `tab_file`
 #
@@ -37,7 +35,7 @@ CREATE TABLE `tab_grp` (
   `tagname` varchar(50) default NULL,
   `icon2` varchar(50) default NULL,
   PRIMARY KEY  (`itemid`)
-) TYPE=MyISAM AUTO_INCREMENT=211 ;
+) TYPE=MyISAM AUTO_INCREMENT=10 ;
 
 # --------------------------------------------------------
 
@@ -68,7 +66,7 @@ CREATE TABLE `tab_icon` (
   `icon2` varchar(50) default NULL,
   `icon3` varchar(50) default NULL,
   PRIMARY KEY  (`id`,`tagname`)
-) TYPE=MyISAM AUTO_INCREMENT=5 ;
+) TYPE=MyISAM AUTO_INCREMENT=6 ;
 
 # --------------------------------------------------------
 
@@ -83,7 +81,7 @@ CREATE TABLE `tab_message` (
   `loglevel` varchar(40) NOT NULL default '',
   `message` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM AUTO_INCREMENT=55571 ;
+) TYPE=MyISAM AUTO_INCREMENT=24829 ;
 
 # --------------------------------------------------------
 
@@ -103,7 +101,7 @@ CREATE TABLE `tab_poi` (
   `zoomlevel` int(11) default NULL,
   `tagname` varchar(50) default NULL,
   PRIMARY KEY  (`itemid`,`usrid`,`itemname`)
-) TYPE=MyISAM AUTO_INCREMENT=88 ;
+) TYPE=MyISAM AUTO_INCREMENT=103 ;
 
 # --------------------------------------------------------
 
@@ -113,13 +111,36 @@ CREATE TABLE `tab_poi` (
 
 DROP TABLE IF EXISTS `tab_usr`;
 CREATE TABLE `tab_usr` (
-  `id` int(11) NOT NULL auto_increment,
-  `username` varchar(20) NOT NULL default '',
+  `itemid` int(11) NOT NULL auto_increment,
+  `itemname` varchar(20) NOT NULL default '',
   `password` varchar(50) NOT NULL default '',
   `email` varchar(50) NOT NULL default '',
   `homepage` varchar(50) default NULL,
-  `location` varchar(50) default NULL,
-  `abouthtml` varchar(255) default NULL,
+  `description` varchar(255) default NULL,
   `picture` varchar(50) default NULL,
-  PRIMARY KEY  (`id`)
-) TYPE=MyISAM AUTO_INCREMENT=56 ;
+  `lat` varchar(50) default NULL,
+  `lon` varchar(50) default NULL,
+  `zoomlevel` int(11) default NULL,
+  `admin` int(11) default NULL,
+  `tagname` varchar(50) NOT NULL default '',
+  PRIMARY KEY  (`itemid`)
+) TYPE=MyISAM AUTO_INCREMENT=57 ;
+
+# ------------------------------------------------------
+
+INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )
+VALUES (
+'', 'user', 'images/user.png', NULL , NULL
+);
+
+
+
+
+
+
+
+
+
+
+
+

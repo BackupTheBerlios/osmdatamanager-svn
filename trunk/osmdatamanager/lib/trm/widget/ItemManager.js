@@ -16,8 +16,8 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	viewMode: "",
 	templatePath:    dojo.moduleUrl('trm.widget', 'ItemManager.html'),
 	_gridStructure: [
-		{ field: "itemname", name: "Part Number", width: 'auto',cellStyles: 'padding-left:40px' },
-		{ field: "itemtype", name: "Minimum Temperature", width: "100px" }
+		{ field: "itemname", name: "Itemname", width: 'auto',cellStyles: 'padding-left:80px' },
+		{ field: "itemtype", name: "Itemtype", width: "100px" }
 	],
 	_store: null,
 	postCreate: function() {
@@ -39,18 +39,6 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		this.grid.startup();
 	},
 	_getIconname1: function(item) {
-		/*
-		if (item.tags != null) {	
-			for (var x = 0; x < item.tags.length; x++) {
-				var tag1 = item.tags[x];
-								
-				if (tag1.tagname[0] == item.tagname[0]) {
-					return item.tags[x].icon1;
-				}
-			}	
-		}
-		return "";
-		*/
 		if (gl_application) {
 			var usr1 = gl_application.getActiveUser();
 			if (usr1) {
@@ -71,7 +59,6 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		if (node.hasChildNodes()) {
             for (var i = 0; i < node.childNodes.length; i++) {
 				var e1 = node.childNodes[i];
-				//console.debug(e1.nodeName);
 				if (e1.nodeName == nodename) {
 					return e1;
 				} else {
@@ -105,14 +92,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 						
 						s1.setAttribute("class", "dnd_source_visible");
 						s1.setAttribute("className", "dnd_source_visible");
-						//console.debug(s1);
-						//console.debug(this.currentItem);
-						/*
-						s1.setAttribute("name", this.currentItem.itemname);
-						s1.setAttribute("itemname", this.currentItem.itemname);
-						s1.setAttribute("tagname", this.currentItem.tagname);
-						*/
-						
+					
 						s1.style.left = c1.x;
 						s1.style.top = c1.y;
 					}
@@ -121,7 +101,6 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 					
 					if (img) {
 						img.setAttribute("src", this._getIconname1(itm1));
-						//gl_groupmanager.setDropitem(itm1);
 					}
 				}
 				
@@ -165,7 +144,6 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 				target: this,
 				func: this._cb_delete
 			}
-			console.debug(this.currentItem[0]);
 			if (this.currentItem.itemtype[0].toLowerCase() == "poi") {
 				this.clientapp.deletePoi(this.currentItem,cb);
 			}

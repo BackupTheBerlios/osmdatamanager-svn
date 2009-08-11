@@ -1,0 +1,18 @@
+{
+   label: 'name',
+   identifier: 'id',
+   items: [
+      { id:'1', name:'product_id', type:'item' },
+      { id:'2', name:'name', type:'item' },
+      { id:'3', name:'description', type:'item' },
+      { id:'4', name:'product_company', type:'item', plugin_id:'5', children: [
+         { id:'4_1', name:'fieldid', type:'sub'}
+         ]
+      },
+      { id:'5', name:'product_keys', type:'item', plugin_id:'7', children: [
+         { id:'5_1', name:'fieldid', type:'sub'}
+         ]
+      },
+      { id:'6', name:'serial_number', type:'item' }
+   ]
+}

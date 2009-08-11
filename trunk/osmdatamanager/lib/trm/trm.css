@@ -1,6 +1,6 @@
 .trmDialog {
-	background-color:#d9bf77;
-	border: solid 1px #83839a;	
+	background-color:#93b4c9;
+	border: solid 1px #43677C;	
 	padding:8px;
 }
 
@@ -33,4 +33,49 @@
 
 .tundra .user {
 	background-image: url(../../images/user.png);
+}
+
+
+
+/* ########################################################################
+   #
+   # Custom Dojo Button Styles
+   #
+   ######################################################################## */
+
+.trmDialog .dijitButtonText {
+	padding: 0px;
+	margin:0px;
+	color: #000000;
+}
+
+.trmDialog .dijitDisabled .dijitButtonText {
+	color: #b3b3b3;
+}
+
+.tundra .trmDialog .dijitButtonNode {
+	border-color: #2F407D;
+	border-bottom-color:#2F407D; 
+	background: #287B60 url(images/button_enabled.png) top repeat-x;
+	/* background-color: #9D66AF;*/
+	padding: 2px;
+	margin: 0px;
+	width: 160px;
+}
+
+.tundra .trmDialog .dijitButtonActive {
+	background: #6D7CB1 url(images/button_enabled.png) top repeat-x;
+}
+
+.tundra .trmDialog .dijitButtonNode button { 
+	border: 0px; 
+	background-color: transparent; 
+	padding: 0px;
+	margin: 0px;
+} 
+
+.tundra .trmDialog .dijitButtonHover .dijitButtonNode {
+	/*background: #7dc35f;*/
+	border-color: #419479;
+	background:#63AF96 url(images/button_focused.png) top repeat-x;
 }

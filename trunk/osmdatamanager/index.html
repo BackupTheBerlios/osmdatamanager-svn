@@ -23,70 +23,21 @@
 			
 	<script type="text/javascript">	
 		  dojo.require("dojo.parser");
-                    
-		  
+          
 		  dojo.addOnLoad(function(){
 				dojo.registerModulePath("trm","../../trm");		
 				dojo.requireLocalization("trm", "popupmenu");
-						
 				
-						
-				//dojo.require("dojox.widget.SortList");
 				dojo.require("dijit.layout.ContentPane");
 			  	dojo.require("dijit.layout.BorderContainer");
 				dojo.require("dijit.Dialog");
 				dojo.require("dojo.dnd.Source"); 
-				//dojo.require("dijit.form.Button");
-				
-				/*
-				
-				dojo.require("dijit.Menu");
-				dojo.require("dijit.form.TextBox");
-				//dojo.require("dijit.form.ValidationTextBox");
-		   		dojo.require("dojox.validate.regexp");
-		   		dojo.require("dojo.parser");
-				dojo.require("dojo.data.ItemFileReadStore");
-				//dojo.require("dojox.data.QueryReadStore");
-				dojo.require("dojox.image.ThumbnailPicker");
-				dojo.require("dijit.form.CheckBox");
-				//dojo.require("dijit.form.NumberSpinner");	
-				dojo.require("dijit.form.Textarea");
-				
-				dojo.require("dojox.grid.DataGrid");
-				dojo.require("dojox.grid.compat.Grid");
-				dojo.require("dojox.data.CsvStore");
-				dojo.require("dojox.grid.compat._data.model");
-				dojo.require("dojo.dnd.Source"); 
-				dojo.require("dojo.string");
-				
-				dojo.require("dojo.dnd.Mover");
-  				dojo.require("dojo.dnd.Moveable");
-  				dojo.require("dojo.dnd.move");
-				
-				dojo.require("dojo.data.ItemFileWriteStore");
-  				dojo.require("dijit.tree.ForestStoreModel");
-  				dojo.require("dijit._tree.dndSource");
-  				*/
-				
-				//dojo.require("dojox.data.demos.stores.LazyLoadJSIStore");
-								
 				
 				//trm widgets
 				//dojo.require("trm.login.Form");
 				dojo.require("trm.translation.tt");
 				dojo.require("trm.Button.TrmButton");
 				dojo.require("trm.MenuItem.TrmMenuItem");
-				/*
-				dojo.require("trm.login.Form");
-				
-				
-				
-				dojo.require("trm.widget.ItemManager");
-				dojo.require("trm.widget.GroupDialog");
-				dojo.require("trm.widget.PoiDialog");	
-				*/
-				//dojo.require("trm.widget.UserDialog");
-				
 								
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
@@ -109,7 +60,6 @@
 	<script src="lib/trm/openlayers_extensions.js"></script>
 	<script src="lib/trm/Application.js"></script>
 	<script src="lib/trm/DijitClient.js"></script>
-	<!-- <script src="lib/trm/GroupTree.js"></script> -->
 	<script src="lib/trm/GroupManager.js"></script>
 	<script src="lib/trm/PoiManager.js"></script>
 	<script src="lib/trm/Markermanager.js"></script>
@@ -119,15 +69,13 @@
 				
 		var gl_map;  				//openlayers map
 		var gl_markers;				//marker layer
-		//var gl_groupmanager = null; 
 		var gl_dblclick = null;
 		var gl_application=null;	//client application
-		var gl_idx = 0;
-		var gl_moveable=null;
+		//var gl_idx = 0;
+		//var gl_moveable=null;
 		var gl_markermanager = null;
 		var gl_tree = null;
-				
-		//TRM.TargetPrefix = "";
+		var gl_groupmanager = null;
 		
 		//Initialise the 'map' object
 		function init() {
@@ -161,8 +109,7 @@
 									
 			//Client Application
 			gl_application = new DijitClient2("osmdatamanager",gl_map);			
-			//gl_application.disablePrivatemode();
-						
+									
 			//Groupmanager
 			gl_groupmanager = new Groupmanager(gl_application);	
 			//gl_application.initGroupmanager(gl_groupmanager);
@@ -175,38 +122,7 @@
 				target:gl_application
 			}
 			gl_application.loginUser("Testuser2","Testuser",cb);
-			
-			//gl_application.checkUser(cb);
-			
-			
-			
-			
-			//dojo.connect(dojo.byId("dnd_source"), "onDndDrop", onDrop);
-			/*		
-			dojo.subscribe("/dnd/drop", function(source,nodes,iscopy){
-  				
-				var t = dojo.dnd.manager().target;
-				//ClearMsg();	
-				if(t == source) return;
-				
-				if (t) {
-					
-				}
-				
-				if (source) {
-					console.debug(nodes[0].innerHTML);
-					console.debug(iscopy);
-					console.debug(source);
-					//document.removeChild(nodes[0]);
-				}
-				
-				dojo.dnd.manager().canDrop(false);
-				});
-			*/
-			
-			//dlg_filelist
-			//gl_moveable = new dojo.dnd.Moveable("dlg_filelist");
-					
+			//gl_application.checkUser(cb);					
 		}		
 		
 	</script>
@@ -219,7 +135,7 @@
 	    	
 		<!-- TOP Menu (general map options)  -->
 		<div dojoType="dijit.layout.ContentPane" region="top" class="topmenu">						
-				<button dojoType="dijit.form.Button" onclick="window.open('http://osmdatamanager.berlios.de/')">.:Project Page:.</button>
+			 <button dojoType="dijit.form.Button" onclick="window.open('http://osmdatamanager.berlios.de/')">.:Project Page:.</button>
 		</div>	
 		
 		<!-- MAIN MAP -->
@@ -231,7 +147,7 @@
 			<!-- <img src="images/bg_street_small.png"></img> -->
 			<img src="images/logo4a.png" />
 			
-			<div style="width: 210px; height:400px; padding-top:8px;background-color:#fdd13a;" id="roundeddiv">
+			<div id="mainmenu_content">
 							
 				<div class="custombutton1">								
 					<button dojoType="trm.Button.TrmButton" id="btn_login" onclick="gl_application.showLogin()" field="login">Login</button>
@@ -269,7 +185,7 @@
 	
 	
 	<!-- Popup -->
-	<div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="roundeddiv" style="display: none;" >
+	<div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="mainmenu_content" style="display: none;" >
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_loaddata" field="display" onClick="gl_application.displaySelected()">Anzeigen</div> 
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_edit" field="edit" onClick="gl_application.showEdit()">Bearbeiten</div>		
 	  	<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_remove" field="remove" onClick="gl_application.doRemove()" >Entfernen</div>
@@ -307,27 +223,9 @@
 		<div class="dojoDndItem" id="dnd_itm">_Dnd_Item</div>
 	</div>
 	
-	<p>List of Items to be categorized</p>
-
-				<div dojoType="dojo.dnd.Source" id="source2"  jsId="c2" copyOnly="true" selfCopy="true" class="container" style="height: 100px; overflow: auto">
-				<div class="dojoDndItem" itemname="hallo">Apple</div>
-				<div class="dojoDndItem" >Orange</div>
-				<div class="dojoDndItem" id="1003" name="house music" itemtype="Group">Banana</div>
-				<div class="dojoDndItem" id="1004">Tomato</div>
-				<div class="dojoDndItem" id="1005">Pepper</div>
-
-				<div class="dojoDndItem" id="1006">Wheat</div>
-				<div class="dojoDndItem" id="1007">Corn</div>
-				<div class="dojoDndItem" id="1008">Spinach</div>
-				<div class="dojoDndItem" id="1009">Cucumber</div>
-				<div class="dojoDndItem" id="1010">Carrot</div>
-				<div class="dojoDndItem" id="1011">Potato</div>
-
-				<div class="dojoDndItem" id="1012">Grape</div>
-				<div class="dojoDndItem" id="1013">Lemon</div>
-				<div class="dojoDndItem" id="1014">Lettuce</div>
-				<div class="dojoDndItem" id="1015">Peanut</div>
-			</div>
+	<div id="dlg_loading" class="loading_hidden">
+		loading...
+	</div>
 
 	
 </body>

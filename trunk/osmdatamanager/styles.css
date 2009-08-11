@@ -4,12 +4,13 @@ body {
 }
 
 .tundra .maincontent .dijitGutterV {
-	background-image: url(images/bg_GutterV.gif);
+	/*background-image: url(images/bg_GutterV.gif);*/
+	background-color: #43677C;
 	width:2px;
 }
 
 .tundra .maincontent .dijitGutterH {
-	background-color: #dbdbdb;
+	background-color: #83a3b7;
 }
 
 #overlay { 
@@ -37,13 +38,11 @@ body {
 	margin:0px;
 }
 
-/*
- * Mainmenu On Left Side
- */
+/* mainmenu on left side */
 #mainmenu {
-	background-color: #23dfc7;
 	overflow:hidden;
-	background-image: url(images/bg_mainmenu.gif);
+	/*background-image: url(images/bg_mainmenu.gif);*/
+	background-color: #93b4c9;
 	background-repeat: repeat-x;
 	padding: 10px 4px 10px 8px;
 	width:220px;
@@ -51,22 +50,48 @@ body {
 	margin:0px;
 }
 
-/*
-#mainmenu img{
-	margin:4px 14px 4px 8px;
+#mainmenu_content {
+	width: 210px;
+	height: 400px;
+	padding-top: 10px;
+	background-color: #6D7CB1; 
+	border: solid 1px #43677C;
+}
+
+
+/* loading div */
+.loading_hidden {
+	position:absolute;
+	display:none;
+}
+
+.loading_visible {
+	visibility:visible;
+	/*display:block;*/
+	
+	position:absolute;
+	top: 50%;
+  	left: 50%; 
+  	color:#ffffff;
+  	text-align:center;
+  	background-color: #c5c8cf;
+	width:200px;
+	padding: 2px 0px 2px 0px;
+	border: solid 1px #000000;
+	filter:alpha(opacity=80); opacity:.80;
+}
+
+/* dnd source div */
+.dnd_source_hidden {
+	visibility:hidden;
+	display:none;	
+}
+
+.dnd_source_visible {
+	visibility: visible;
 	display:block;
 }
-*/
 
-#filemanager {
-	visibility:hidden;
-	position:absolute;
-	left: 100px;
-	top: 40px;
-	width: 640px;
-	height: 480px;
-	background-color: #115a88;
-}
 
 .tundra .maincontent .dijitDialog .dijitDialogPaneContent {
 	background: #115a88 url(images/button_enabled.png) top repeat-x;
@@ -79,87 +104,20 @@ body {
  */
 .tundra .maincontent .topmenu {
 	color:#005506;
-	background-color:#e3dfc7;
-	background-image: url(images/bg_topmenu.gif);
+	background-color:#83a3b7;
+	/*background-image: url(images/bg_topmenu.gif);*/
 	background-repeat: repeat-y;
-	border-bottom:solid 1px #8e8e8e;
+	/*border-bottom:solid 1px #DFF5AD;*/
+	border:none;
 	padding:0px;
 }
 
-/*
- * Tree
- */
-#treecontainer {
-	/*border:solid 1px #cacdd4;	*/
-	border-top: solid 1px #a9b4ea;
-	padding:4px 10px 4px 0px;
-	overflow:auto;
-	max-height:300px;
-	/*background-color:#c6c6e1;*/
-}
 
-.nodespan {
-	color:#9ab3e1;
-	padding-left:10px;
-	padding-bottom:5px;
-	display:block;			
-	clear:both;
-}
-
-.rootnodespan {
-	color:#9ab3e1;
-	padding-left:2px;
-	padding-bottom:5px;
-	padding-top:0px;
-	display:block;			
-	clear:both;
-}
-
-
-
-.tree_entry {
-	border: solid 1px green;
-	vertical-align:middle;
-}
-
-.tree_entry img {
-	
-}
-
-.tree_entry a {
-	vertical-align:middle;
-}
-
-.nodespan .visibletrace {
-	color:#e80a0a;
-}
-
-
-.nodespan img, .rootnodespan img {
-	/*float:left;*/
-	padding:0px;
-	margin: 0px;
-}
-
-.nodespan .selected,  .rootnodespan .selected{
-	color: #f0fdcb;
-	background: #115a88 url(images/button_enabled.png) top repeat-x;
-	padding:3px;
-}
-
-.nodespan a, .rootnodespan a{
-	font-size:12px;
-	color:#000000;
-	cursor:pointer;
-}
-
-.rootnodespan .dojoDndContainerOver a {
-	color:red;
-}
-
-/*
- * Custom Dojo Button Styles
- */
+/* ########################################################################
+   #
+   # Custom Dojo Button Styles
+   #
+   ######################################################################## */
 
 .custombutton1 {
 	font-family: Verdana,Arial;
@@ -170,8 +128,7 @@ body {
 .custombutton1 .dijitButtonText {
 	padding: 0px;
 	margin:0px;
-	color: #f0fdcb;
-	border-color:Yellow;
+	color: #000000;
 }
 
 .custombutton1 .dijitDisabled .dijitButtonText {
@@ -179,16 +136,17 @@ body {
 }
 
 .tundra .custombutton1 .dijitButtonNode {
-	border-color: #b9d8ec;
-	border-bottom-color:#5c7590; 
-	background: #115a88 url(images/button_enabled.png) top repeat-x;
+	border-color: #2F407D;
+	border-bottom-color:#2F407D; 
+	background: #287B60 url(images/button_enabled.png) top repeat-x;
+	/* background-color: #9D66AF;*/
 	padding: 2px;
 	margin: 0px;
 	width: 160px;
 }
 
 .tundra .custombutton1 .dijitButtonActive {
-	background: #115a88 url(images/button_enabled.png) top repeat-x;
+	background: #6D7CB1 url(images/button_enabled.png) top repeat-x;
 }
 
 .tundra .custombutton1 .dijitButtonNode button { 
@@ -199,13 +157,17 @@ body {
 } 
 
 .tundra .custombutton1 .dijitButtonHover .dijitButtonNode {
-	background: #7dc35f;
-	background:#614cc9 url(images/button_focused.png) top repeat-x;
+	/*background: #7dc35f;*/
+	border-color: #419479;
+	background:#63AF96 url(images/button_focused.png) top repeat-x;
 }
 
-/*
- * Custom Dojo Button Styles
- */
+/* ########################################################################
+   #
+   # Custom Dojo Button Styles
+   #
+   ######################################################################## */
+
 .topmenu .dijitButtonText {
 	padding: 0px;
 	margin:0px;
@@ -249,121 +211,3 @@ body {
 	color: #fdd13a;
 	cursor: pointer;
 }
-
-/*************************************************************
- * 
- * Filemanager
- * 
- *************************************************************/
-
-.target {border: 1px dotted gray; width: 300px; height: 300px;padding: 5px;}
-
-.dnd_source_hidden {
-	border: 1px dotted skyblue;
-	/*height: 200px; width: 300px;*/
-	background-color: #ffffff;
-	position:absolute;
-	left: 40px;
-	top:40px;
-	z-index: 10;	
-	visibility:hidden;
-}
-        
-.dnd_source_visible {
-	border: 1px dotted skyblue;
-	/*height: 200px; width: 300px;*/
-	background-color: #ffffff;
-	position:absolute;
-	left: 40px;
-	top:40px;
-	z-index: 10;
-	visibility:visible;;
-}
-		
-		.bluesquare {height:50px;width:100%;background-color:skyblue}
-        .redsquare {height:50px;width:100%;background-color:red}
-
-.heading {
-    font-weight: bold;
-    padding-bottom: 0.25em;
-  }
-
-  #dlgfilelist_tab_grid {
-    border: 1px solid #333;
-    width: 45em;
-    height: 30em;
-  }
-
-  #dlgfilelist_tab_grid .dojoxGrid-row {
-    border: none;
-  }
-
-  #dlgfilelist_tab_grid .dojoxGrid-row-table {
-    border-collapse: collapse;
-  }
-
-  #dlgfilelist_tab_grid .dojoxGrid-cell {
-    border: none;
-    padding: 10px;
-  }
-
-  .selectedRow .dojoxGrid-cell {
-    background-color: Red; /*#003366;*/
-    color: white;
-  }
-
-  .specialRow .dojoxGrid-cell {
-    background-color: dimgray;
-  }
-
-  .selectedRow.specialRow .dojoxGrid-cell {
-    text-decoration: line-through;
-    /* duplicate selection background-color so has precendence over specialRow background-color */
-    background-color: #003366;
-  }
-
-  /* in the yellow column, assign specific decoration for special rows that are selected */
-  .selectedRow.specialRow .yellowColumnData {
-    text-decoration: line-through underline;
-  }
-
-  .yellowColumn {
-    color: #006666;
-  }
-
-  .overRow .dojoxGrid-cell {
-    text-decoration: underline;
-  }
-
-  .greenColumn {
-    color: yellow;
-    background-color: #006666;
-    font-style: italic;
-  }
-  .yellowColumnData {
-    background-color: yellow;
-    text-decoration: underline;
-  }
-
-.filemanager_hidden {
-	position:absolute;
-	/*display:none;*/
-	visibility:hidden;
-	top:60;
-	left:60;
-	background-color:#dbdbdb;
-	width: 640px;
-}
-
-.filemanager_visible {
-	position:absolute;
-	top:60;
-	left:240;
-	visibility:visible;
-	background-color:#dbdbdb;
-	/*width: 640px;*/	
-	z-index:10;
-	border:solid 1px black;
-}
-
-

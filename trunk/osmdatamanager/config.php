@@ -26,11 +26,14 @@
 	$gl_dbhost = "your db hostename";
 			
 	//FTP Settings
+	/*
 	$gl_ftpserver = "ftpserver";
 	$gl_ftpuser = "ftpuser";
 	$gl_ftppwd = "ftppassword";			
 	$gl_useftp = false;  //you can use a ftp account to store pictures and files, it must be a subdirectory of osmdatamanager, use picturedir and filedir otherwise
 	$gl_ftpprefix = "";  
+	*/
+	
 	
 	/* DEBUG
 	 * 
@@ -55,11 +58,13 @@
 	$gl_baselon = 0;
 	$gl_basezoomlevel = 14;
 	
+	/*
 	$gl_icon_group_expanded = "images/treeExpand_minus.gif";
 	$gl_icon_group_collapsed = "images/treeExpand_plus.gif";
 	$gl_icon_poi = "images/poi.gif";
 	$gl_icon_file = "images/gpxfile.gif";
 	$gl_standardtag = "standard";
+	*/
 		
 	/****************************************************
 	 * END CONFIG SECTION

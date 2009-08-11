@@ -23,25 +23,11 @@
 	 * Group
 	 */
 	class Group extends GroupItem {
-		/*
-		var $groupid;
-		var $usrid;
-		var $groupname;
-		var $parentgroup;
-		*/
-		//var $files;
-		var $haschildren;	
-		
-				
+
+		var $haschildren;
+			
 		function Group() {
 			parent::GroupItem("Group");
-			/*
-			$this->groupid = null;
-			$this->usrid = null;
-			$this->parentgroup = null;
-			$this->groupname = null;
-			*/
-			//$this->files = array();
 			$this->haschildren=false;
 			$this->protection=null;
 			$this->zoomlevel=null;
@@ -49,33 +35,10 @@
 			$this->lon=null;
 		}
 		
-		/*	
-		function Group($aGroupId,$aUsrId,$aParentGroup,$aGroupname,$aHasChildren,$aProtection,$aZoomlevel,$aLat,$aLon,$aIconExpanded,$aIconCollapsed) {
-			parent::GroupItem("Group",$aIconExpanded,$aIconCollapsed);
-			
-			$this->groupid = $aGroupId;
-			$this->usrid = $aUsrId;
-			$this->parentgroup = $aParentGroup;
-			$this->groupname = $aGroupname;
-			$this->files = array();
-			$this->haschildren=$aHasChildren;
-			$this->protection=$aProtection;
-			$this->zoomlevel=$aZoomlevel;
-			$this->lat=$aLat;
-			$this->lon=$aLon;
-		}
-		*/
 		
 		function getGroupId() {
 			return $this->itemid;
 		}
-		
-		/*
-		function setName($aName) {
-			$this->name = $aName;
-		}
-		*/
-			
 	}
 	
 	/**
@@ -194,19 +157,11 @@
 			$lst1 = $this->getGroupItems($aUserid,$aGroup->itemid);
 			if ($lst1 != null) {				
 				for ($i=0;$i<count($lst1);$i++) {
-						$itm1 = $lst1[$i];
-						$itm1->prepareForTree($aGroup->itemid);
-						$aGroup->addChild($itm1);
+						//$itm1 = $lst1[$i];
+						$lst1[$i]->prepareForTree($aGroup->itemid);
+						$aGroup->addChild(&$lst1[$i]);
 					}	
 			}
-		}
-		
-		function addChildren(&$aGroup,&$aList) {
-			for ($i=0;$i<count($aList);$i++) {
-				$itm1 = $aList[$i];
-				$itm1->prepareForTree($aGroup->itemid);
-				$aGroup->addChild($itm1);
-			}	
 		}
 		
 		/**
@@ -215,57 +170,14 @@
 		 * @param $aGroup Object
 		 */
 		function parseChildren($aUserid, &$aGroup) {
-				
-			//$prevGroup = $aGroup;
-			/*
-			echo "<br>++++++++++++++++++<br>";
-			var_dump($aGroup);
-			echo "<br>==================<br>";
-			*/
-			//echo "<br>1:".$aGroup->itemid."<br>"; 
-			
 			$lst1 = $this->getChildGroups($aUserid,$aGroup->itemid);
 			if ($lst1 != null) {
-				//$this->addChildren($aGroup,$lst1);
-				for ($i=0;$i<count($lst1);$i++) {
-						//$itm1 = $lst1[$i];
-						//echo $itm1->itemid."<br>";
-						//$aPrevGroup = $aGroup;
-						//echo $lst1[$i]->itemid."<br>";
-						//$lst1[$i]->prepareForTree(-1);
-						//$aGroup->addChild($lst1[$i]);
-						
-						//$aGroup->addChild($lst1[$i]);
-						$lst1[$i]->prepareForTree($aGroup->itemid);
-						
-						$this->parseChildren($aUserid,$lst1[$i]);
-						//echo "<br>prnt: ".$aGroup->itemid."-to-".$lst1[$i]->itemid."<br>";
-						$aGroup->addChild(&$lst1[$i]);
-						//$aGroup->children[] = $lst1[$i];
-						/*
-						$g1 = $this->parseChildren($aUserid,$lst1[$i]);
-						if ($g1 != null) {
-							$aGroup->addChild($g1);
-						}
-						*/
-						
-						//$aGroup = $aPrevGroup;
-				}
-				/*
-				for ($x=0;$x<count($aGroup->children);$x++) {
-					$this->parseChildren($aUserid,$aGroup->children[$x]);
-				}
-				*/
-				
+				for ($i=0;$i<count($lst1);$i++) {	
+					$lst1[$i]->prepareForTree($aGroup->itemid);
+					$this->parseChildren($aUserid,$lst1[$i]);
+					$aGroup->addChild(&$lst1[$i]);
+				}				
 			} 
-			/*
-			echo "<br>2:".$aGroup->itemid."<br>"; 
-						
-			echo "<br>PPPPPPPPPPPPPPPPPPPPP<br>";
-			var_dump($aGroup);
-			echo "<br>#####################<br>";
-			*/
-			//return $aGroup; 
 		}	
 		
 		function printGroup(&$aGroup) {

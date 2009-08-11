@@ -20,9 +20,6 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		
 		try {
 			if (item.root != true) {
-				console.debug("getIconClass");
-				console.debug(item);
-				//console.debug(this.model.store.getValue(item, 'tagname'));
 				if (opened) {
 					return this.model.store.getValue(item, 'tagname') + "_open";
 				}
@@ -46,22 +43,10 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		this.selectedItem = {};
 		this.selectedTreeItem = item;
 		for (var key in item) {
-			//console.debug(key);
 			var val = item[key][0];
-			//console.debug(val);
 			if ((val != "undefined") && (val != null))
 				this.selectedItem[key] = item[key][0];
 		}
-		console.debug(this.selectedItem);
-		
-		/*
-		var itm1 = this.model.store.getItemByIdentifier(item.id[0]);
-		console.debug(itm1);
-		if (item.i) {
-			console.debug(item);
-			this.selectedItem = item.i;
-		}
-		*/
 	},
 	
 	onMouseOver: function(event) {
@@ -84,7 +69,5 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 			}
 		}
 	}
-	
 		
-	
 });

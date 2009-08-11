@@ -21,17 +21,7 @@
 	 * Poi
 	 */
 	class Poi extends GroupItem {
-		//var $poiid;
-		//var $usrid;
-		
-		//var $poiname;
-				
-		/*
-		var $latlon;
-		var $lat;
-		var $lon;
-		var $georssurl;
-		*/
+
 		var $poitype;  //TODO benötigt ?
 		var $description;
 				

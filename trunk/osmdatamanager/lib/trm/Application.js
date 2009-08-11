@@ -273,13 +273,15 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} child
 		 */
 		getIconname1: function(child) {
-			if (child.tags != null) {
-				for (var xx = 0; xx < child.tags.length; xx++) {
-					var tag1 = child.tags[xx];
-					if (tag1.tagname == child.tagname) {
-						return tag1.icon1;
-					}
-				}	
+			if (this.activeuser) {
+				if (this.activeuser.tags != null) {
+					for (var i = 0; i < this.activeuser.tags.length; i++) {
+						var tag1 = this.activeuser.tags[i];
+						if (tag1.tagname == child.tagname) {
+							return tag1.icon1;
+						}
+					}	
+				}
 			}
 			return "";
 		},

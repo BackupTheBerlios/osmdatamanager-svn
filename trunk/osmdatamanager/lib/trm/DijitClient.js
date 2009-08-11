@@ -22,36 +22,31 @@ dojo.declare("DijitClient2", Application2, {
 			this._id_offset = 1;
         },
 		
-		
+		/**
+		 * add a root group
+		 * @param {Object} group
+		 */
 		_cb_addGroup: function(group) {
-			console.debug("_cb_addGroup");
-			console.debug(group);
-			gl_tree.model.doload = false;
-			//gl_tree.model.newItem(group,"root");
-			
+						
 			var pInfo = {
 				parent: gl_tree.model.root,
 				attribute: "children"
 			}
-			
-			console.debug(gl_tree.model.root);
-			//gl_tree.model.newItem({id:"test",name:"hallo",parentid: -1},null);
+						
 			group.parentid = -1;
 			gl_tree.model.newItem(group,null);
-			
-			console.debug(gl_tree.model.store._arrayOfTopLevelItems);
-			console.debug(gl_tree.model.root);
 		},
 		
+		/**
+		 * add a subgroup
+		 * @param {Object} group
+		 */
 		_cb_addSubGroup: function(group) {
-			console.debug("_cb_addSubGroup");
-			gl_tree.model.store.dofetch = false;
+			//gl_tree.model.store.dofetch = false;
 			var itm1 = gl_tree.selectedTreeItem;
 			if (itm1) {
-				console.debug(itm1);
 				gl_tree.model.newItem(group, itm1);
 			}
-			console.debug(":::end _cb_addSubGroup");
 		},
 		
 		/**
@@ -68,14 +63,11 @@ dojo.declare("DijitClient2", Application2, {
 				gl_groupmanager.updateGroup(data.itemid,data.itemname,data.protection,data.zoomlevel,data.lat,data.lon,data.tagname,cb);
 			}
 			else {
-				
-				
 				if (data.parentid != -1) {
 					var cb = {
 						target: this,
 						func: this._cb_addSubGroup
 					}
-					
 					gl_groupmanager.createSubGroup(data.parentid, data.itemname, cb);
 				}
 				else {
@@ -83,7 +75,6 @@ dojo.declare("DijitClient2", Application2, {
 						target: this,
 						func: this._cb_addGroup
 					}
-					
 					gl_groupmanager.createRootGroup(data.itemname, cb);
 				}
 			}
@@ -200,6 +191,9 @@ dojo.declare("DijitClient2", Application2, {
 				this._cb_LoggedIn(response);
 			} else {
 				//alert(nls["loginfailed"]);
+				var lat = 50.9350850727913;
+				var lon = 6.95356597872225;
+				this.centerMap(lat, lon, 6);
 			}
 		},
 		
@@ -257,13 +251,19 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		dndAccept: function(source,nodes){			
+			console.debug("dndAccept");
 			if (source.node.id == "dnd_source")
 				return true;
 			
 			return false;
 		},
 		
-		
+		/**
+		 * 
+		 * @param {Object} node
+		 * @param {Object} source
+		 * @param {Object} position
+		 */
 		treeCheckItemAcceptance: function(node,source,position) {
 			console.debug("treeCheckItemAcceptance");
 			var item = dijit.getEnclosingWidget(node).item;
@@ -283,6 +283,10 @@ dojo.declare("DijitClient2", Application2, {
 			return false;
 		},
 		
+		/**
+		 * 
+		 * @param {Object} item
+		 */
 		treeGetLabel: function(item){
 			console.debug("treeGetLabel");
 			console.debug(item);
@@ -296,28 +300,29 @@ dojo.declare("DijitClient2", Application2, {
 			return "nix";
 		},
 		
+		/**
+		 * 
+		 * @param {Object} item
+		 * @param {Object} pInfo
+		 */
 		_storeOnNew: function(item, pInfo) {			
 			console.debug("_storeOnNew");
-			if (String(item.itemtype) != "Group") {
-				console.debug(String(item.itemid));
-				console.debug(String(pInfo.item.itemid));
-				
+			console.debug(item);
+			console.debug(pInfo);
+			if (String(item.itemtype) != "Group") {				
 				var gm = new Groupmanager();
 				gm.addGroupItem(String(pInfo.item.itemid),String(item.itemid),String(item.itemtype));
 			}			
 		},
-		
-		_storeOnAddToRoot: function (item) {
-			console.debug("_storeOnAddToRoot");
-			console.debug(item);
-		},
-		
+			
 		/**
-		 * 
+		 * called before a new item will be created => copy data from the dnd item
 		 * @param {Object} keywordArgs
 		 * @param {Object} parentInfo
 		 */
+		
 		_storeBeforeNewItem: function(keywordArgs, parentInfo) {
+			console.debug("_storeBeforeNewItem");
 			if (String(keywordArgs.itemtype) != "Group") {
 				var dlg1 = dijit.byId('dlg_itemmanager');
 				if (dlg1) {
@@ -349,63 +354,30 @@ dojo.declare("DijitClient2", Application2, {
 				return;
 			
 			dojo.require("trm.widget.CustomForestStoreModel");
-			dojo.require("trm.widget.CustomQueryStore");
-			dojo.require("trm.widget.DataTree");
-			//dojo.require("trm.widget.DataTree");				
-			
+			dojo.require("trm.widget.DataTree");			
 			dojo.require("dojo.data.ItemFileWriteStore");
 			dojo.require("dijit.Tree");
-			//dojo.require("dojox.data.JsonRestStore");
-			/*
-			var store = new dojox.data.JsonRestStore  ({
-				 transport: "REST",
-            envelope: "URL",
-            target: "groupfunctions.php?action=msg.gettree&parentgroupid=-1",
-            contentType:"application/json",
-            parameters: [
-                {name: "location", type: "string", optional: true}
-            ]
-			*/
-
-			//var store = new dojo.data.ItemFileWriteStore  ({
-			var store = new trm.widget.CustomQueryStore ({
+			
+			var store = new dojo.data.ItemFileWriteStore  ({
+			   //var store = new trm.widget.CustomQueryStore ({
 				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1"
-		    });	
-			
-			dojo.connect(store,"beforeNewItem",this,"_storeBeforeNewItem");
-			
-			/*
-			 * dojo.connect(myStore, "onNew", function(item, pInfo){
-				var p = pInfo && pInfo.item;
-				if (p) {	
-					var currentTotal = myStore.getValues(p, "numberOfItems")[0];
-					myStore.setValue(p, "numberOfItems", ++currentTotal);
-				}
-				
-			});
-
-			 */
+		    });				
 			dojo.connect(store,"onNew",this,"_storeOnNew");
-			
-			//var treeModel = new dijit.tree.ForestStoreModel({
+						
 			var treeModel = new trm.widget.CustomForestStoreModel({
 		        store: store,
-				//query: {"itemtype":  'Group'},
 				query: {"parentid":  -1},
-				rootId: "root", 
-				onAddToRoot: this.storeOnAddToRoot
-				//query: {"parentgroupid":  '-1' }
+				rootId: "root"
 		    });
+			dojo.connect(treeModel,"beforeNewItem",this,"_storeBeforeNewItem");		
 			
 			gl_tree = new trm.widget.DataTree({
 		        model: treeModel,
 				showRoot: false,
-		        //persist: false,
 				betweenThreshold: 5,
 				dndController: dijit._tree.dndSource,
 				checkAcceptance: this.dndAccept,
 				checkItemAcceptance: this.treeCheckItemAcceptance
-				//getLabel: this.treeGetLabel
 		    }, "treeThree");
 		},
 		
@@ -599,18 +571,36 @@ dojo.declare("DijitClient2", Application2, {
 			}
 		},
 		
+		showLoading: function() {
+			var dlg1 = document.getElementById('dlg_loading');
+			if (dlg1) {
+				dlg1.setAttribute("class","loading_visible");
+			}
+		},
+		
+		hideLoading: function() {
+			var dlg1 = document.getElementById('dlg_loading');
+			if (dlg1) {
+				dlg1.setAttribute("class","loading_hidden");
+			}
+		},
+		
 		/**
 		 * shows the login dialog
 		 */
 		showLogin: function() {
 			
 			//dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_LoggedIn");
+			this.showLoading();
+			
 			var dlg1 = dijit.byId('dlg_login');
 			if (! dlg1) {
 				dojo.require("trm.login.Form");
 				dlg1 = new trm.login.Form({}, "dlg_login");
 				dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_LoggedIn");		
 			}
+			
+			this.hideLoading();
 						
 			var dlg1 = dijit.byId('dlg_login');
 			if (dlg1)  {
@@ -637,6 +627,7 @@ dojo.declare("DijitClient2", Application2, {
 			
 			
 			//dojoType="trm.widget.ItemManager"
+			this.showLoading();
 			
 			var dlg1 = dijit.byId('dlg_itemmanager');
 			if (! dlg1) {
@@ -646,6 +637,8 @@ dojo.declare("DijitClient2", Application2, {
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onZoomlevelClick",this,"_onZoomlevelClick");
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"_cb_createPoi",this,"_updateitem");
 			}
+			
+			this.hideLoading();
 			
 			if (dlg1)  {
 				dlg1.clientapp = this;
@@ -657,8 +650,9 @@ dojo.declare("DijitClient2", Application2, {
 		 * shows the group dialog
 		 */
 		showGroupDialog: function(isroot,isupdate) {
-			var dlg1 = dijit.byId('dlg_group');
+			this.showLoading();
 			
+			var dlg1 = dijit.byId('dlg_group');			
 			if (! dlg1) {
 				dojo.require("trm.widget.GroupDialog");
 				dlg1 = new trm.widget.GroupDialog({}, "dlg_group");	
@@ -667,6 +661,7 @@ dojo.declare("DijitClient2", Application2, {
 				dojo.connect(dlg1,"onZoomlevelClick",this,"_onZoomlevelClick");
 			}
 			
+			this.hideLoading();
 			if (dlg1)  {
 				if (isroot) {
 					dlg1.show(isupdate,isroot);
@@ -700,8 +695,12 @@ dojo.declare("DijitClient2", Application2, {
 		 * shows the poi dialog
 		 */
 		showPoiDialog: function(item) {
+			this.showLoading();
+			
 			var dlg1 = dijit.byId('dlg_itemmanager');
 			if (dlg1)  {
+				this.hideLoading();
+				
 				dlg1.poidialog.prevWidget = null;
 				dlg1.poidialog.setDataItem(item);
 				dlg1.poidialog.show(true);
