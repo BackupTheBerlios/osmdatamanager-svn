@@ -429,7 +429,7 @@
 			var $zoomlevel;
 			var $lat;
 			var $lon;	
-					
+								
 			function MapItem() {
 				global $gl_baselat;
 				global $gl_baselon;
@@ -473,7 +473,7 @@
 			var $name;  //the same value as itemname, used for the tree
 			var $id;    //unique id for the tree
 			var $children;
-			
+						
 			function GroupItem($aItemtype)
 			{
 				parent::MapItem();
@@ -488,7 +488,6 @@
 				$this->tags = null;
 				$this->children = array();
 				$this->id = "";
-				echo "<br>->".$aItemtype."<br>";
 			}
 			
 			function addChild(&$aItem) {
@@ -503,7 +502,7 @@
 				$this->name = $this->itemname;
 				//array_push($this->children, "__Dummy");
 				$this->parentid = $aParentId;
-				$this->id = "__grpitm__".$aParentId."_".$this->itemid;
+				$this->id = "__".$this->itemtype.$aParentId."_".$this->itemid;
 				/*
 				if ($this->haschildren) {
 					$this->id = "__grpitm__".$aParentId."_".$this->itemname;

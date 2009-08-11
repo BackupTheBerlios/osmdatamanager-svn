@@ -141,18 +141,37 @@
 				} else {
 					
 				}
-					
+				
 				if ($lst1 != null)
 				{
+					//echo $action;				
+					
 					for ($i=0;$i<count($lst1);$i++) {
-							$grp = $lst1[$i];
-							$fac->parseChildren($usr->getUid(),$grp);
+							//$grp = $lst1[$i];
+							//$lst1[$i]->prepareForTree(-1);
 							//$fac->parseItems($usr->getUid(),$grp);
-							$grp->prepareForTree(-1);
-							$gc->addGroup($grp);
+							//$x1 = $fac->parseChildren($usr->getUid(),$grp,$grp);
+							//echo $lst1[$i]->itemid;
+							//echo "start<br>";
+							$fac->parseChildren($usr->getUid(),$lst1[$i]);
+							//echo "root:".$grp->itemid;"<br>";
+							//$x1 = $fac->addChildGroups($usr->getUid(),$grp);
+							
+							//echo "root ret:".$x1->itemid."<br>";
+							/*
+							echo "<br>------ret-----:<br>";
+							var_dump($g1);
+							*/
+														
+							$lst1[$i]->prepareForTree(-1);
+							$gc->addGroup($lst1[$i]);
+							//var_dump($gc);
+							
+							//$fac->printGroup($lst1[$i]);														
 					}
+					
+					
 				}
-				
 								
 				echo application_getMessage($gc);
 				/*
