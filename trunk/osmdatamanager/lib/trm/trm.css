@@ -1,6 +1,6 @@
 .trmDialog {
-	background-color:#93b4c9;
-	border: solid 1px #43677C;	
+	background-color:#6394a9;
+	border: solid 1px #285d74;	
 	padding:8px;
 }
 
@@ -46,7 +46,7 @@
 .trmDialog .dijitButtonText {
 	padding: 0px;
 	margin:0px;
-	color: #000000;
+	color: #ffffff;
 }
 
 .trmDialog .dijitDisabled .dijitButtonText {
@@ -54,9 +54,9 @@
 }
 
 .tundra .trmDialog .dijitButtonNode {
-	border-color: #2F407D;
-	border-bottom-color:#2F407D; 
-	background: #287B60 url(images/button_enabled.png) top repeat-x;
+	border-color: #283c45;
+	border-bottom-color:#283c45; 
+	background: #275c73 url(images/button_enabled.png) top repeat-x;
 	/* background-color: #9D66AF;*/
 	padding: 2px;
 	margin: 0px;
@@ -76,6 +76,6 @@
 
 .tundra .trmDialog .dijitButtonHover .dijitButtonNode {
 	/*background: #7dc35f;*/
-	border-color: #419479;
-	background:#63AF96 url(images/button_focused.png) top repeat-x;
+	border-color: #283c45;
+	background:#416a7b url(images/button_focused.png) top repeat-x;
 }

@@ -5,12 +5,12 @@ body {
 
 .tundra .maincontent .dijitGutterV {
 	/*background-image: url(images/bg_GutterV.gif);*/
-	background-color: #43677C;
+	background-color: #285d74;
 	width:2px;
 }
 
 .tundra .maincontent .dijitGutterH {
-	background-color: #83a3b7;
+	background-color: #BFDD7D;
 }
 
 #overlay { 
@@ -42,7 +42,7 @@ body {
 #mainmenu {
 	overflow:hidden;
 	/*background-image: url(images/bg_mainmenu.gif);*/
-	background-color: #93b4c9;
+	background-color: #BFDD7D;
 	background-repeat: repeat-x;
 	padding: 10px 4px 10px 8px;
 	width:220px;
@@ -54,8 +54,8 @@ body {
 	width: 210px;
 	height: 400px;
 	padding-top: 10px;
-	background-color: #6D7CB1; 
-	border: solid 1px #43677C;
+	background-color: #6394a9; 
+	border: solid 1px #285d74;
 }
 
 
@@ -104,8 +104,8 @@ body {
  */
 .tundra .maincontent .topmenu {
 	color:#005506;
-	background-color:#83a3b7;
-	/*background-image: url(images/bg_topmenu.gif);*/
+	/*background-color:#add15c;*/
+	background-image: url(images/bg_topmenu.gif);
 	background-repeat: repeat-y;
 	/*border-bottom:solid 1px #DFF5AD;*/
 	border:none;
@@ -128,7 +128,7 @@ body {
 .custombutton1 .dijitButtonText {
 	padding: 0px;
 	margin:0px;
-	color: #000000;
+	color: #ffffff;
 }
 
 .custombutton1 .dijitDisabled .dijitButtonText {
@@ -136,9 +136,9 @@ body {
 }
 
 .tundra .custombutton1 .dijitButtonNode {
-	border-color: #2F407D;
-	border-bottom-color:#2F407D; 
-	background: #287B60 url(images/button_enabled.png) top repeat-x;
+	border-color: #283c45;
+	border-bottom-color:#283c45; 
+	background: #275c73 url(images/button_enabled.png) top repeat-x;
 	/* background-color: #9D66AF;*/
 	padding: 2px;
 	margin: 0px;
@@ -158,8 +158,8 @@ body {
 
 .tundra .custombutton1 .dijitButtonHover .dijitButtonNode {
 	/*background: #7dc35f;*/
-	border-color: #419479;
-	background:#63AF96 url(images/button_focused.png) top repeat-x;
+	border-color: #283c45;
+	background:#416a7b url(images/button_focused.png) top repeat-x;
 }
 
 /* ########################################################################

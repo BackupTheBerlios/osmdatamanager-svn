@@ -53,8 +53,9 @@
 		
 	</script>
 	
-	<script src="http://openlayers.org/api/OpenLayers.js"></script>
-	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>	
+	<!-- <script src="http://openlayers.org/api/OpenLayers.js"></script> -->
+	<script src="lib/openlayers/OpenLayers.js"></script>
+	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 		
 	<!-- Project Files -->
 	<script src="lib/trm/openlayers_extensions.js"></script>
@@ -81,6 +82,7 @@
 		function init() {
 			
 			//Main Map
+			
 			gl_map = new OpenLayers.Map("map", {
 			controls: [
 				//new OpenLayers.Control.KeyboardDefaults(),
@@ -104,9 +106,8 @@
 					
 			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
     		gl_map.addLayer(gl_markers);
-			
-			var pm = new PoiManager();
-									
+						
+			var pm = new PoiManager();						
 			//Client Application
 			gl_application = new DijitClient2("osmdatamanager",gl_map);			
 									

@@ -27,8 +27,9 @@ dojo.declare("Serverconnection", null, {
 					
 					// The ERROR function will be called in an error case.
 					error: function(response, ioArgs){ //
-						alert(response);
+						//alert(response);
 						console.error("HTTP status code: ", ioArgs.xhr.status); //
+						console.error(response);
 						return response; //
 					}
 				});

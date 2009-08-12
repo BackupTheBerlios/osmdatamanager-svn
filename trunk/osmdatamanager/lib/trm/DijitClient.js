@@ -169,7 +169,7 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		/**
-		 * callback after login -> check if response is valid
+		 * callback after login or logout -> check if response is valid
 		 * @param {Object} response
 		 * @param {Object} ioArgs
 		 */
@@ -178,7 +178,16 @@ dojo.declare("DijitClient2", Application2, {
 			console.debug(response);
 			if (response == "msg.logoutok") {
 				dijit.byId('btn_login').attr("label", "::Login::");
-				gl_groupmanager.getGroupTree().reset();
+				
+				try {
+					gl_tree.model.store.close();
+					gl_tree.model.fetch();
+				} catch (e) {
+					console.error(e);
+				}
+				//gl_tree.destroy();
+				//gl_tree = null;
+				
 				this.clearMap();
 				this.disablePrivatemode();
 				var lat = 50.9350850727913;
@@ -353,6 +362,7 @@ dojo.declare("DijitClient2", Application2, {
 			if (gl_tree != null)
 				return;
 			
+			console.debug("init tree...");
 			dojo.require("trm.widget.CustomForestStoreModel");
 			dojo.require("trm.widget.DataTree");			
 			dojo.require("dojo.data.ItemFileWriteStore");
@@ -360,7 +370,8 @@ dojo.declare("DijitClient2", Application2, {
 			
 			var store = new dojo.data.ItemFileWriteStore  ({
 			   //var store = new trm.widget.CustomQueryStore ({
-				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1"
+				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1",
+				clearOnClose: true
 		    });				
 			dojo.connect(store,"onNew",this,"_storeOnNew");
 						
