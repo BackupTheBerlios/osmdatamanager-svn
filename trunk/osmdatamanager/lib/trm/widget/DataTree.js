@@ -17,9 +17,8 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 	},
 	
 	getIconClass: function(/*dojo.data.Item*/item, /*Boolean*/ opened){
-		
 		try {
-			if (item.root != true) {
+			if (item.root != true) {	
 				if (opened) {
 					return this.model.store.getValue(item, 'tagname') + "_open";
 				}
@@ -30,10 +29,11 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		} catch (e) {
 			console.error(e);
 		}
-		
+		/*
 		if (gl_application) {
 			return this.inherited(arguments);
 		}
+		*/
 	},
 	
 	
@@ -51,20 +51,21 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 	
 	onMouseOver: function(event) {
 		this.inherited(arguments);
-		console.debug(onMouseOver);
-		console.debug(event);
 	},
 	
-	_loadTags: function() {
-		if (tags.length > 0)
-			return;	
-	
+	_getIconName: function(tagname, opened) {
+			
 		if (gl_application) {
 			var usr1 = gl_application.getActiveUser();
 			if (usr1) {
 				for (var i = 0; i < usr1.tags.length; i++) {
 					var t1 = usr1.tags[i];
-					this.tags.push(t1);
+					if (String(t1.tagname) == tagname) {
+					  if (opened)
+					  	return String(t1.icon2);
+					  else
+						return String(t1.icon1);
+					}
 				}
 			}
 		}

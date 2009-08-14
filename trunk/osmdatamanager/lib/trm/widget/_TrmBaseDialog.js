@@ -147,7 +147,6 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * load tag values into the html select
 	 */
 	_loadTags: function() {
-		//console.debug("loading tags");
 		if (this.dlg_cmbTagname) {
 			this._removeTags();
 			if (gl_application) {
@@ -321,8 +320,6 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * @param {Object} latlon
 	 */
 	setPoint: function(latlon) {
-		//console.debug("setPoint");
-		//console.debug(latlon);
 		this.showPrevWidget = true;
 		this.dlg_tbLat.attr("value",latlon.lat);
 		this.dlg_tbLon.attr("value",latlon.lon);

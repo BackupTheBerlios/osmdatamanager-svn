@@ -84,12 +84,22 @@ body {
 /* dnd source div */
 .dnd_source_hidden {
 	visibility:hidden;
-	display:none;	
+	display:none;
+	position: absolute;	
 }
 
 .dnd_source_visible {
 	visibility: visible;
-	display:block;
+	/*display:block;*/
+	position: absolute;
+	z-index:20;
+	color:#000000;
+	background-color:#ffffff;
+	padding: 4px;
+}
+
+.dnd_source_visible img {
+	
 }
 
 

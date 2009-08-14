@@ -122,7 +122,7 @@
 				func:gl_application._cb_loginUser,
 				target:gl_application
 			}
-			gl_application.loginUser("Testuser2","Testuser",cb);
+			gl_application.loginUser("test","test",cb);
 			//gl_application.checkUser(cb);					
 		}		
 		
@@ -183,7 +183,7 @@
 	<div id="dlg_login"></div> 
 	<div id="dlg_itemmanager"></div>
 	<div id="dlg_group"></div> 
-	
+	<div id="dialog_info"></div> 
 	
 	<!-- Popup -->
 	<div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="mainmenu_content" style="display: none;" >
@@ -221,7 +221,8 @@
       
 	<!-- Dnd Source -->
 	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source_hidden" copyOnly="true" dndType="dnd_source">
-		<div class="dojoDndItem" id="dnd_itm">_Dnd_Item</div>
+		
+		<div class="dojoDndItem" id="dnd_itm"><img id="dnd_source_image"></img></div>
 	</div>
 	
 	<div id="dlg_loading" class="loading_hidden">

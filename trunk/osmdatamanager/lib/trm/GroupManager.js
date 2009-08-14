@@ -110,7 +110,6 @@ dojo.declare("Groupmanager", Serverconnection, {
 			
 			var grpitmid = null;
 			var itemtype = null;
-			console.debug(this.dropitem);
 			if (this.dropitem) {
 				grpitmid = this.dropitem.itemid;
 				itemtype = this.dropitem.itemtype;	

@@ -72,6 +72,10 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		return null;
 	},
 	
+	/**
+	 * 
+	 * @param {Object} sender
+	 */
 	_onCellMouseOver: function(sender) {
 		try {
 			this.currentItem = null;
@@ -85,11 +89,9 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 					if (s1) {
 						var dndsrc = this._getChildnode(s1,"DIV");
 						if (dndsrc) {
-							//dndsrc.setAttribute("id", "__dnd__" + this.currentItem.itemid);	
-							dndsrc.innerHTML = this.currentItem.itemname;
+							dndsrc.setAttribute("id", "__dnd__" + this.currentItem.itemid);	
+							//dndsrc.innerHTML = this.currentItem.itemname;
 						}
-						
-						
 						s1.setAttribute("class", "dnd_source_visible");
 						s1.setAttribute("className", "dnd_source_visible");
 					
@@ -103,7 +105,6 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 						img.setAttribute("src", this._getIconname1(itm1));
 					}
 				}
-				
 			}
 		} catch(e) {
 			console.error(e);

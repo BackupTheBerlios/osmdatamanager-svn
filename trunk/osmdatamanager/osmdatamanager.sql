@@ -130,9 +130,18 @@ CREATE TABLE `tab_usr` (
 
 INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )
 VALUES (
-'', 'user', 'images/user.png', NULL , NULL
+'', 'user', 'images/crystal_project/identity.png', NULL , NULL
 );
 
+INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )
+VALUES (
+'', 'standard', 'images/crystal_project/folder.png', 'images/crystal_project/folder_open.png' , NULL
+);
+
+INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )
+VALUES (
+'', 'standard_poi', 'images/crystal_project/flag.png', NULL , NULL
+);
 
 
 

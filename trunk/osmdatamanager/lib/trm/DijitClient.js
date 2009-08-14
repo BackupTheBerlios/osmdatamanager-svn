@@ -55,12 +55,15 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		_dlgGrp_onOkClick: function(data) {									
 			if (data.itemid != -1) {
+				console.error("TODO: _dlgGrp_onOkClick");
+				/*
 				var cb = {
 					target: gl_groupmanager.getGroupTree(),
 					func: gl_groupmanager.getGroupTree().updateGroup
 				}
 				//function(groupid,groupname,protection,zommlevel,lat,lon,tagname,cb) {
 				gl_groupmanager.updateGroup(data.itemid,data.itemname,data.protection,data.zoomlevel,data.lat,data.lon,data.tagname,cb);
+				*/
 			}
 			else {
 				if (data.parentid != -1) {
@@ -87,7 +90,6 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		_cb_onGetPointClick: function(e) {
 			var lonlat = this.map.getLonLatFromViewPortPx(e.xy).transform(this.map.getProjectionObject(),new OpenLayers.Projection("EPSG:4326"));
-			console.debug(lonlat.lon);
 			if (this.senderdialog) {
 				this.senderdialog.setPoint(lonlat);
 				this.senderdialog.onlyshow = true;
@@ -121,7 +123,7 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		/**
-		 * updates a item in the grouptree
+		 * 
 		 * @param {Object} response
 		 * @param {Object} ioArgs
 		 */
@@ -130,7 +132,8 @@ dojo.declare("DijitClient2", Application2, {
 			console.debug("_updateitem");
 			if (response != "msg.failed") {
 				var itm1 = response;
-				gl_groupmanager.getGroupTree().updateItem(itm1);
+				//gl_groupmanager.getGroupTree().updateItem(itm1);
+				console.error("TODO: _updateitem");
 			}
 		},
 		
@@ -175,7 +178,6 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		_cb_loginUser: function(response, ioArgs) {
 			//var nls = dojo.i18n.getLocalization("trm.login", "Form");
-			console.debug(response);
 			if (response == "msg.logoutok") {
 				dijit.byId('btn_login').attr("label", "::Login::");
 				
@@ -212,8 +214,17 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} ioArgs
 		 */
 		_cb_delete: function(response, ioArgs) {
-			if (response == "msg.delok") {
-				gl_groupmanager.getRootGroups();
+			try {
+				if (response == "msg.delok") {
+					//gl_groupmanager.getRootGroups();
+					console.debug(gl_tree.selectedTreeItem);
+					if (gl_tree.selectedTreeItem) {
+						gl_tree.model.store.deleteItem(gl_tree.selectedTreeItem);
+						gl_tree.selectedTreeItem = null;
+					}
+				}
+			} catch(e) {
+				console.debug(e);
 			}
 		},
 		
@@ -260,7 +271,6 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		dndAccept: function(source,nodes){			
-			console.debug("dndAccept");
 			if (source.node.id == "dnd_source")
 				return true;
 			
@@ -268,28 +278,41 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		/**
-		 * 
+		 * check if node has already the current dnd_source as child
 		 * @param {Object} node
 		 * @param {Object} source
 		 * @param {Object} position
 		 */
 		treeCheckItemAcceptance: function(node,source,position) {
-			console.debug("treeCheckItemAcceptance");
-			var item = dijit.getEnclosingWidget(node).item;
-			if (item.i) {
-				gl_tree.model.store.dndTargetItem = item.i
+			try {
+				var dlg1 = dijit.byId('dlg_itemmanager');
+				if (dlg1) {
+					var item = dijit.getEnclosingWidget(node).item; //drag over item
+					if (item) {
+						if (String(item.itemtype).toLowerCase() != "group")
+							return;
+						
+						for (var i = 0; i < item.children.length; i++) {
+							var chld1 = item.children[i];
+							
+							var id1 = String(chld1.itemid);
+							var tp1 = String(chld1.itemtype);
+							
+							var id2 = String(dlg1.currentItem.itemid);
+							var tp2 = String(dlg1.currentItem.itemtype);
+
+							if ((id1 == id2) && (tp1 == tp2)) {
+								return false;
+							}
+						}
+					}
+					return true;
+				}
+				return false;
+			} catch (e) {
+				console.error(e);
+				return false;
 			}
-									
-			if (source.node.id == "dnd_source") {
-				return true;
-			}
-			
-			if (source.node.id == "source2") {
-				return true;
-			}
-			
-			
-			return false;
 		},
 		
 		/**
@@ -297,8 +320,6 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} item
 		 */
 		treeGetLabel: function(item){
-			console.debug("treeGetLabel");
-			console.debug(item);
 			if (item.i) {
 				return item.i.itemname;
 			}
@@ -315,9 +336,6 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} pInfo
 		 */
 		_storeOnNew: function(item, pInfo) {			
-			console.debug("_storeOnNew");
-			console.debug(item);
-			console.debug(pInfo);
 			if (String(item.itemtype) != "Group") {				
 				var gm = new Groupmanager();
 				gm.addGroupItem(String(pInfo.item.itemid),String(item.itemid),String(item.itemtype));
@@ -330,8 +348,7 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} parentInfo
 		 */
 		
-		_storeBeforeNewItem: function(keywordArgs, parentInfo) {
-			console.debug("_storeBeforeNewItem");
+		_storeBeforeNewItem: function(keywordArgs, parentInfo) {			
 			if (String(keywordArgs.itemtype) != "Group") {
 				var dlg1 = dijit.byId('dlg_itemmanager');
 				if (dlg1) {
@@ -348,6 +365,7 @@ dojo.declare("DijitClient2", Application2, {
 							}
 						}
 						keywordArgs.id = id1 + "_" + this._id_offset;
+						name1 = String(dlg1.currentItem.itemname);
 						keywordArgs.name = name1;
 						this._id_offset++;
 					}
@@ -362,7 +380,6 @@ dojo.declare("DijitClient2", Application2, {
 			if (gl_tree != null)
 				return;
 			
-			console.debug("init tree...");
 			dojo.require("trm.widget.CustomForestStoreModel");
 			dojo.require("trm.widget.DataTree");			
 			dojo.require("dojo.data.ItemFileWriteStore");
@@ -506,7 +523,6 @@ dojo.declare("DijitClient2", Application2, {
 		getSelectedItem: function() {
 			//return gl_groupmanager.getGroupTree().getSelectedItem();	
 			if (gl_tree) {
-				console.debug(gl_tree.selectedItem);
 				return gl_tree.selectedItem;	
 			}
 			return null;
@@ -756,10 +772,18 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} message
 		 */
 		showMessageDialog: function(title, message) {
-			dijit.byId('dialog_info').setAttribute("title",title);
+			
+			var dlg1 = dijit.byId('dialog_info');
+			if (! dlg1) {
+				dojo.require("trm.widget.InfoDialog");
+				dlg1 = new trm.widget.InfoDialog({}, "dialog_info");
+			}
+			
+			//dijit.byId('dialog_info').setAttribute("title",title);
 			//dijit.byId('dialog_info').setContent(text);
-			document.getElementById('dlginfo_text').innerHTML = message;
-			dijit.byId('dialog_info').show();
+			//document.getElementById('dlginfo_text').innerHTML = message;
+			dlg1.show(message);
+			//dijit.byId('dialog_info').show(message);
 		},
 		
 		/**

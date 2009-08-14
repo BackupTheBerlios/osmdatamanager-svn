@@ -9,10 +9,10 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 	prevWidget: null,
 	showPrevWidget: true,
 	onGetPoint: function(sender) {
-		//console.debug(sender);
+		
 	},
 	onZoomlevelClick: function(sender) {
-		//console.debug(sender);
+		
 	}, 
 	postCreate: function() {
 		this.inherited(arguments);
@@ -75,10 +75,7 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 			if(dojo.hasClass(dojo.body(),"dojoMove")){ return; }
 			
 			var viewport = dijit.getViewport();
-			//console.debug(viewport);
 			var mb = dojo.marginBox(this.domNode);
-			//console.debug(this.domNode);
-			//console.debug(mb);
 			var style = this.domNode.style;
 			style.left = Math.floor((viewport.l + (viewport.w - mb.w)/2)) + "px";
 			style.top = Math.floor((viewport.t + (viewport.h - mb.h)/2)) + "px";
@@ -86,20 +83,17 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 	_changeCssClass: function(fromclass, toclass) {
 		var cls = this.domNode.getAttribute("class");
 		if (cls) {
-			//console.debug(cls);
 			var lst1 = cls.split(" ");
 			if (lst1) {
 				var rslt = "";
 				for (var i=0;i<lst1.length;i++) {
 					var v1 =  lst1[i];
-					//console.debug(v1);
 					if (v1.toLowerCase() == fromclass.toLowerCase()) {
 					  rslt = rslt + " " + toclass;
 					} else {
 						rslt = rslt + " " + v1;
 					}
 				}
-				//console.debug(rslt);
 				this.domNode.setAttribute("class",rslt);
 				return;
 			}
@@ -107,11 +101,9 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 		this.domNode.setAttribute("class","trmVisible");
 	},
 	_zoomLevelClick: function() {
-		//console.debug("_zoomLevelClick");
 		this.onZoomlevelClick(this);
 	},
 	_getPointClick: function() {
-		//console.debug("_getPointClick");
 		this.showPrevWidget = false;
 		this.onGetPoint(this);
 	},
@@ -119,7 +111,7 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 		this.hide();
 	},
 	_okClick: function(e) {
-		//console.debug("_ok_");
+		
 	},
 	show: function() {
 		this._changeCssClass("trmHidden","trmVisible");

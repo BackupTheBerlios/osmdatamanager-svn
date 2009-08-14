@@ -53,18 +53,13 @@ dojo.declare("trm.widget.CustomForestStoreModel", [dijit.tree.ForestStoreModel],
 	 * @param {Object} error_cb
 	 */
 	getChildren: function(parentItem, complete_cb, error_cb) {
-		console.debug("getChildren");
-		console.debug(complete_cb);
-		console.debug(error_cb);
 		try {
-			console.debug(parentItem);
 			if (parentItem.root != true) {
 				//if (this.doload) {
 					var parentid = this.store.getValue(parentItem, 'itemid');
 					if (parentid != -1) {
 						//this.store.close();
 						this.store.url = "groupfunctions.php?action=msg.getgrpitems&treedata=yes&groupid=" + parentid;
-						console.debug("fetch");
 						this.store.fetch({
 							query: {
 								'parentid': parentid
@@ -73,12 +68,6 @@ dojo.declare("trm.widget.CustomForestStoreModel", [dijit.tree.ForestStoreModel],
 							onError: error_cb
 						});
 					}
-				/*
-				} else {
-					console.debug("dontload")
-					this.doload = true;
-				}
-				*/
 			}
 			return this.inherited(arguments);
 		} catch (e) {

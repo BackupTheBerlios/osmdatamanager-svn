@@ -1,18 +1,13 @@
-/*
- * copy and paste code for a custom widget
- * 
- * 
- * 
-dojo.provide("trm.widget.GroupDialog");
+dojo.provide("trm.widget.InfoDialog");
 dojo.require("trm.widget._TrmBaseDialog");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 
 //dojo.requireLocalization("trm.translation", "tt");
 
-dojo.declare("trm.widget.UserDialog", [trm.widget._TrmWidget, dijit._Templated], {
+dojo.declare("trm.widget.InfoDialog", [trm.widget._TrmBaseDialog], {
 	widgetsInTemplate: true,
-	templatePath:    dojo.moduleUrl('trm.widget', 'UserDialog.html'),
+	templatePath:    dojo.moduleUrl('trm.widget', 'InfoDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
 	},
@@ -20,14 +15,15 @@ dojo.declare("trm.widget.UserDialog", [trm.widget._TrmWidget, dijit._Templated],
 		this.inherited(arguments);
 	},
 	_okClick: function(e) {
-		this.inherited(arguments);
+		//this.inherited(arguments);
+		this.hide();
 	},
-	show: function() {
+	show: function(infotext) {
 		this.inherited(arguments);
+		this.dlg_lblInfo.innerHTML = infotext;
 	},
 	hide: function() {
 		this.inherited(arguments);
 	}
 		
 });
-*/

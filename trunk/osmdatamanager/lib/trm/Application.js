@@ -133,8 +133,6 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} e
 		 */
 		_cb_getPointFromMap: function(e) {
-			console.debug(e);
-			console.debug(this);
 			if (this.callback != null) {
 				this.callback.func.apply(this.callback.target, [e]);
 			}	
@@ -387,7 +385,6 @@ dojo.declare("Application2", Serverconnection, {
 	                        }
 	                    });
 					
-					console.debug("hhh");
 					this.map.addControl(gl_dblclick);
 					gl_dblclick.activate();
 				} catch (e) {
