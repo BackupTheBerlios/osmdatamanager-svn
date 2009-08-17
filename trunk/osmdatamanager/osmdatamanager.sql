@@ -143,6 +143,11 @@ VALUES (
 '', 'standard_poi', 'images/crystal_project/flag.png', NULL , NULL
 );
 
+INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )
+VALUES (
+'', 'file_gpx', 'images/crystal_project/runit.png', NULL , NULL
+);
+
 
 
 

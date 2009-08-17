@@ -10,24 +10,38 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 	onOkClick: function(data) {
 		
 	},
+	
+	onUpdatePoi: function(poi) {
+		
+	},
+	
 	postCreate: function() {
 		this.inherited(arguments);
 	},
+	
 	_cb_createPoi: function(response, ioArgs) {
 		this.hide();	
 	},
+	
+	_cb_updatePoi: function(response, ioArgs) {
+		if (response != "msg.failed") {
+			this.onUpdatePoi(response);
+		}
+		this.hide();	
+	},
+	
 	_okClick: function(e){
 	  this.inherited(arguments);
 	  
 	  if (this._dataOk()) {
 	  		var data = this.getData();
 						
-			if (this.storedata) {
+			if (this.storedata) { //if storedata is true, the dialog will execute the serverside functions
 				var pm = new PoiManager();
 				
 				if (this.dataitem) {
 					var cb = {
-						func: this._cb_createPoi,
+						func: this._cb_updatePoi,
 						target: this
 					}
 					pm.updatePoi(this.dataitem.itemid, data.itemname, data.description, data.lat, data.lon, data.tagname, data.zoomlevel, cb);
@@ -50,8 +64,10 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 	},
 	
 	show: function(isupdate) {
+		this.inherited(arguments);
 		if (this.onlyshow) {
-			this.inherited(arguments);
+			this._setTag(this.dataitem.tagname);
+			//this.inherited(arguments);
 			return;
 		}
 		
@@ -61,7 +77,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 			this._resetFields();
 			this.dataitem = null;
 		}
-		this.inherited(arguments);
+		
 	}
 		
 });

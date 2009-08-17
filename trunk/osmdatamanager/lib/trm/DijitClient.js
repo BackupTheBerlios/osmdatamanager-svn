@@ -1,27 +1,17 @@
-/**
-*
+/*
 * DijitClient -> connection between dijit and the base application
 *
 */
 dojo.declare("DijitClient2", Application2, {
         
 		constructor: function(name,map){
-			/*
-        	dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_LoggedIn");
-			
-			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onGetPoint",this,"_onGetPointClick");
-			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onZoomlevelClick",this,"_onZoomlevelClick");
-			dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"_cb_createPoi",this,"_updateitem");
-			
-			dojo.connect(dijit.byId("dlg_user"),"onGetPoint",this,"_onGetPointClick");
-			dojo.connect(dijit.byId("dlg_user"),"onZoomlevelClick",this,"_onZoomlevelClick");
-			*/
-						
+			this.nls = dojo.i18n.getLocalization("trm.translation", "tt");			
 			this.senderdialog = null;        
 			this.privatemode  = false;
 			this._id_offset = 1;
         },
 		
+				
 		/**
 		 * add a root group
 		 * @param {Object} group
@@ -55,15 +45,13 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		_dlgGrp_onOkClick: function(data) {									
 			if (data.itemid != -1) {
-				console.error("TODO: _dlgGrp_onOkClick");
-				/*
 				var cb = {
-					target: gl_groupmanager.getGroupTree(),
-					func: gl_groupmanager.getGroupTree().updateGroup
+					target: this,
+					func: this._updateitem
 				}
 				//function(groupid,groupname,protection,zommlevel,lat,lon,tagname,cb) {
 				gl_groupmanager.updateGroup(data.itemid,data.itemname,data.protection,data.zoomlevel,data.lat,data.lon,data.tagname,cb);
-				*/
+				
 			}
 			else {
 				if (data.parentid != -1) {
@@ -89,12 +77,18 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} e
 		 */
 		_cb_onGetPointClick: function(e) {
-			var lonlat = this.map.getLonLatFromViewPortPx(e.xy).transform(this.map.getProjectionObject(),new OpenLayers.Projection("EPSG:4326"));
-			if (this.senderdialog) {
-				this.senderdialog.setPoint(lonlat);
-				this.senderdialog.onlyshow = true;
-				this.senderdialog.show(true);
-				this.senderdialog.onlyshow = false;
+			try {
+				var lonlat = this.map.getLonLatFromViewPortPx(e.xy).transform(this.map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+				if (this.senderdialog) {
+					this.senderdialog.setPoint(lonlat);
+					this.senderdialog.onlyshow = true;
+					this.senderdialog.show(true);
+					this.senderdialog.onlyshow = false;
+				}
+				this.map.removeControl(gl_dblclick);
+				gl_dblclick.destroy();
+			} catch(e) {
+				console.error(e);
 			}
 		},
 		
@@ -108,7 +102,7 @@ dojo.declare("DijitClient2", Application2, {
 				func: this._cb_onGetPointClick,
 				target: this
 			}
-			this.getPoint(cb,sender,"Punkt","machen Sie einen Doppelklick einen Punkt");				
+			this.getPoint(cb,sender,this.nls["info"],this.nls["dbl_clk_point"]);				
 		},
 		
 		/**
@@ -123,17 +117,18 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		/**
-		 * 
-		 * @param {Object} response
-		 * @param {Object} ioArgs
+		 * updates an item in the tree
+		 * @param {Object} item
 		 */
-		_updateitem: function(response, ioArgs) {
-			//TODO checken ob benötigt
-			console.debug("_updateitem");
-			if (response != "msg.failed") {
-				var itm1 = response;
-				//gl_groupmanager.getGroupTree().updateItem(itm1);
-				console.error("TODO: _updateitem");
+		_updateitem: function(item) {
+			try {
+				gl_tree.updateItem(item);
+				
+				if (gl_markermanager.markerExistsById(item.itemid))
+					this.displayItem(item);
+				
+			} catch (e) {
+				console.error(e);
 			}
 		},
 		
@@ -150,14 +145,9 @@ dojo.declare("DijitClient2", Application2, {
 			if (usr != null) {
 				dijit.byId('btn_login').attr("label", "Logout [" + usr.itemname + "]");
 				this.enablePrivatemode();
-				//gl_groupmanager.getRootGroups();
 				this._initTree();
 				this.centerHomebase();
-				/*
-				self.updateFileList(null);
-								
 				
-				*/
 				var dlg1 = dijit.byId('dlg_login');
 				if (dlg1) {
 					dlg1.hide();
@@ -167,7 +157,7 @@ dojo.declare("DijitClient2", Application2, {
 				var lat = 50.9350850727913;
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
-				
+				gl_tree.clearNodes();
 			}		
 		},
 		
@@ -177,18 +167,14 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} ioArgs
 		 */
 		_cb_loginUser: function(response, ioArgs) {
-			//var nls = dojo.i18n.getLocalization("trm.login", "Form");
 			if (response == "msg.logoutok") {
 				dijit.byId('btn_login').attr("label", "::Login::");
-				
 				try {
-					gl_tree.model.store.close();
-					gl_tree.model.fetch();
+					gl_tree.clearNodes();
+					
 				} catch (e) {
 					console.error(e);
 				}
-				//gl_tree.destroy();
-				//gl_tree = null;
 				
 				this.clearMap();
 				this.disablePrivatemode();
@@ -201,7 +187,6 @@ dojo.declare("DijitClient2", Application2, {
 			if (response != "msg.loginfailed") {
 				this._cb_LoggedIn(response);
 			} else {
-				//alert(nls["loginfailed"]);
 				var lat = 50.9350850727913;
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
@@ -217,14 +202,13 @@ dojo.declare("DijitClient2", Application2, {
 			try {
 				if (response == "msg.delok") {
 					//gl_groupmanager.getRootGroups();
-					console.debug(gl_tree.selectedTreeItem);
 					if (gl_tree.selectedTreeItem) {
 						gl_tree.model.store.deleteItem(gl_tree.selectedTreeItem);
 						gl_tree.selectedTreeItem = null;
 					}
 				}
 			} catch(e) {
-				console.debug(e);
+				console.error(e);
 			}
 		},
 		
@@ -235,7 +219,10 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		_cb_remove: function(response, ioArgs) {
 			if (response == "msg.remok") {
-				gl_groupmanager.getRootGroups();
+				if (gl_tree.selectedTreeItem) {
+					gl_tree.model.store.deleteItem(gl_tree.selectedTreeItem);
+					gl_tree.selectedTreeItem = null;
+				}	
 			}
 		},
 		
@@ -249,7 +236,7 @@ dojo.declare("DijitClient2", Application2, {
 				func: this._cb_delete
 			}
 			
-			if (confirm("delete group " + item.itemname + " ?"))  //TODO mehrsprachig
+			if (confirm(this.nls["delete"] + " " + item.itemname + " ?"))  //TODO mehrsprachig
 				gl_groupmanager.deleteGroup(item.itemid,cb);
 		},
 						
@@ -258,14 +245,14 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} item
 		 */
 		_removeItem: function(item) {
-			var grpid = gl_groupmanager.getGroupTree().getSelectedParentGroupId();
+			var grpid = gl_tree.getSelectedParentGroupId();
 			if (grpid) {
 				var cb = {
 					target: this,
 					func: this._cb_remove
 				}
 				
-				if (confirm(item.itemname + " aus Gruppe entfernen ?"))  //TODO mehrsprachig
+				if (confirm(this.nls["remove"] + " " + item.itemname + " ?"))  //TODO mehrsprachig
 					gl_groupmanager.removeGroupItem(grpid,item.itemid,cb);	
 			}
 		},
@@ -292,17 +279,19 @@ dojo.declare("DijitClient2", Application2, {
 						if (String(item.itemtype).toLowerCase() != "group")
 							return;
 						
-						for (var i = 0; i < item.children.length; i++) {
-							var chld1 = item.children[i];
-							
-							var id1 = String(chld1.itemid);
-							var tp1 = String(chld1.itemtype);
-							
-							var id2 = String(dlg1.currentItem.itemid);
-							var tp2 = String(dlg1.currentItem.itemtype);
-
-							if ((id1 == id2) && (tp1 == tp2)) {
-								return false;
+						if (item.children) {
+							for (var i = 0; i < item.children.length; i++) {
+								var chld1 = item.children[i];
+								
+								var id1 = String(chld1.itemid);
+								var tp1 = String(chld1.itemtype);
+								
+								var id2 = String(dlg1.currentItem.itemid);
+								var tp2 = String(dlg1.currentItem.itemtype);
+								
+								if ((id1 == id2) && (tp1 == tp2)) {
+									return false;
+								}
 							}
 						}
 					}
@@ -377,9 +366,20 @@ dojo.declare("DijitClient2", Application2, {
 		 * 
 		 */
 		_initTree: function() {
-			if (gl_tree != null)
+			if (gl_tree != null) {
+				//gl_tree.model.store.close();
+				//gl_tree.model.store.save();
+				//gl_tree.model.store.fetch();
+				/*
+				gl_tree.model.store.fetch({
+							query: {
+								'parentid': -1
+							}});
+				*/			
+				gl_tree.refresh();
 				return;
-			
+			}
+							
 			dojo.require("trm.widget.CustomForestStoreModel");
 			dojo.require("trm.widget.DataTree");			
 			dojo.require("dojo.data.ItemFileWriteStore");
@@ -415,7 +415,7 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		groupTreeOpenmenu: function(sender) {
 			this.disabledAllMenuItems();
-			
+						
 			if (! this.privatemode)
 				return;
 			
@@ -437,7 +437,7 @@ dojo.declare("DijitClient2", Application2, {
 						dijit.byId('itm_edit').attr("disabled",false);
 						dijit.byId('itm_remove').attr("disabled",false);
 						dijit.byId('itm_manager').attr("disabled",false);
-						dijit.byId('itm_updatetree').attr("disabled",false);
+						//dijit.byId('itm_updatetree').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
 						break;
 					case "group":
@@ -450,14 +450,14 @@ dojo.declare("DijitClient2", Application2, {
 						dijit.byId('itm_createsubgroup').attr("disabled",false);
 						dijit.byId('itm_deletegroup').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
-						dijit.byId('itm_updatetree').attr("disabled",false);
+						//dijit.byId('itm_updatetree').attr("disabled",false);
 						break;
 					case "file":
 						dijit.byId('itm_loaddata').attr("disabled",false);
 						//dijit.byId('itm_edit').attr("disabled",false);
 						dijit.byId('itm_remove').attr("disabled",false);
 						dijit.byId('itm_manager').attr("disabled",false);
-						dijit.byId('itm_updatetree').attr("disabled",false);
+						//dijit.byId('itm_updatetree').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
 						break;
 				}
@@ -496,7 +496,7 @@ dojo.declare("DijitClient2", Application2, {
 			dijit.byId('itm_delete').attr("disabled","disabled");
 			
 			dijit.byId('itm_removeall').attr("disabled","disabled");
-			dijit.byId('itm_updatetree').attr("disabled","disabled");
+			//dijit.byId('itm_updatetree').attr("disabled","disabled");
 			dijit.byId('itm_submenu_settings').attr("disabled","disabled");
 		},
 		
@@ -622,8 +622,8 @@ dojo.declare("DijitClient2", Application2, {
 			
 			var dlg1 = dijit.byId('dlg_login');
 			if (! dlg1) {
-				dojo.require("trm.login.Form");
-				dlg1 = new trm.login.Form({}, "dlg_login");
+				dojo.require("trm.widget.LoginDialog");
+				dlg1 = new trm.widget.LoginDialog({}, "dlg_login");
 				dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_LoggedIn");		
 			}
 			
@@ -648,12 +648,9 @@ dojo.declare("DijitClient2", Application2, {
 		},
 		
 		/**
-		 * shows the item manager
+		 * returns the itemmanager widget, if not exist it will be created
 		 */
-		showItemManager: function() {
-			
-			
-			//dojoType="trm.widget.ItemManager"
+		getItemManager: function() {
 			this.showLoading();
 			
 			var dlg1 = dijit.byId('dlg_itemmanager');
@@ -663,12 +660,20 @@ dojo.declare("DijitClient2", Application2, {
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onGetPoint",this,"_onGetPointClick");
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onZoomlevelClick",this,"_onZoomlevelClick");
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"_cb_createPoi",this,"_updateitem");
+				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onUpdatePoi",this,"_updateitem");
+				dlg1.clientapp = this;
 			}
 			
 			this.hideLoading();
-			
+			return dlg1;
+		},
+		
+		/**
+		 * shows the item manager
+		 */
+		showItemManager: function() {
+			var dlg1 = this.getItemManager();
 			if (dlg1)  {
-				dlg1.clientapp = this;
 				dlg1.show();
 			}
 		},
@@ -722,12 +727,8 @@ dojo.declare("DijitClient2", Application2, {
 		 * shows the poi dialog
 		 */
 		showPoiDialog: function(item) {
-			this.showLoading();
-			
-			var dlg1 = dijit.byId('dlg_itemmanager');
+			var dlg1 = this.getItemManager();
 			if (dlg1)  {
-				this.hideLoading();
-				
 				dlg1.poidialog.prevWidget = null;
 				dlg1.poidialog.setDataItem(item);
 				dlg1.poidialog.show(true);
@@ -748,7 +749,17 @@ dojo.declare("DijitClient2", Application2, {
 		 * shows the user dialog
 		 */
 		showUserDialog: function(item) {
+			this.showLoading();
+			
 			var dlg1 = dijit.byId('dlg_user');
+			if (!dlg1) {
+				dojo.require("trm.widget.UserDialog");
+				dlg1 = new trm.widget.UserDialog({}, "dlg_user");
+				dojo.connect(dlg1,"onGetPoint",this,"_onGetPointClick");
+				dojo.connect(dlg1,"onZoomlevelClick",this,"_onZoomlevelClick");		
+			}
+			
+			this.hideLoading();
 			if (dlg1)  {
 				dlg1.application = this;
 				dlg1.setDataItem(this.activeuser);

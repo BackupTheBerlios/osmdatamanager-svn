@@ -11,7 +11,6 @@
     	@import "lib/dojo/dojox/grid/resources/nihiloGrid.css";
 		
 		@import "lib/trm/trm.css";
-		@import "lib/trm/login/Form.css";
 		@import "lib/trm/widget/ItemManager.css";
 		@import "lib/trm/widget/GroupDialog.css";
 		@import "lib/trm/widget/PoiDialog.css";
@@ -19,25 +18,24 @@
 	</style>
 	
 	<script type="test/javascript">djConfig = { isDebug: true };</script> 
-	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>			
+	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false, locale: 'en'"></script>			
 			
 	<script type="text/javascript">	
 		  dojo.require("dojo.parser");
           
 		  dojo.addOnLoad(function(){
 				dojo.registerModulePath("trm","../../trm");		
-				dojo.requireLocalization("trm", "popupmenu");
-				
+								
 				dojo.require("dijit.layout.ContentPane");
 			  	dojo.require("dijit.layout.BorderContainer");
 				dojo.require("dijit.Dialog");
 				dojo.require("dojo.dnd.Source"); 
 				
 				//trm widgets
-				//dojo.require("trm.login.Form");
 				dojo.require("trm.translation.tt");
 				dojo.require("trm.Button.TrmButton");
 				dojo.require("trm.MenuItem.TrmMenuItem");
+				dojo.require("trm.MenuItem.TrmPopupMenuItem");
 								
 				dojo.parser.parse();   
                 dojo.fadeOut({ 
@@ -123,7 +121,7 @@
 				target:gl_application
 			}
 			gl_application.loginUser("test","test",cb);
-			//gl_application.checkUser(cb);					
+			//gl_application.checkUser(cb);				
 		}		
 		
 	</script>
@@ -183,6 +181,7 @@
 	<div id="dlg_login"></div> 
 	<div id="dlg_itemmanager"></div>
 	<div id="dlg_group"></div> 
+	<div id="dlg_user"></div> 
 	<div id="dialog_info"></div> 
 	
 	<!-- Popup -->
@@ -195,8 +194,7 @@
 		<div dojoType="dijit.MenuSeparator"></div>	
 		
 		<!-- Groups -->  
-		<div dojoType="dijit.PopupMenuItem" id="itm_submenu_groups">
-			<span>Gruppen</span>
+		<div dojoType="trm.MenuItem.TrmPopupMenuItem" field="groups" id="itm_submenu_groups">
 			<div dojoType="dijit.Menu" id="submenu_groups">
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createmaingroup" field="createrootgroup" onClick="gl_application.showGroupDialog(true,false)">Hauptgruppe hinzuf&uuml;gen</div>
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_createsubgroup" field="createsubgroup" onClick="gl_application.showGroupDialog(false,false)">Untergruppe hinzuf&uuml;gen</div>
@@ -208,11 +206,11 @@
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_delete" field="delete" onClick="">Entfernen</div>
 		<div dojoType="dijit.MenuSeparator"></div>	
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_removeall" field="clearmap" onClick="gl_application.clearMap()">Karte bereinigen</div>
-		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_updatetree" field="updatetree" onClick="gl_groupmanager.getRootGroups()">Baum aktualisieren</div>				
+		<!-- <div dojoType="trm.MenuItem.TrmMenuItem" id="itm_updatetree" field="updatetree" onClick="gl_groupmanager.getRootGroups()">Baum aktualisieren</div>	-->
 		<div dojoType="dijit.MenuSeparator"></div>	
 		
-		<div dojoType="dijit.PopupMenuItem" id="itm_submenu_settings">
-			<span>Einstellungen</span>
+		<div dojoType="trm.MenuItem.TrmPopupMenuItem" id="itm_submenu_settings" field="settings" label="hallo">
+			<!-- <span id="itm_submenu_settings_txt">_Einstellungen</span> -->
 			<div dojoType="dijit.Menu" id="submenu_settings">
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_usersettings" field="usersettings" onClick="gl_application.showUserDialog()">Benutzereinstellungen</div>
 			</div>
@@ -221,12 +219,11 @@
       
 	<!-- Dnd Source -->
 	<div dojoType="dojo.dnd.Source" jsId="dnd_s1" id="dnd_source" class="dnd_source_hidden" copyOnly="true" dndType="dnd_source">
-		
 		<div class="dojoDndItem" id="dnd_itm"><img id="dnd_source_image"></img></div>
 	</div>
 	
 	<div id="dlg_loading" class="loading_hidden">
-		loading...
+		<img src="images/ajax-loader.gif" style="float:left;"></img>loading...
 	</div>
 
 	

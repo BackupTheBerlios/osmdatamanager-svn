@@ -28,21 +28,35 @@
 }
 
 .tundra .file_gpx {
-	background-image: url(../../images/crystal_project/gpx.png);
+	background-image: url(../../images/crystal_project/runit.png);
 }
 
 .tundra .user {
 	background-image: url(../../images/crystal_project/identity.png);
 }
 
+.tundra .icon_poi {
+	background-image: url(../../images/crystal_project/flag.png);
+	background-repeat:no-repeat;
+	height:18px;
+	text-align:center;
+	width:18px;
+}
 
+.tundra .icon_gpx {
+	background-image: url(../../images/crystal_project/runit.png);
+	background-repeat:no-repeat;
+	height:18px;
+	text-align:center;
+	width:18px;
+}
 
 /* ########################################################################
    #
    # Custom Dojo Button Styles
    #
    ######################################################################## */
-
+/*
 .trmDialog .dijitButtonText {
 	padding: 0px;
 	margin:0px;
@@ -57,7 +71,7 @@
 	border-color: #283c45;
 	border-bottom-color:#283c45; 
 	background: #275c73 url(images/button_enabled.png) top repeat-x;
-	/* background-color: #9D66AF;*/
+	/* background-color: #9D66AF;* /
 	padding: 2px;
 	margin: 0px;
 	width: 160px;
@@ -75,7 +89,8 @@
 } 
 
 .tundra .trmDialog .dijitButtonHover .dijitButtonNode {
-	/*background: #7dc35f;*/
+	/*background: #7dc35f;* /
 	border-color: #283c45;
 	background:#416a7b url(images/button_focused.png) top repeat-x;
 }
+*/

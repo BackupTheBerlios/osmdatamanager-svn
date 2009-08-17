@@ -68,6 +68,15 @@ dojo.declare("trm.widget.CustomForestStoreModel", [dijit.tree.ForestStoreModel],
 							onError: error_cb
 						});
 					}
+			} else {
+				this.store.url = "groupfunctions.php?action=msg.getgrpitems&treedata=yes&groupid=" + parentid;
+						this.store.fetch({
+							query: {
+								'parentid': -1
+							},
+							onComplete: complete_cb,
+							onError: error_cb
+						});
 			}
 			return this.inherited(arguments);
 		} catch (e) {

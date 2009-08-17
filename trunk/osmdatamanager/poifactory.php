@@ -22,13 +22,13 @@
 	 */
 	class Poi extends GroupItem {
 
-		var $poitype;  //TODO benötigt ?
+		//var $poitype;  //TODO benötigt ?
 		var $description;
 				
 		function Poi() {
 			parent::GroupItem("Poi");
 			
-			$this->poitype = "Poi";
+			//$this->poitype = "Poi";
 			$this->description = "";
 		}
 		

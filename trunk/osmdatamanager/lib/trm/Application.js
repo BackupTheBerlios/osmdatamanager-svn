@@ -1,4 +1,22 @@
 /**
+    @license
+    This file is part of osmdatamanager.
+
+    osmdatamanager is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, only GPLv2.
+
+    osmdatamanager is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
+/**
  * base class for server connections 
  */
 dojo.declare("Serverconnection", null, {
@@ -448,7 +466,7 @@ dojo.declare("Application2", Serverconnection, {
 			if (this.markermanager) {
 				var mm = this.markermanager;
 				var lonLat = new OpenLayers.LonLat(poi.lon, poi.lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
-				mm.addPoiMarker(lonLat, gl_markers, poi.description, this.getIconname1(poi));
+				mm.addPoiMarker(lonLat, gl_markers, poi.description, this.getIconname1(poi),poi.itemid);
 				if (this.docentermap) 
 					this.centerMap(poi.lat, poi.lon, poi.zoomlevel);
 			}

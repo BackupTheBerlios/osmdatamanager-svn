@@ -41,21 +41,6 @@
 		$this->isadmin=false;
 	}
 	
-	/*
-	function parseLocation($latlon)
-	{
-		$tmp = split(";",$latlon);
-		if ($tmp != null)
-		{
-			if (count($tmp) > 1)
-			{
-				$this->location_lat = $tmp[0];
-				$this->location_lon = $tmp[1];
-			}
-		}
-	}
-	*/
-	
 	function getUid() {
 		return $this->itemid;
 	}
@@ -164,33 +149,7 @@
 		}
 		return null;
 	}
-	
-	/**
-	 * updates user data
-	 * @return 
-	 * @param $user Object
-	 */
-	/*
-	function updateUser($user) {		 
-		 $qry1   =  "UPDATE `tab_usr` SET ";
-		 //$qry1 = $qry1 + "`username`='".$aVal1."' ";
-		 $qry1 = $qry1."`email`='".$user->email."' ";
-		 $qry1 = $qry1.", `homepage`='".$user->homepage."' ";
-		 $qry1 = $qry1.", `lat`='".$user->lat."' ";
-		 $qry1 = $qry1.", `lon`='".$user->lon."' ";
-		 $qry1 = $qry1.", `description`='".$user->description."' ";
-		 $qry1 = $qry1.", `picture`='".$user->picture."' ";
-		 $qry1 = $qry1." WHERE `itemid` = ".$user->itemid."";
-		 
-		 $result = $this->executeQuery($qry1);
-		 if ($result != null)
-		 	return true;
-		else
-			return false;
-		 //, `password`='".$aVal2."       ' WHERE `wd_id_es` = ".$id1;
-	}
-	*/
-	
+		
 	/**
 	 * 
 	 * @return 
@@ -313,7 +272,7 @@
 		return null;
 	}
 	
-	/**
+	/** //TODO checken
 	 * deletes a user an all his data
 	 * @return 
 	 * @param $username Object

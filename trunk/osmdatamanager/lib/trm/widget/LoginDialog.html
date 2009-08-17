@@ -1,5 +1,5 @@
-<div class="trmLoginForm trmDialog">
-	<div class="dijitLoginError" dojoAttachPoint="errorNode"></div>
+<div class="trmDialog trmHidden">
+	<!-- <div class="dijitLoginError" dojoAttachPoint="errorNode"></div> -->
 	<table>
 		<tr>
 			<td><div class="trmLoginLabelUser" dojoAttachPoint="trmLoginLabelUserNode"></div></td>
@@ -11,6 +11,10 @@
 		</tr>
 	</table>
 	<hr/>
-	<button dojoType="dijit.form.Button" dojoAttachPoint="trmLoginBtnCancelNode" dojoAttachEvent="onClick:_cancelClick">_cancel_</button>
-	<button dojoType="dijit.form.Button" dojoAttachPoint="trmLoginBtnOkNode" dojoAttachEvent="onClick:_okClick">_ok_</button>
+	<table>
+		<tr class="custombutton1">
+			<td><button  dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnOk" dojoAttachEvent="onClick:_okClick">_Ok</button></td>
+			<td><button  dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnCancel" dojoAttachEvent="onClick:_cancelClick">_Abbrechen</button></td>	
+		</tr>
+	</table>
 </div>

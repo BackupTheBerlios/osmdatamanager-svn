@@ -13,16 +13,23 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	clientapp: null,
 	currentItem: null,
 	widgetsInTemplate: true,
+	nls: null,
 	viewMode: "",
 	templatePath:    dojo.moduleUrl('trm.widget', 'ItemManager.html'),
-	_gridStructure: [
-		{ field: "itemname", name: "Itemname", width: 'auto',cellStyles: 'padding-left:80px' },
-		{ field: "itemtype", name: "Itemtype", width: "100px" }
-	],
+	_gridStructure:null ,
 	_store: null,
+	
+	_initStructure: function() {
+	  this._gridStructure = [
+			{ field: "itemname", name: this.nls["itemname"], width: 'auto',cellStyles: 'padding-left:80px' },
+			{ field: "itemtype", name: this.nls["itemtype"], width: "100px" }
+		] 
+	},
+	
 	postCreate: function() {
 		this.inherited(arguments);
-				
+		this.nls = dojo.i18n.getLocalization("trm.translation", "tt");		
+		this._initStructure();
 		this._store = null; //new dojo.data.ItemFileReadStore({ url: "filefunctions.php?action=msg.getfiles" }); 
 		this.grid = new dojox.grid.DataGrid({
 					query: { itemname: '*' },
@@ -34,10 +41,26 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 					onStyleRow: dojo.hitch(this,this._onStyleRow),
 					structure: this._gridStructure
 		}, this.trmItemManagerGridNode);
-		
+		this._setTranslations();
 		this.popup.targetNodeIds = this.grid.domNode.id;
 		this.grid.startup();
 	},
+	
+	_setTranslations: function() {
+		if (this.dlg_btnOk)
+			this.dlg_btnOk.containerNode.innerHTML = this.nls["ok"];
+				
+		if (this.dlg_btnCancel)
+			this.dlg_btnCancel.containerNode.innerHTML = this.nls["cancel"];
+					
+		if (this.dlg_btnPoi)
+			this.dlg_btnPoi.label = this.nls["displaypois"];
+
+		if (this.dlg_btnGpx)
+			this.dlg_btnGpx.label = this.nls["displaygpxfiles"];
+			
+	},
+	
 	_getIconname1: function(item) {
 		if (gl_application) {
 			var usr1 = gl_application.getActiveUser();

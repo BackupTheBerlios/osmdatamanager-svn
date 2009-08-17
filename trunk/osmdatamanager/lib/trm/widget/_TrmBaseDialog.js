@@ -80,6 +80,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * resets all fields
 	 */
 	_resetFields: function() {
+		
 		if (this.dlg_tbItemname)
 			this.dlg_tbItemname.attr("value","");
 		
@@ -129,15 +130,16 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 				this._loadTags();
 			}
 			
+			var idx=0;
+			this.dlg_cmbTagname.selectedIndex = -1;
 			for (var i = 0; i < this.dlg_cmbTagname.childNodes.length; i++) {
-				var e1 = this.dlg_cmbTagname.childNodes[i];
-				if (e1.nodeName.toLowerCase() == "option") {
-					e1.removeAttribute("selected");
-					e1.selected = false;
-					if (e1.value == tagname) {
-						e1.setAttribute("selected","selected");
-						e1.selected = true;
+				if (this.dlg_cmbTagname.childNodes[i].nodeName.toLowerCase() == "option") {
+					this.dlg_cmbTagname.options[idx].selected = false;
+					if (this.dlg_cmbTagname.childNodes[i].value == tagname) {
+						this.dlg_cmbTagname.options[idx].selected = true;
+						this.dlg_cmbTagname.selectedIndex = idx;
 					}
+					idx++;
 				}
 			}
 		}

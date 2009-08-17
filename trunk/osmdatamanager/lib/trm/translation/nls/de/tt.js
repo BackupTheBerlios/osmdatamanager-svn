@@ -1,8 +1,9 @@
 ({
-	"name": "Submit",
-	"hallo": "Username:",
 	"password": "Password:",
-	"invalidUsername": "The username \"%s\" is not valid",
+	"username": "Benutzername",
+	"invalidusername":"Bitte geben Sie einen Benutzernamen ein",
+	"invalidpassword":"Bitte geben Sie ein Passwort ein",
+	"login_failed": "Anmeldung fehlgeschlagen",
 	"cancel": "Abbrechen",
 	"ok":"Ok",
 	"login":"Login",
@@ -17,7 +18,7 @@
 	"delete":"Löschen",
 	"clearmap":"Karte bereinigen",
 	"updatetree":"Baum aktualisieren",
-	"groups":"Gruppen trns",
+	"groups":"Gruppen",
 	"createpoi": "Poi erstellen",
 	"usersettings": "Benutzereinstellungen",
 	"entervaliddata": "Bitte geben Sie gültige Daten ein",
@@ -26,5 +27,13 @@
 	"zoomlevel": "Zoomlevel",
 	"position": "Position",
 	"longtext": "Langtext",
-	"tagname": "Tagname"
+	"tagname": "Tagname",
+	"displaypois": "Poi's auflisten",
+	"displaygpxfiles": "Gpx Dateien auflisten",
+	"itemname": "Name",
+	"itemtype": "Typ",
+	"settings": "Einstellungen",
+	"email": "eMail",
+	"info": "Info",
+	"dbl_clk_point": "Bitte machen Sie einen Doppelklick auf einen Punkt"
 })

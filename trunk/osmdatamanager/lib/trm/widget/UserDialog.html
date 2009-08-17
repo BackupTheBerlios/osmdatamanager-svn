@@ -32,8 +32,8 @@
 		  </td>
 	    </tr>
 		<tr>
-	      <td><label for="name">_eMail:</label></td>
-	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgUsr_tbEmail" /></td>
+	      <td><label dojoAttachPoint="dlg_lblEmail">_eMail:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbEmail" /></td>
 	    </tr>
 		<tr>
 			<td><label dojoAttachPoint="dlg_lblLongText">_Htmltext: </label></td>	 
@@ -43,7 +43,7 @@
 	
 	<hr/>	
 	<table>
-		<tr>
+		<tr class="custombutton1">
 			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnOk" dojoAttachEvent="onClick: _okClick">_Ok</button></td>
 			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnCancel" dojoAttachEvent="onClick:_cancelClick">_Abbrechen</button></td>
 		</tr> 

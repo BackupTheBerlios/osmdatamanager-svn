@@ -1,11 +1,13 @@
 <div class="trmItemManager trmDialog trmHidden">
 	
 	<div id="dlgfilelist_buttons">
-		<button dojoType="dijit.form.Button" dojoAttachEvent="onClick: loadPois">
-		 	<img src="images/flag.png" border="0" /> 
+		<button showLabel="false" dojoAttachPoint="dlg_btnPoi" iconClass="icon_poi" dojoType="dijit.form.Button" dojoAttachEvent="onClick: loadPois">
+		 	<!-- <img src="images/crystal_project/flag.png" border="0" />  -->
+			_list pois__
 		 </button>
-		 <button dojoType="dijit.form.Button" dojoAttachEvent="onClick: loadGpxFiles">
-		 	<img src="images/gpx_small.png" border="0" /> 
+		 <button showLabel="false" dojoAttachPoint="dlg_btnGpx" iconClass="icon_gpx" dojoType="dijit.form.Button" dojoAttachEvent="onClick: loadGpxFiles">
+		 	<!-- <img src="images/crystal_project/runit.png" border="0" />  -->
+			_list gpx files__
 		 </button>
 	</div>
 	
@@ -15,9 +17,9 @@
 	
 		
 	<table>
-		<tr>
-			<td><button dojoType="dijit.form.Button"  dojoAttachEvent="onClick:_okClick">Ok</button></td>
-			<td><button dojoType="dijit.form.Button"  dojoAttachEvent="onClick:_cancelClick">Abbrechen</button></td>	
+		<tr class="custombutton1">
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnOk"  dojoAttachEvent="onClick:_okClick">_Ok</button></td>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnCancel" dojoAttachEvent="onClick:_cancelClick">_Abbrechen</button></td>	
 		</tr>
 	</table>
 	
