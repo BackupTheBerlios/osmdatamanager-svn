@@ -76,6 +76,7 @@
 	 define ("msg_remok","msg.remok");
 	 define ("msg_delok","msg.delok");
 	 define ("msg_failed","msg.failed");
+	 define ("msg_empty","{items: []}");
 	 define ("msg_none","msg.none");
 	 define ("msg_exists","msg.exists");
 	 define ("msg_logoutok","msg.logoutok");
@@ -86,6 +87,7 @@
 	 //define ("msg_updateuserok","msg.updateuserok");
 	 //define ("msg_updateuserfailed","msg.updateuserfailed");
 	 define ("msg_updateok","msg.updateok");
+	 
 	 
 	 //db types
 	 define ("protection_private","private");
@@ -173,10 +175,12 @@
 	}
 	
 	function application_getMessage($aMessage) {
-		$json = new Services_JSON;
-		//$js2 = new Services_JSON;
-		$encoded = $json->encode($aMessage);
-		return $encoded;	
+		if ($aMessage != "") {
+			$json = new Services_JSON;
+			//$js2 = new Services_JSON;
+			$encoded = $json->encode($aMessage);
+			return $encoded;	
+		}
 	}
 	
 				

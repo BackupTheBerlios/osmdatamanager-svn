@@ -6,6 +6,7 @@
 	"login_failed": "Anmeldung fehlgeschlagen",
 	"cancel": "Abbrechen",
 	"ok":"Ok",
+	"close": "Schließen",
 	"login":"Login",
 	"showhomebase":"Heimatort",
 	"display":"Anzeigen",

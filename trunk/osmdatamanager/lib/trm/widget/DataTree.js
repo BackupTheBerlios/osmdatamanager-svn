@@ -121,13 +121,49 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 			}
 		}
 		
-		console.debug(this.lastFocused);
+		//console.debug(this.lastFocused);
 		if (this.lastFocused) {
 			var prnt = this.lastFocused.getParent();
 			if (prnt) {
 				this.focusNode(prnt);
 			}
 		}
+	},
+	
+	deleteItemById: function(itemid) {
+		for (var i = (this.model.store._arrayOfAllItems.length - 1); i > -1; i--) {
+			var nd1 = this.model.store._arrayOfAllItems[i];
+			if (nd1) {
+				if (String(nd1.itemid) == String(itemid)) {
+					this.model.store.deleteItem(nd1);
+				}
+			}
+		}
+	},
+	
+	deleteSelectedItem: function() {
+		console.debug("deleteSelectedItem");
+		if (this.selectedTreeItem) {
+			this.model.store.deleteItem(this.selectedTreeItem);
+			this.selectedTreeItem = null;
+			this.selectedItem = null;
+			this.lastFocused = null;
+		}
+		this.removeFocus();
+	},
+	
+	_removeFocus: function(node) {
+		if (node.children) {
+			for (var i=0;i<node.children.length;i++) {
+			  var nd1 = node.children[i];
+			  dojo.removeClass(nd1, "dijitTreeNodeSelected");	
+			  this._removeFocus(nd1);
+			}
+		}
+	},
+	
+	removeFocus: function(node) {
+		this._removeFocus(this.domNode);
 	},
 	
 	getSelectedParentGroupId: function() {

@@ -94,7 +94,7 @@
 					echo application_getMessage($pc);
 					//echo application_getMessage($lst1);	
 				} else {
-					echo application_getMessage(msg_failed);	
+					echo msg_empty;	
 				}
 			}
 			

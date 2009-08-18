@@ -185,7 +185,7 @@
 	<div id="dialog_info"></div> 
 	
 	<!-- Popup -->
-	<div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="false" targetNodeIds="mainmenu_content" style="display: none;" >
+	<div dojoType="dijit.Menu" id="trmPopup" onOpen="gl_application.groupTreeOpenmenu(this)" contextMenuForWindow="true" targetNodeIds="mainmenu_content" style="display: none;" >
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_loaddata" field="display" onClick="gl_application.displaySelected()">Anzeigen</div> 
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_edit" field="edit" onClick="gl_application.showEdit()">Bearbeiten</div>		
 	  	<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_remove" field="remove" onClick="gl_application.doRemove()" >Entfernen</div>
@@ -223,7 +223,7 @@
 	</div>
 	
 	<div id="dlg_loading" class="loading_hidden">
-		<img src="images/ajax-loader.gif" style="float:left;"></img>loading...
+		<img src="images/ajax-loader.gif" style="float:left;padding: 4px;"></img>loading...
 	</div>
 
 	

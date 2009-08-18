@@ -202,10 +202,7 @@ dojo.declare("DijitClient2", Application2, {
 			try {
 				if (response == "msg.delok") {
 					//gl_groupmanager.getRootGroups();
-					if (gl_tree.selectedTreeItem) {
-						gl_tree.model.store.deleteItem(gl_tree.selectedTreeItem);
-						gl_tree.selectedTreeItem = null;
-					}
+					gl_tree.deleteSelectedItem();
 				}
 			} catch(e) {
 				console.error(e);
@@ -582,9 +579,10 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} callback
 		 */
 		deletePoi: function(item, callback) {
-			if (confirm(item.itemname + " aus löschen ?")) { //TODO mehrsprachig
+			if (confirm(this.nls["delete"] + " " + item.itemname + " ?")) { 
 				var pm = new PoiManager();										
 				pm.deletePoi(item.itemid, callback);
+				gl_tree.deleteItemById(item.itemid);
 			}
 		},
 		

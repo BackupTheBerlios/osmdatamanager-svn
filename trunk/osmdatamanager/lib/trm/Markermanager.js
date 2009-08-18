@@ -23,7 +23,6 @@ dojo.declare("MarkerManager", Serverconnection, {
 		 */
 		constructor: function(){
      		this.markerlist = new Array();
-			this.itemlist   = new Array(); //list of item if you use the addItem function
 			
 			this.AutoSizeAnchoredBubble = OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, {
 		            'autoSize': true
@@ -132,51 +131,56 @@ dojo.declare("MarkerManager", Serverconnection, {
 		 * @param {Object} iconurl
 		 */
 		addMarker: function(latlon, popupClass, popupContentHTML, closeBox, overflow,layer,iconurl,markerid) {
-	
-	            var feature = new OpenLayers.Feature(layer, latlon); 
-	            feature.closeBox = closeBox;
-	            feature.popupClass = popupClass;
-	            feature.data.popupContentHTML = popupContentHTML;
-	            //feature.data.overflow = (overflow) ? "auto" : "hidden";
-	                    
-	            //var marker = feature.createMarker();
-	            			
-				if ((iconurl != null) && (iconurl != "")) {
-					var ico = new OpenLayers.Icon(iconurl, new OpenLayers.Size(16, 16),  new OpenLayers.Pixel(0, -16));
-					//ico.url = iconurl;
-					var marker = new OpenLayers.Marker(latlon,ico);
-					marker.feature = feature;
-					marker.markerid = markerid;	
-				} else {
-					var marker = new OpenLayers.Marker(latlon);
-					marker.feature = feature;
-					marker.markerid = markerid;	
+				try {
+					var feature = new OpenLayers.Feature(layer, latlon);
+					feature.closeBox = closeBox;
+					feature.popupClass = popupClass;
+					feature.data.popupContentHTML = popupContentHTML;
+					//feature.data.overflow = (overflow) ? "auto" : "hidden";
+					
+					//var marker = feature.createMarker();
+					
+					if ((iconurl != null) && (iconurl != "")) {
+						var ico = new OpenLayers.Icon(iconurl, new OpenLayers.Size(16, 16), new OpenLayers.Pixel(0, -16));
+						//ico.url = iconurl;
+						var marker = new OpenLayers.Marker(latlon, ico);
+						marker.feature = feature;
+						marker.markerid = markerid;
+					}
+					else {
+						var marker = new OpenLayers.Marker(latlon);
+						marker.feature = feature;
+						marker.markerid = markerid;
+					}
+					
+					var markerClick = function(evt){
+						if (this.popup == null) {
+							this.popup = this.createPopup(this.closeBox);
+							//this.popup.closeOnMove = true;
+							//this.popup.setOpacity(0.8);
+							gl_map.addPopup(this.popup);
+						//this.popup.show();
+						}
+						else {
+							this.popup.toggle();
+						}
+						//currentPopup = this.popup;
+						OpenLayers.Event.stop(evt);
+					};
+					
+					marker.events.register("mousedown", feature, markerClick);
+					layer.addMarker(marker);
+					this.markerlist.push(marker);
+				} catch(e) {
+					console.error(e);
 				}
-				
-				var markerClick = function (evt) {
-					if (this.popup == null) {
-	                    this.popup = this.createPopup(this.closeBox);
-						//this.popup.closeOnMove = true;
-						//this.popup.setOpacity(0.8);
-						gl_map.addPopup(this.popup);
-	                    //this.popup.show();
-	                } else {
-	                    this.popup.toggle();
-	                }
-	                //currentPopup = this.popup;
-	                OpenLayers.Event.stop(evt);
-	            };
-	            
-				marker.events.register("mousedown", feature, markerClick);
-				layer.addMarker(marker);
-				this.markerlist.push(marker);
 	    },
 		
 		/**
 		 * 
 		 * @param {Object} latlon
 		 * @param {Object} layer
-		 */		
+		 * /		
 		addTestmarker: function(latlon, layer) {
 			popupClass = OpenLayers.Popup.AnchoredBubble;
 	        popupContentHTML = '<img src="pic1.png"></img>';
@@ -189,12 +193,13 @@ dojo.declare("MarkerManager", Serverconnection, {
 		 * @param {Object} latlon
 		 * @param {Object} layer
 		 * @param {Object} description
-		 */
+		 * /
 		addTestmarker2:function(latlon, layer, description) {
 			popupClass = OpenLayers.Popup.FramedCloud;
 	        popupContentHTML = "<p>"+description+"</p>";
 			this.addMarker(latlon,popupClass, popupContentHTML, true,true,layer); 		
 		},
+		*/
 		
 		/**
 		 * 
@@ -206,7 +211,7 @@ dojo.declare("MarkerManager", Serverconnection, {
 				//var f1 = m1.feature;
 				if (m1) {
 					layer.removeMarker(m1);
-					this.markerlist.pop(m1);
+					this.markerlist.pop();
 				}
 			}
 		},
@@ -218,7 +223,15 @@ dojo.declare("MarkerManager", Serverconnection, {
 		 */
 		removeMarker: function(layer, marker) {
 			layer.removeMarker(marker);
-			this.markerlist.pop(marker);  //TODO;
+			var idx = -1;
+			for (var i=0;i<this.markerlist.length;i++){
+				var m1 = this.markerlist[i];
+				if (marker == m1) {
+					idx = i;
+					break;
+				}
+			}
+			this.arrayRemove(this.markerlist,idx);
 			marker.destroy();
 		},
 		
@@ -227,6 +240,7 @@ dojo.declare("MarkerManager", Serverconnection, {
 		  array.length = from < 0 ? array.length + from : from;
 		  return array.push.apply(array, rest);
 		},
+		
 		/*
 		removeItem: function(item) {
 			console.debug(this.itemlist.length);
@@ -250,22 +264,26 @@ dojo.declare("MarkerManager", Serverconnection, {
 		 * @param {Object} iconname
 		 */
 		addPoiMarker: function(latlon, layer, description,iconname,markerid) {
-			var popupClass = this.AutoSizeAnchoredBubble2;
-	        //popupContentHTML = '<img src="pic1.png"></img>';
-			var popupContentHTML = "<p>"+description+"</p>";
-			//alert(popupContentHTML);
-			
-			if (this.markerExists(latlon)) {
-				this.updatePoiMarker(latlon, layer, description,iconname,markerid);
-				return;
+			try {
+				var popupClass = this.AutoSizeAnchoredBubble2;
+				//popupContentHTML = '<img src="pic1.png"></img>';
+				var popupContentHTML = "<p>" + description + "</p>";
+				//alert(popupContentHTML);
+				
+				if (this.markerExists(latlon)) {
+					this.updatePoiMarker(latlon, layer, description, iconname, markerid);
+					return;
+				}
+				
+				if (this.markerExistsById(markerid)) {
+					this.updatePoiMarker(latlon, layer, description, iconname, markerid);
+					return;
+				}
+				
+				this.addMarker(latlon, popupClass, popupContentHTML, true, true, layer, iconname, markerid);
+			} catch(e) {
+				console.error(e);
 			}
-			
-			if (this.markerExistsById(markerid)) {
-				this.updatePoiMarker(latlon, layer, description,iconname,markerid);
-				return;
-			}
-			
-			this.addMarker(latlon,popupClass, popupContentHTML, true,true,layer,iconname,markerid); 		
 		},
 		
 		/**

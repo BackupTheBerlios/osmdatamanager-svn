@@ -20,6 +20,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 	},
 	
 	_cb_createPoi: function(response, ioArgs) {
+		this._resetFields();
 		this.hide();	
 	},
 	
@@ -27,6 +28,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 		if (response != "msg.failed") {
 			this.onUpdatePoi(response);
 		}
+		this._resetFields();
 		this.hide();	
 	},
 	
@@ -66,8 +68,12 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 	show: function(isupdate) {
 		this.inherited(arguments);
 		if (this.onlyshow) {
-			this._setTag(this.dataitem.tagname);
+			if (this.dataitem) {
+				this._setTag(this.dataitem.tagname);
 			//this.inherited(arguments);
+			} else {
+				this._setTag("standard_poi");
+			}
 			return;
 		}
 		
@@ -75,6 +81,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 			this._loadData();
 		} else {
 			this._resetFields();
+			this._setTag("standard_poi");
 			this.dataitem = null;
 		}
 		

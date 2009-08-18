@@ -71,6 +71,9 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			if (this.dlg_btnCancel)
 				this.dlg_btnCancel.containerNode.innerHTML = this.nls["cancel"];
 			
+			if (this.dlg_btnClose)
+				this.dlg_btnClose.containerNode.innerHTML = this.nls["close"];	
+			
 			if (this.dlg_btnZoomLevelFromMap)
 				this.dlg_btnZoomLevelFromMap.containerNode.innerHTML = this.nls["zoomlevelfrommap"];	
 		}
@@ -342,6 +345,10 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		this.inherited(arguments);
 		if (! this.isupdate) {
 			this._loadTags();
+		}
+		
+		if (this.dlg_tbItemname) {
+			this.dlg_tbItemname.focus();
 		}
 	}
 	

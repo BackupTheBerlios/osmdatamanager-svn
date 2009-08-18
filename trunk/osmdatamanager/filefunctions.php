@@ -77,18 +77,7 @@
 				}
 				$ff->deleteInvalid($usr->getUid());
 			}
-			
-			//msg_getfiles
-			/* old one
-			if ($action == msg_getfiles) {
-				$lst1 = $ff->getFiles($usr->getUid());
-				if ($lst1 != null) {
-					echo application_getMessage($lst1);
-				} else {
-					echo application_getMessage(msg_failed);
-				}
-			}*/
-			
+					
 			//$files = array();
 			if ($action == msg_getfiles) {
 				$lst1 = $ff->getFiles($usr->getUid());
@@ -101,7 +90,7 @@
 					
 					echo application_getMessage($fc);
 				} else {
-					echo application_getMessage(msg_failed);
+					echo msg_empty;
 				}
 			}
 			

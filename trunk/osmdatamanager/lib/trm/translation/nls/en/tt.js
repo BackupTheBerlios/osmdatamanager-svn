@@ -6,6 +6,7 @@
 	"login_failed": "Login failed",
 	"cancel": "Cancel",
 	"ok":"Ok",
+	"close": "Close",
 	"login":"Login",
 	"showhomebase":"Homebase",
 	"display":"Display",

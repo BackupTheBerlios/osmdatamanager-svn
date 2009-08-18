@@ -265,11 +265,18 @@
 		 * @param $aPoiId Object
 		 */
 		function deletePoi($aUsrId,	$aPoiId) {
-			$delquery = "DELETE FROM `tab_poi` WHERE (itemid = $aPoiId) AND (usrid = $aUsrId)";
-			if ($this->executeQuery($delquery) == null)
+			$delquery1 = "DELETE FROM `tab_poi` WHERE (itemid = $aPoiId) AND (usrid = $aUsrId)";
+			if ($this->executeQuery($delquery1) == null)
 			{
 				return false;
 			}
+			
+			$delquery2 = "DELETE FROM `tab_grp_item` WHERE (childid = $aPoiId) AND (usrid = $aUsrId)";
+			if ($this->executeQuery($delquery2) == null)
+			{
+				return false;
+			}
+			
 			return true;							
 		}
 		

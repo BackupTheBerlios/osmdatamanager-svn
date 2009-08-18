@@ -15,6 +15,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	widgetsInTemplate: true,
 	nls: null,
 	viewMode: "",
+	isDragOperation: false,
 	templatePath:    dojo.moduleUrl('trm.widget', 'ItemManager.html'),
 	_gridStructure:null ,
 	_store: null,
@@ -39,11 +40,31 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 					onCellMouseOver: dojo.hitch(this,this._onCellMouseOver),
 					onCellContextMenu: dojo.hitch(this,this._onCellContextMenu),
 					onStyleRow: dojo.hitch(this,this._onStyleRow),
+					onRowClick: dojo.hitch(this,this._onRowClick),
 					structure: this._gridStructure
 		}, this.trmItemManagerGridNode);
 		this._setTranslations();
-		this.popup.targetNodeIds = this.grid.domNode.id;
+		
+		//this.popup.targetNodeIds = [this.grid.domNode.id,this.domNode.id];
+		//console.debug(this.popup.targetNodeIds);
+		//this.popup.startup();
+		dojo.subscribe("/dnd/start", null, dojo.hitch(this,this._dndStart));
+		dojo.subscribe("/dnd/cancel", null, dojo.hitch(this,this._dndCancel));
+		dojo.subscribe("/dnd/drop", null, dojo.hitch(this,this._dndDrop));
+
 		this.grid.startup();
+	},
+	
+	_dndStart: function() {
+		this.isDragOperation = true;
+	},
+	
+	_dndCancel: function() {
+		this.isDragOperation = false;
+	},
+	
+	_dndDrop: function() {
+		this.isDragOperation = false;
 	},
 	
 	_setTranslations: function() {
@@ -58,7 +79,9 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 
 		if (this.dlg_btnGpx)
 			this.dlg_btnGpx.label = this.nls["displaygpxfiles"];
-			
+		
+		if (this.dlg_btnClose)
+			this.dlg_btnClose.containerNode.innerHTML = this.nls["close"];
 	},
 	
 	_getIconname1: function(item) {
@@ -101,6 +124,9 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	 */
 	_onCellMouseOver: function(sender) {
 		try {
+			if (this.isDragOperation == true)
+				return;
+			
 			this.currentItem = null;
 			var c1 = dojo.coords(sender.target.parentNode, true);
 			if (c1) {
@@ -138,6 +164,9 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	},
 	_onCellContextMenu: function(e) {
 		//_onCellContextMenu
+	},
+	_onRowClick: function(e) {
+		
 	},
 	hideDndSource: function() {
 		var src1 = document.getElementById("dnd_source");
@@ -199,6 +228,31 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	_okClick: function(e) {
 		this.inherited(arguments);
 	},
+	
+	_disableAllPopupItems: function() {
+		this.itmCrtPoi.attr("disabled","disabled");
+		this.itmEdt.attr("disabled","disabled");
+		this.itmShow.attr("disabled","disabled");
+		this.itmDel.attr("disabled","disabled");
+	},
+	
+	_popupOpenmenu: function(sender) {
+		this._disableAllPopupItems();
+		this.itmCrtPoi.attr("disabled",false);
+		if (this.currentItem) {
+			if (String(this.currentItem.itemtype).toLowerCase() == "file") {
+				this.itmEdt.attr("disabled",false);
+				this.itmShow.attr("disabled",false);
+			}
+			
+			if (String(this.currentItem.itemtype).toLowerCase() == "poi") {
+				//this.itmEdt.attr("disabled",false);
+				this.itmDel.attr("disabled",false);		
+				this.itmShow.attr("disabled",false);
+			}
+		}
+	},
+	
 	show: function() {
 		this.inherited(arguments);
 		this.loadGpxFiles();
