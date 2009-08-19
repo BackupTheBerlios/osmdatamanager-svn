@@ -32,10 +32,10 @@
 	 define ("msg_addgrpitm","msg.addgrpitm");	
 		 	 
 	 define ("msg_getchildgrps","msg.getchildgrps");
-	 define ("msg_getgrpfiles","msg.getgrpfiles");
-	 define ("msg_getgrppois","msg.getgrppois");
-	 define ("msg_getgrpfilesrecursiv","msg.getgrpfilesrecursiv");
-	 define ("msg_getgrppoisrecursiv","msg.getgrppoisrecursiv");
+	 //define ("msg_getgrpfiles","msg.getgrpfiles");
+	 //define ("msg_getgrppois","msg.getgrppois");
+	 //define ("msg_getgrpfilesrecursiv","msg.getgrpfilesrecursiv");
+	 //define ("msg_getgrppoisrecursiv","msg.getgrppoisrecursiv");
 	 define ("msg_getgrpitems","msg.getgrpitems");
 	 define ("msg_getpublicgrpitems","msg.getpublicgrpitems");	
      define ("msg_remgrpitm","msg.remgrpitm");
@@ -49,8 +49,8 @@
 	 define ("msg_updatepoi","msg.updatepoi");
 	 //
 	 //define ("msg_addgrppois","msg.addgrppois");	 
-	 define ("msg_remgrppois","msg.remgrppois");
-	 define ("msg_remgrpfiles","msg.remgrpfiles");
+	 //define ("msg_remgrppois","msg.remgrppois");
+	 //define ("msg_remgrpfiles","msg.remgrpfiles");
 	 
 	 	 
 	 //login - out - user
@@ -278,24 +278,18 @@
 			function createTableStructure() {
 				 $sqlFileToExecute = "osmdatamanager.sql";
 				 $f = fopen($sqlFileToExecute,"r");
-			     $sqlFile = fread($f,filesize($sqlFileToExecute));
-			     $sqlArray = explode(';',$sqlFile);	
-					
-				if ($sqlArray != null) {
-				   foreach ($sqlArray as $stmt) {
-				       if (strlen($stmt)>3){
-				       	  	$this->executeQuery($stmt);
-							/*				
-				              if (!) {
-				              //if (!$result){
-				                 $sqlErrorCode = mysql_errno();
-				                 $sqlErrorText = mysql_error();
-				                 $sqlStmt      = $stmt;
-				                 echo "error executiong sql: ".$stmt."<br/>";
-								 break;
-				              }    
-				            */
-				       }
+			     if ($f === false) {
+			     	echo "could not open: ".$sqlFileToExecute."!! <br/>"; 
+			     } else {
+					$sqlFile = fread($f,filesize($sqlFileToExecute));
+				     $sqlArray = explode(';',$sqlFile);	
+						
+					if ($sqlArray != null) {
+					   foreach ($sqlArray as $stmt) {
+					       if (strlen($stmt)>3){
+					       	  	$this->executeQuery($stmt);
+					       }
+						}
 					}
 				}
 			}
@@ -307,9 +301,10 @@
 			 */						
 			function executeQuery($aQuery)
 			{  
-				//check if read only mode (no insert, update and delete allowed)
+				
 				$this->lastid = -1;
 				
+				//check if read only mode (no insert, update and delete allowed)
 				if ($this->readonly) {
 					$ro = strpos(strtolower($aQuery), "insert");
 					if ($ro !== false) {

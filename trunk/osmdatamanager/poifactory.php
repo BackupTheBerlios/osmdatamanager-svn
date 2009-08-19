@@ -228,13 +228,44 @@
 			{   
 				while ($row = mysql_fetch_row($result))
 				{
-					$poiname = $row[3];
-					if (strtolower($poiname) == strtolower($aPoiName))
+					$poi = new Poi();
+					$this->parse_Poi($poi,$row,$result);
+					
+					if (strtolower($poi->itemname) == strtolower($aPoiName))
 						return true;
 				}
 			}
 			return false;
 		}
+		
+		/**
+		 * returns true if a poi at the given position exists
+		 * @return 
+		 * @param $aUsrId Object
+		 * @param $aLat Object
+		 * @param $aLon Object
+		 */
+		function poiExistsByPos($aUsrId, $aLat, $aLon)
+		{
+			$qry = "SELECT * FROM `tab_poi` WHERE (usrid = $aUsrId) AND (lat = \"$aLat\") AND (lon = \"$aLon\")"; 
+			$result = $this->executeQuery($qry);
+					
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					$poi = new Poi();
+					$this->parse_Poi($poi,$row,$result);
+					
+					if (($poi->lat = $aLat) && ($poi->lon = $aLon)) {
+						return true;
+					}
+				
+				}
+			}
+			return false;
+		}
+		
 		
 		/**
 		 * creates a new poi

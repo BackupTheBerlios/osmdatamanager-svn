@@ -134,6 +134,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 				if (itm1) {
 					this.currentItem = itm1;
 					
+					
 					var s1 = document.getElementById("dnd_source");
 					if (s1) {
 						var dndsrc = this._getChildnode(s1,"DIV");

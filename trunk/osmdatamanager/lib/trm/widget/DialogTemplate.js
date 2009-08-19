@@ -5,13 +5,11 @@
  * 
 dojo.provide("trm.widget.GroupDialog");
 dojo.require("trm.widget._TrmBaseDialog");
-dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 
 //dojo.requireLocalization("trm.translation", "tt");
 
-dojo.declare("trm.widget.UserDialog", [trm.widget._TrmWidget, dijit._Templated], {
-	widgetsInTemplate: true,
+dojo.declare("trm.widget.UserDialog", [trm.widget._TrmBaseDialog], {
 	templatePath:    dojo.moduleUrl('trm.widget', 'UserDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);

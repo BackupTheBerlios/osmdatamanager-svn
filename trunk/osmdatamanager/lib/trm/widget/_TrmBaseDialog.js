@@ -28,12 +28,17 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	dataitem: null,
 	parentitem: null,
 	isupdate: false,
+	islongtextkey: false,
 	nls: null,
 	onlyshow: false,
 	postCreate: function() {
 		this.inherited(arguments);
 		this.nls = dojo.i18n.getLocalization("trm.translation", "tt");
 		this._setTranslations();		
+		dojo.connect(this,"onKeyDown",this,"_onKeyDown");		
+		
+		dojo.connect(this.dlg_taLongText,"onKeyDown",this,"_onLongTextKeyDown");		
+		
 		/*
 		this.dlg_tbItemname = null;
 		this.dlg_tbLat = null;
@@ -203,38 +208,58 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * checks if all components have data
 	 */
 	_dataOk: function() {
-		
 		if (this.dlg_tbItemname) {
-			if (this.dlg_tbItemname.attr("value").trim() == "")
+			if (document.getElementById(this.dlg_tbItemname.id).value.trim() == "")
 				return false;
 		}
-		
+
 		if (this.dlg_tbLat) {
-			if (this.dlg_tbLat.attr("value").trim() == "")
+			if (document.getElementById(this.dlg_tbLat.id).value.trim() == "")
 				return false;
 		}
 		
 		if (this.dlg_tbLon) {
-			if (this.dlg_tbLon.attr("value").trim() == "")
+			if (document.getElementById(this.dlg_tbLon.id).value.trim() == "")
 				return false;
 		}
 		
 		if (this.dlg_spinZoomlevel) {
-			if (this.dlg_spinZoomlevel.attr("value") == "")
+			if (document.getElementById(this.dlg_spinZoomlevel.id).value == "")
 				return false;
 		}
 		
 		if (this.dlg_taLongText) {
-			if (this.dlg_taLongText.attr("value").trim() == "")
+			if (document.getElementById(this.dlg_taLongText.id).value.trim() == "")
 				return false;
 		}
 		
 		if (this.dlgGrp_cmbTagname) {
-			if (this.dlgGrp_cmbTagname.attr("value").trim() == "")
+			if (document.getElementById(this.dlgGrp_cmbTagname.id).value.trim() == "")
 				return false;
 		}
 					
 		return true;	
+	},
+	
+	_onKeyDown: function(e) {
+		//console.debug("_onKeyDown");
+		
+		if (this.islongtextkey) {
+			this.islongtextkey = false;
+			return;
+		}
+		
+		if (e.keyCode == 13) {
+			this._okClick();
+		}
+		
+		if (e.keyCode == 27) {
+			this._cancelClick();
+		}
+	},
+	
+	_onLongTextKeyDown: function(e) {
+		this.islongtextkey = true;
 	},
 	
 	/**
@@ -258,23 +283,25 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 				parentid = this.parentitem.itemid;
 								
 			if (this.dlg_tbItemname) {
-				itemname = this.dlg_tbItemname.attr("value");
+				//itemname = this.dlg_tbItemname.attr("value");
+				itemname = document.getElementById(this.dlg_tbItemname.id).value;
 			}
-				
+			
 			if (this.dlg_tbLat) {
-				lat = this.dlg_tbLat.attr("value");
+				lat = document.getElementById(this.dlg_tbLat.id).value;
 			}
 			
 			if (this.dlg_tbLon) {
-				lon = this.dlg_tbLon.attr("value");
+				lon = document.getElementById(this.dlg_tbLon.id).value;
 			}
 			
 			if (this.dlg_spinZoomlevel) {
-				zoomlevel = this.dlg_spinZoomlevel.attr("value");
+				zoomlevel = document.getElementById(this.dlg_spinZoomlevel.id).value;
 			}
 			
 			if (this.dlg_taLongText) {
-				description = this.dlg_taLongText.attr("value");
+				//description = this.dlg_taLongText.attr("value");
+				description = document.getElementById(this.dlg_taLongText.id).value;
 			}
 			
 			var result = {

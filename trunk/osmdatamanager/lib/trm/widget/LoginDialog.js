@@ -33,6 +33,10 @@ dojo.declare("trm.widget.LoginDialog", [trm.widget._TrmBaseDialog], {
 			//alert(nls["loginfailed"]);
 			this._resetFields();
 			alert(this.nls["login_failed"]);
+			
+			if (this.trmLoginInputUserNode) {
+				this.trmLoginInputUserNode.focus();
+			}
 		}
 	},
 	_resetFields: function() {
@@ -43,8 +47,9 @@ dojo.declare("trm.widget.LoginDialog", [trm.widget._TrmBaseDialog], {
 		console.debug("okclick");
 		
 		var username = this.trmLoginInputUserNode.value;
-		var password = this.trmLoginInputPasswordNode.value;
-		
+		//var password = this.trmLoginInputPasswordNode.value;
+		var password = document.getElementById(this.trmLoginInputPasswordNode.id).value;
+				
 		if ((username == null) || (username  == "")) {
 			alert(this.nls["invalidusername"]);
 			return;	
@@ -68,6 +73,10 @@ dojo.declare("trm.widget.LoginDialog", [trm.widget._TrmBaseDialog], {
 		this.inherited(arguments);
 		//this._position();
 		this._resetFields();
+		
+		if (this.trmLoginInputUserNode) {
+			this.trmLoginInputUserNode.focus();
+		}
 		
 	},
 	hide: function() {

@@ -2,6 +2,7 @@
 	background-color:#6394a9;
 	border: solid 1px #285d74;	
 	padding:8px;
+	z-index:1000;
 }
 
 .trmHidden {
@@ -13,6 +14,7 @@
 	display:block;
 	visibility: visible;
 	position: absolute;
+	z-index:1000;
 }
 
 .tundra .standard {

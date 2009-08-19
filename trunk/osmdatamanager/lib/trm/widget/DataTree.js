@@ -8,12 +8,10 @@ dojo.require("dijit._tree.dndSource");
 //dojo.requireLocalization("trm.translation", "tt");
 
 dojo.declare("trm.widget.DataTree", [dijit.Tree], {
-	tags: null,
 	selectedItem: {},
 	selectedTreeItem: null,
 	postCreate: function() {
 		this.inherited(arguments);
-		//this.tags = new Array();
 	},
 	
 	getIconClass: function(/*dojo.data.Item*/item, /*Boolean*/ opened){
@@ -29,11 +27,6 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		} catch (e) {
 			console.error(e);
 		}
-		/*
-		if (gl_application) {
-			return this.inherited(arguments);
-		}
-		*/
 	},
 	
 	
@@ -52,43 +45,6 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 	onMouseOver: function(event) {
 		this.inherited(arguments);
 	},
-	
-	/* //TODO kann weg
-	_clearNode: function(node) {
-		try {
-			
-			if (node.children) {
-				for (var i = (node.children.length - 1); i > -1; i--) {
-					var nd1 = node.children[i];
-					//console.debug(String(nd1.itemname));
-					this._clearNode(nd1);
-				}
-			}
-			/*
-			var parent = node.getParent();
-			if (parent) {
-				parent.removeChild(node);
-			}* /
-				
-			console.debug(node);
-			this.model.store.deleteItem(node);
-			//node.destroyRecursive();
-			
-			/*
-			for (var i = (this.model.store._arrayOfAllItems.length - 1); i > 0; i--) {
-					var nd1 = this.model.store._arrayOfAllItems[i];
-					//this._clearNode(nd1);
-					console.debug(String(nd1.itemname));
-					this.model.store.deleteItem(nd1);
-				}
-			* /
-			
-			
-		} catch (e) {
-			console.error(e);
-		}
-	},
-	*/
 	
 	/**
 	 * copy's data from sourceItem into a destItem in the ItemFileWriteStore
@@ -121,7 +77,6 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 			}
 		}
 		
-		//console.debug(this.lastFocused);
 		if (this.lastFocused) {
 			var prnt = this.lastFocused.getParent();
 			if (prnt) {
@@ -130,6 +85,10 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		}
 	},
 	
+	/**
+	 * deletes the item with the given itemid from the tree and also from the itemstore
+	 * @param {Object} itemid
+	 */
 	deleteItemById: function(itemid) {
 		for (var i = (this.model.store._arrayOfAllItems.length - 1); i > -1; i--) {
 			var nd1 = this.model.store._arrayOfAllItems[i];
@@ -141,8 +100,10 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		}
 	},
 	
+	/**
+	 * deletes the current selected item
+	 */
 	deleteSelectedItem: function() {
-		console.debug("deleteSelectedItem");
 		if (this.selectedTreeItem) {
 			this.model.store.deleteItem(this.selectedTreeItem);
 			this.selectedTreeItem = null;
@@ -152,6 +113,10 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		this.removeFocus();
 	},
 	
+	/**
+	 * removes the dijitTreeNodeSelected css class from given node 
+	 * @param {Object} node
+	 */
 	_removeFocus: function(node) {
 		if (node.children) {
 			for (var i=0;i<node.children.length;i++) {
@@ -162,10 +127,16 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		}
 	},
 	
-	removeFocus: function(node) {
+	/**
+	 * removes the dijitTreeNodeSelected css class from all nodes
+	 */
+	removeFocus: function() {
 		this._removeFocus(this.domNode);
 	},
 	
+	/**
+	 * 
+	 */
 	getSelectedParentGroupId: function() {
 		if (this.lastFocused) {
 			var prnt = this.lastFocused.getParent();
@@ -212,6 +183,11 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		}
 	},
 	
+	/**
+	 * 
+	 * @param {Object} tagname
+	 * @param {Object} opened
+	 */
 	_getIconName: function(tagname, opened) {
 			
 		if (gl_application) {

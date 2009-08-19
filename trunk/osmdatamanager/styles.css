@@ -93,7 +93,7 @@ body {
 	visibility: visible;
 	/*display:block;*/
 	position: absolute;
-	z-index:20;
+	z-index:1010;
 	color:#000000;
 	background-color:#ffffff;
 	padding: 4px;

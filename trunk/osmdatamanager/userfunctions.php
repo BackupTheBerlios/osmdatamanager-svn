@@ -33,7 +33,6 @@
 	  $zoomlevel = $_REQUEST['zoomlevel'];
 	  
 	  global $gl_loglevel;
-	  $gl_loglevel 	= 1;
   } else {
   	  //uncomment for debug
 	  /*

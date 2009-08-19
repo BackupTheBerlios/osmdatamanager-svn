@@ -37,7 +37,6 @@
 		$itemtype       = $_REQUEST['itemtype'];
 		$treedata       = $_REQUEST['treedata'];
 		global $gl_loglevel;
-		$gl_loglevel 	= 1;
 	} else {
 		//uncomment for debug
 		/*		
@@ -138,91 +137,22 @@
 				
 				if ($parentgroupid == -1) {
 					$lst1 = $fac->getRootGroups($usr->getUid());
-				} else {
-					
-				}
+				} 
 				
 				if ($lst1 != null)
 				{
-					//echo $action;				
-					
 					for ($i=0;$i<count($lst1);$i++) {
-							//$grp = $lst1[$i];
-							//$lst1[$i]->prepareForTree(-1);
-							//$fac->parseItems($usr->getUid(),$grp);
-							//$x1 = $fac->parseChildren($usr->getUid(),$grp,$grp);
-							//echo $lst1[$i]->itemid;
-							//echo "start<br>";
-							$fac->parseChildren($usr->getUid(),$lst1[$i]);
-							//echo "root:".$grp->itemid;"<br>";
-							//$x1 = $fac->addChildGroups($usr->getUid(),$grp);
-							
-							//echo "root ret:".$x1->itemid."<br>";
-							/*
-							echo "<br>------ret-----:<br>";
-							var_dump($g1);
-							*/
-														
+							$fac->parseChildren($usr->getUid(),$lst1[$i]);							
 							$lst1[$i]->prepareForTree(-1);
 							$gc->addGroup($lst1[$i]);
-							//var_dump($gc);
-							
-							//$fac->printGroup($lst1[$i]);														
 					}
-					
-					
 				}
 								
 				echo application_getMessage($gc);
-				/*
-				if ($parentgroupid == -1) {
-					$lst1 = $fac->getRootGroups($usr->getUid());
-				}
-				
-				if ($lst1 != null) {
-					echo application_getMessage($lst1);
-				} else {
-					echo application_getMessage(msg_failed);
-				}
-				*/
 			}
-			
-			
-			//msg_addgrpfiles
-			//TODO weg
-			/*
-			if ($action == msg_addgrpfiles) {							
-				//$fac->addMessage("msg_addgrpfiles");				
-				if (isset($files))
-				{
-					$lst1 = $js2->decode(str_replace("\\\"","\"",$files));
-					
-					//$encoded = $files;
-					if ($lst1 != null)
-					{						
-						$ok = true;
-						$fn = "";
-						for ($i=0;$i<count($lst1);$i++) {
-							$fn = $lst1[$i];
-							if (! ($fac->addGroupFile($groupid, $usr->getUid(), $fn))) {
-								$ok = false;
-							}
-						}
 						
-						if ($ok) {
-							echo application_getMessage(msg_addok);
-						} else {
-							echo application_getMessage(msg_failed);
-						}
-						
-					}
-				} else {
-					echo application_getMessage(msg_failed);
-				}
-			}
-			*/
-			
 			//msg_remgrpfiles
+			/*
 			if ($action == msg_remgrpfiles) {							
 				//$fac->addMessage("msg_addgrpfiles");				
 				if (isset($files))
@@ -257,9 +187,11 @@
 					echo application_getMessage(msg_failed);
 				}
 			}
+			*/
 			
 			
 			//msg_getgrpfiles
+			/*
 			if ($action == msg_getgrpfiles) {
 				$lst1 = $fac->getGroupFiles($usr->getUid(), $groupid);
 				if ($lst1 != null) {
@@ -300,6 +232,7 @@
 					echo application_getMessage(msg_failed);
 				}
 			}
+			*/
 			
 			//msg_getchildgrps
 			if ($action == msg_getchildgrps) {
@@ -346,45 +279,7 @@
 				if (isset($grpitmid)) {
 				   $fac->addGroupItem($groupid,$usr->getUid(),$grpitmid,$itemtype);
 				}
-				
-				//childgroups
-				$lst1 = $fac->getChildGroups($usr->getUid(), $groupid);
-				if ($lst1 != null) {
-					for ($i=0;$i<count($lst1);$i++) {
-						$grp1 = $lst1[$i];
-						array_push($items,$grp1);
-					}
-				}
-				
-				
-				$lst1 = $fac->getGroupItems($usr->getUid(), $groupid);
-				if ($lst1 != null) {
-					for ($i=0;$i<count($lst1);$i++) {
-						$itm1 = $lst1[$i];
-						array_push($items,$itm1);
-					}
-				}
-				
-				
-				/*
-				//groupfiles
-				$lst1 = $fac->getGroupFiles($usr->getUid(), $groupid);
-				if ($lst1 != null) {
-					for ($i=0;$i<count($lst1);$i++) {
-						$fl1 = $lst1[$i];
-						array_push($items,$fl1);
-					}
-				}
-								
-				//grouppois
-				$lst1 = $fac->getGroupPois($usr->getUid(), $groupid);
-				if ($lst1 != null) {
-					for ($i=0;$i<count($lst1);$i++) {
-						$poi1 = $lst1[$i];
-						array_push($items,$poi1);
-					}
-				}
-				*/		
+									
 				if (count($items) > 0) {
 						
 					if (isset($treedata)) {

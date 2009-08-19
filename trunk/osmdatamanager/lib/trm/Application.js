@@ -427,6 +427,21 @@ dojo.declare("Application2", Serverconnection, {
 		},
 		
 		/**
+		 * loads childitems from a group with the given groupname
+		 * @param {Object} groupname
+		 * @param {Object} cb
+		 */
+		getGroupItemsByGroupName: function(groupname, cb){			
+			var params = {
+				"action": "msg.getgrpitems",
+				"groupid": -1,
+				"groupname": groupname
+			}
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php", params,this. _cb_standard);
+		},
+		
+		/**
 		 * 
 		 * @param {Object} description
 		 * @param {Object} filename
@@ -510,7 +525,8 @@ dojo.declare("Application2", Serverconnection, {
 		},
 		
 		/**
-		 * 
+		 * display all groupitems from the given group on the map
+		 * @param {Object} group
 		 */
 		displayGroupItems: function(group) {
 			var cb = {
@@ -519,7 +535,19 @@ dojo.declare("Application2", Serverconnection, {
 			}
 			this.isgrouploading = true;
 			this.getGroupItems(group,cb);
+		},
+		
+		/**
+		 * 
+		 * @param {Object} groupname
+		 */
+		displayGroupItemsByGroupName: function(groupname) {
+			var cb = {
+				target: this,
+				func: this.displayItemList
+			}
+			this.isgrouploading = true;
+			this.getGroupItemsByGroupName(groupname,cb);
 		}
-		
-		
+
 });

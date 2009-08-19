@@ -18,6 +18,7 @@
 	include_once("itemparser.php");
 	include_once("poifactory.php");
 	include_once("filefactory.php");
+	include_once("userfactory.php");
 	
 	/**
 	 * Group
@@ -646,9 +647,47 @@
 						
 					}
 				}
+				//$this->addVirtualGroups($aUserid,$groups);
 				return $groups;
 			}
 			return null;
+		}
+		
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aGroup Object
+		 */
+		function addUsers(&$aGroup) {
+			$uf = new UserFactory();
+			$lst1 = $uf->getAllUsers();
+			if ($lst1 != null) {
+				$aGroup->haschildren = true;	
+				for ($i=0;$i<count($lst1);$i++) {	
+					$lst1[$i]->prepareForTree($aGroup->itemid);
+					$lst1[$i]->tags = null;
+					$aGroup->addChild(&$lst1[$i]);
+				}	
+			}
+		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserid Object
+		 * @param $aList Object
+		 */
+		function addVirtualGroups($aUserid, &$aList) {
+			
+			//Users
+			$grp = new Group();
+			$grp->itemname = "Users";
+			$grp->itemid = "virtual_01";
+			$grp->tagname = "standard";
+			$grp->prepareForTree(-1);
+			$this->addUsers($grp);
+			array_push($aList, $grp);	
 		}
 		
 		

@@ -44,7 +44,7 @@ dojo.declare("MarkerManager", Serverconnection, {
 		 ***********************************************************************************************/
 		
 		/**
-		 * 
+		 * return true if marker with given latlon exists
 		 * @param {Object} latlon
 		 */
 		markerExists: function(latlon) {
@@ -55,6 +55,10 @@ dojo.declare("MarkerManager", Serverconnection, {
 				return false;
 		},
 		
+		/**
+		 * returns true if marker with given markerid exists
+		 * @param {Object} markerid
+		 */
 		markerExistsById: function(markerid) {
 			var m1 = this.getMarkerById(markerid);
 			if (m1 != null)
@@ -78,7 +82,7 @@ dojo.declare("MarkerManager", Serverconnection, {
 		},
 		
 		/**
-		 * 
+		 * returns marker with given latlon
 		 * @param {Object} latlon
 		 */
 		getMarker: function(latlon) {
@@ -92,6 +96,10 @@ dojo.declare("MarkerManager", Serverconnection, {
 			return null;
 		},
 		
+		/**
+		 * returns marker with given markerid
+		 * @param {Object} markerid
+		 */
 		getMarkerById: function(markerid) {
 			for (var i=0;i<this.markerlist.length;i++) {
 				var m1 = this.markerlist[i];
@@ -175,34 +183,9 @@ dojo.declare("MarkerManager", Serverconnection, {
 					console.error(e);
 				}
 	    },
-		
-		/**
-		 * 
-		 * @param {Object} latlon
-		 * @param {Object} layer
-		 * /		
-		addTestmarker: function(latlon, layer) {
-			popupClass = OpenLayers.Popup.AnchoredBubble;
-	        popupContentHTML = '<img src="pic1.png"></img>';
 			
-			this.addMarker(latlon,popupClass, popupContentHTML, true,true,layer); 		
-		},
-		
-		/**	
-		 * 
-		 * @param {Object} latlon
-		 * @param {Object} layer
-		 * @param {Object} description
-		 * /
-		addTestmarker2:function(latlon, layer, description) {
-			popupClass = OpenLayers.Popup.FramedCloud;
-	        popupContentHTML = "<p>"+description+"</p>";
-			this.addMarker(latlon,popupClass, popupContentHTML, true,true,layer); 		
-		},
-		*/
-		
 		/**
-		 * 
+		 * removes all markers from given layer
 		 * @param {Object} layer
 		 */
 		removeMarkers: function(layer) {
@@ -217,7 +200,7 @@ dojo.declare("MarkerManager", Serverconnection, {
 		},
 		
 		/**		
-		 * 
+		 * removes given marker from layer
 		 * @param {Object} layer
 		 * @param {Object} marker
 		 */
@@ -240,21 +223,7 @@ dojo.declare("MarkerManager", Serverconnection, {
 		  array.length = from < 0 ? array.length + from : from;
 		  return array.push.apply(array, rest);
 		},
-		
-		/*
-		removeItem: function(item) {
-			console.debug(this.itemlist.length);
-			for (var i=0;i<this.itemlist.length;i++) {
-				var itm1 = this.itemlist[i];
-				if (String(itm1.itemid) == String(item.itemid)) {
-					this.arrayRemove(this.itemlist,i);
-					console.debug(this.itemlist.length);
-					return;
-				}
-			}
-		},
-		*/	
-	
+					
 		
 		/**
 		 * 

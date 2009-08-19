@@ -1,0 +1,29 @@
+<div class="trmDialog trmHidden">
+	<p>Where are you from ?</p>
+	
+	<table>
+		<tr>
+	      <td><label>Your name:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbItemname" /></td>
+		</tr>
+		
+		<tr>
+	      <td><label dojoAttachPoint="dlg_lblPosition">_Position: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbLat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbLon" /></td>
+		  <td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _getPointClick">...</button></td>	
+		</tr>
+		<tr>
+			<td><label>Your message: </label></td>	 
+		    <td colspan="2"> <textarea dojoType="dijit.form.Textarea" dojoAttachPoint="dlg_taLongText" style="max-width:320px" ></textarea></td>
+	    </tr> 
+	</table>
+	<hr/>
+	
+	<table>
+		<tr class="custombutton1">
+			<td><button  dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnOk" dojoAttachEvent="onClick:_okClick">_Ok</button></td>
+			<td><button  dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnCancel" dojoAttachEvent="onClick:_cancelClick">_Abbrechen</button></td>	
+		</tr>
+	</table>
+</div>

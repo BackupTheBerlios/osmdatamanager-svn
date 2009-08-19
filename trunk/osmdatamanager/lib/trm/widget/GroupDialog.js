@@ -27,11 +27,15 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
 	},
 	_dataOk: function() {
 		//this.inherited(arguments);
-		if (this.dlg_tbItemname) {
-			if (this.dlg_tbItemname.attr("value").trim() == "")
-				return false;
-		}		
-		return true;
+		if (! this.isupdate) {
+			if (this.dlg_tbItemname) {
+				if (this.dlg_tbItemname.attr("value").trim() == "") 
+					return false;
+			}
+			return true;
+		} else {
+			return this.inherited(arguments);
+		}
 	},
 	_okClick: function(e) {
 		//this.inherited(arguments);

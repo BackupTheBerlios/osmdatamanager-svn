@@ -100,7 +100,7 @@ CREATE TABLE `tab_poi` (
   `lon` varchar(50) NOT NULL default '',
   `zoomlevel` int(11) default NULL,
   `tagname` varchar(50) default NULL,
-  PRIMARY KEY  (`itemid`,`usrid`,`itemname`)
+  PRIMARY KEY  (`itemid`,`usrid`)
 ) TYPE=MyISAM AUTO_INCREMENT=103 ;
 
 # --------------------------------------------------------

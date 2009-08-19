@@ -1,9 +1,28 @@
-/*
-* DijitClient -> connection between dijit and the base application
-*
+/**
+    @license
+    This file is part of osmdatamanager.
+
+    osmdatamanager is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, only GPLv2.
+
+    osmdatamanager is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
+	
 */
+
 dojo.declare("DijitClient2", Application2, {
         
+		/**
+		 * DijitClient -> connection between dijit and the base application
+		 * @param {Object} name
+		 * @param {Object} map
+		 */
 		constructor: function(name,map){
 			this.nls = dojo.i18n.getLocalization("trm.translation", "tt");			
 			this.senderdialog = null;        
@@ -11,7 +30,6 @@ dojo.declare("DijitClient2", Application2, {
 			this._id_offset = 1;
         },
 		
-				
 		/**
 		 * add a root group
 		 * @param {Object} group
@@ -44,24 +62,23 @@ dojo.declare("DijitClient2", Application2, {
 		 * @param {Object} data
 		 */
 		_dlgGrp_onOkClick: function(data) {									
-			if (data.itemid != -1) {
+			if (data.itemid != -1) { //update group
 				var cb = {
 					target: this,
 					func: this._updateitem
 				}
-				//function(groupid,groupname,protection,zommlevel,lat,lon,tagname,cb) {
 				gl_groupmanager.updateGroup(data.itemid,data.itemname,data.protection,data.zoomlevel,data.lat,data.lon,data.tagname,cb);
 				
 			}
 			else {
-				if (data.parentid != -1) {
+				if (data.parentid != -1) { //create subgroup
 					var cb = {
 						target: this,
 						func: this._cb_addSubGroup
 					}
 					gl_groupmanager.createSubGroup(data.parentid, data.itemname, cb);
 				}
-				else {
+				else { //create root group
 					var cb = {
 						target: this,
 						func: this._cb_addGroup
@@ -191,6 +208,14 @@ dojo.declare("DijitClient2", Application2, {
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
 			}
+		},
+		
+		/**
+		 * callback after userdata is updated
+		 * @param {Object} user
+		 */
+		_cb_updateUser: function(user) {
+			dijit.byId('btn_login').attr("label", "Logout [" + user.itemname + "]");	
 		},
 		
 		/**
@@ -360,22 +385,15 @@ dojo.declare("DijitClient2", Application2, {
 		},
 				
 		/**
-		 * 
+		 * init's the tree widget
 		 */
 		_initTree: function() {
 			if (gl_tree != null) {
-				//gl_tree.model.store.close();
-				//gl_tree.model.store.save();
-				//gl_tree.model.store.fetch();
-				/*
-				gl_tree.model.store.fetch({
-							query: {
-								'parentid': -1
-							}});
-				*/			
 				gl_tree.refresh();
+				gl_tree.removeFocus();
 				return;
 			}
+			this.showLoading();
 							
 			dojo.require("trm.widget.CustomForestStoreModel");
 			dojo.require("trm.widget.DataTree");			
@@ -383,7 +401,6 @@ dojo.declare("DijitClient2", Application2, {
 			dojo.require("dijit.Tree");
 			
 			var store = new dojo.data.ItemFileWriteStore  ({
-			   //var store = new trm.widget.CustomQueryStore ({
 				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1",
 				clearOnClose: true
 		    });				
@@ -404,6 +421,8 @@ dojo.declare("DijitClient2", Application2, {
 				checkAcceptance: this.dndAccept,
 				checkItemAcceptance: this.treeCheckItemAcceptance
 		    }, "treeThree");
+			gl_tree.removeFocus();
+			this.hideLoading();
 		},
 		
 		/**
@@ -755,6 +774,7 @@ dojo.declare("DijitClient2", Application2, {
 				dlg1 = new trm.widget.UserDialog({}, "dlg_user");
 				dojo.connect(dlg1,"onGetPoint",this,"_onGetPointClick");
 				dojo.connect(dlg1,"onZoomlevelClick",this,"_onZoomlevelClick");		
+				dojo.connect(dlg1,"onUpdateUser",this,"_cb_updateUser");
 			}
 			
 			this.hideLoading();

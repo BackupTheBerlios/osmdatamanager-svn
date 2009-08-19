@@ -129,6 +129,31 @@
 	}
 	
 	/**
+	 * returns a list with all users
+	 * @return 
+	 */
+	function getAllUsers() {
+		$users = array();
+		
+		$qry = "SELECT * FROM `tab_usr` WHERE 1";
+		$result = $this->executeQuery($qry);
+				
+		if ($result != NULL) 
+		{   
+			while ($row = mysql_fetch_row($result))
+			{
+				if ($row != null){
+					$usr = new User();
+					$this->parse_User($usr,$row,$result);
+					array_push($users, $usr);
+				}
+			}
+			return $users;
+		}
+		return null;
+	}
+	
+	/**
 	 * 
 	 * @return 
 	 * @param $userid Object

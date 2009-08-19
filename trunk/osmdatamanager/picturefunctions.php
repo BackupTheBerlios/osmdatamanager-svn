@@ -21,6 +21,8 @@
 	
 	
 	if (application_userisvalid()) {
+		/* //TODO
+		 
    		global $gl_usepicturedir;
    		global $gl_picturedir;
    		global $gl_ftpprefix;
@@ -50,6 +52,7 @@
 			
 			echo application_getMessage($piclist);
 		}
+		*/
 	}
 	
 	

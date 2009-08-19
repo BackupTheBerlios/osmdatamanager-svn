@@ -28,12 +28,12 @@
 		//$georssurl		= $_REQUEST['georssurl'];
 		$poilist		= $_REQUEST['poilist'];
 		$groupid		= $_REQUEST['groupid'];
+		$groupname		= $_REQUEST['groupname'];
 		$poiid	 		= $_REQUEST['poiid'];
 		$tagname 		= $_REQUEST['tagname'];
 		$zoomlevel 		= $_REQUEST['zoomlevel'];
 		//$itemtype       = $_REQUEST['itmetype'];
 		global $gl_loglevel;
-		$gl_loglevel 	= 1;
 	} else {
 		//uncomment for debug
 		/*
@@ -61,12 +61,23 @@
 			
 			//msg_createpoi
 			if ($action == msg_createpoi) {
-				if (!$pof->poiExists($usr->getUid(),$poiname)) {
-					if ($pof->createPoi($usr->getUid(),$poiname,$description,$lat,$lon,$zoomlevel,$tagname,"Poi")) {
-						echo application_getMessage(msg_crtok);	
+				if (!$pof->poiExistsByPos($usr->getUid(),$lat,$lon)) {
+					if ($pof->createPoi($usr->getUid(),$poiname,$description,$lat,$lon,$zoomlevel,$tagname,"Poi")) {						
+						$poi = $pof->getPoiById($usr->getUid(),$pof->lastid);
+						if ($poi != null) {
+							if (isset($groupname)) { //add created poi into a group
+								$gf = new GroupFactory();
+								$grp = $gf->getGroupByName($usr->getUid(),$groupname);
+								if ($grp != null) {
+									$gf->addGroupItem($grp->itemid, $usr->getUid(),$poi->itemid,$poi->itemtype);
+								}
+							}
+							echo application_getMessage($poi);		
+						}
 					} else {
 						echo application_getMessage(msg_failed);	
 					}
+				
 				} else {
 					echo application_getMessage(msg_exists);
 				}

@@ -13,6 +13,11 @@ dojo.declare("trm.widget.UserDialog", [trm.widget._TrmBaseDialog], {
 		this.inherited(arguments);
 		this.dlg_lblEmail.innerHTML = this.nls["email"];
 	},
+	
+	onUpdateUser: function(user) {
+	
+	},
+	
 	_dataOk: function() {
 		if (this.dlgUsr_tbName.attr("value").trim() == "")
 			return false;
@@ -24,6 +29,7 @@ dojo.declare("trm.widget.UserDialog", [trm.widget._TrmBaseDialog], {
 			if (this.application) {
 				this.application.activeuser = response;
 			}	
+			this.onUpdateUser(response);
 			this.hide();
 		}
 	},

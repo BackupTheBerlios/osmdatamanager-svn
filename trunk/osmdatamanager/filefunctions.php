@@ -26,7 +26,6 @@
 		$description    = $_REQUEST['description'];	
 
 		global $gl_loglevel;
-		$gl_loglevel 	= 1;
 	} else {
 		//uncomment for debug
 		/*
@@ -44,25 +43,16 @@
 	  	if ($usr != null) {	
 	  		$df = new DirectoryFactory();
 			$ff = new FileFactory();
-			
-			global $gl_usefiledir;
+						
 			global $gl_filedir;
-			global $gl_ftpprefix;
-			
+						
 			//msg_updatefilelist
 			//TODO delete file from db if the file does not exist in directory
 			if ($action == msg_updatefilelist) {
 				//$ff->updateFiles($usr->getUid());
 				$ff->setInvalid($usr->getUid());
 				
-				if ($gl_usefiledir) {
-					$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_filedir,array("gpx","xml"));
-				} else {
-					$df->login();
-					$lst1 = $df->listFiles_Ftp($usr->getUid(),array("gpx","xml"));
-					$df->logout();
-				}
-				
+				$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_filedir,array("gpx","xml"));
 				if ($lst1 != null) {
 					for ($i=0;$i<count($lst1);$i++) {
 						$fn = $lst1[$i];

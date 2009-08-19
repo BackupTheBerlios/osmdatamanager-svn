@@ -24,16 +24,9 @@
 	$gl_dbpwd  = "your database password";
 	$gl_dbname = "your database name";
 	$gl_dbhost = "your db hostename";
-			
-	//FTP Settings
-	/*
-	$gl_ftpserver = "ftpserver";
-	$gl_ftpuser = "ftpuser";
-	$gl_ftppwd = "ftppassword";			
-	$gl_useftp = false;  //you can use a ftp account to store pictures and files, it must be a subdirectory of osmdatamanager, use picturedir and filedir otherwise
-	$gl_ftpprefix = "";  
-	*/
 	
+	$gl_picturedir = "pictures/";
+	$gl_filedir = "files/";
 	
 	/* DEBUG
 	 * 
@@ -43,14 +36,6 @@
 	 * 
 	*/
 	
-	//if you don't want to use ftp, you can use picturedir and filedir it's the relativ location to pictures and gpx files
-	//files have to be stored under a subdirectory with userid (trf_+userid) e.g.  pictures/trf_1
-	$gl_usepicturedir = true;
-	$gl_picturedir = "pictures/";
-	
-	$gl_usefiledir = true;
-	$gl_filedir = "files/";
-	
 	$gl_loglevel = 0;
 	$gl_readonly = false;   //if this is true, no insert, update and delete statements are executed
 	
@@ -58,14 +43,6 @@
 	$gl_baselon = 0;
 	$gl_basezoomlevel = 14;
 	
-	/*
-	$gl_icon_group_expanded = "images/treeExpand_minus.gif";
-	$gl_icon_group_collapsed = "images/treeExpand_plus.gif";
-	$gl_icon_poi = "images/poi.gif";
-	$gl_icon_file = "images/gpxfile.gif";
-	$gl_standardtag = "standard";
-	*/
-		
 	/****************************************************
 	 * END CONFIG SECTION
 	 * **************************************************/
