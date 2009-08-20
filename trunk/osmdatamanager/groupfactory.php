@@ -777,7 +777,6 @@
 					$this->addChildGroups($aUserid,$grp2);
 				}
 			}
-			echo "<br>:".$prnt->itemid."-".count($prnt->children)."<br>";
 			return $prnt;
 		}
 		
@@ -817,12 +816,12 @@
 				}
 				if (count($pois) > 0) {
 					$pf = new PoiFactory();
-					$pf->addPois($pois,$items);
+					$pf->addPois($aUserid,$pois,$items);
 				}
-				
+								
 				if (count($files) > 0) {
 					$ff = new FileFactory();
-					$ff->addFiles($files,$items);
+					$ff->addFiles($aUserid,$files,$items);
 				}
 			}
 			return $items;

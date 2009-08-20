@@ -45,7 +45,7 @@
 			$ff = new FileFactory();
 						
 			global $gl_filedir;
-						
+		
 			//msg_updatefilelist
 			//TODO delete file from db if the file does not exist in directory
 			if ($action == msg_updatefilelist) {

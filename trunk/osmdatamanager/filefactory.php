@@ -137,11 +137,13 @@
 		 * @param $aResult Object
 		 */
 		function parse_File(&$aItem, $aRow, $aResult) {
+			
 			$this->parseFieldnames($aResult);
 			$this->parse_GroupItem($aItem, $aRow, $aResult);			
 			
 			if ($this->fieldnames == null)
 				return;
+			
 			
 			for ($i=0;$i<count($this->fieldnames);$i++) {
 				$fn1 = $this->fieldnames[$i];
@@ -256,7 +258,7 @@
 		 * @param $aLinkitemlist Object
 		 * @param $aResultlist Object
 		 */
-		function addFiles($aLinkitemlist, &$aResultlist) {
+		function addFiles($aUserId, $aLinkitemlist, &$aResultlist) {
 			$qry = "SELECT * FROM `tab_file` WHERE itemid in (";
 			
 			if (count($aLinkitemlist) > 0) {
@@ -268,7 +270,8 @@
 						$qry = $qry.",".$itm1->itemid;
 				}		
 			}
-			$qry = $qry.")";
+			$qry = $qry.") AND usrid = $aUserId";
+			
 			$result = $this->executeQuery($qry);
 			
 			if ($result != NULL) 

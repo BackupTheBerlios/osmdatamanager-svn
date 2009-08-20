@@ -138,7 +138,7 @@
 		 * @param $aLinkitemlist Object
 		 * @param $aResultlist Object
 		 */
-		function addPois($aLinkitemlist, &$aResultlist) {
+		function addPois($aUserId, $aLinkitemlist, &$aResultlist) {
 			$qry = "SELECT * FROM `tab_poi` WHERE itemid in (";
 			
 			if (count($aLinkitemlist) > 0) {
@@ -150,7 +150,7 @@
 						$qry = $qry.",".$itm1->itemid;
 				}		
 			}
-			$qry = $qry.")";
+			$qry = $qry.") AND usrid = $aUserId";
 			
 			$result = $this->executeQuery($qry);
 			

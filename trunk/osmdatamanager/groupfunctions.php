@@ -282,7 +282,7 @@
 									
 				if (count($items) > 0) {
 						
-					if (isset($treedata)) {
+					//if (isset($treedata)) {
 						$gc = new GroupContainer("id","name");
 																
 						if ($items != null)
@@ -295,9 +295,11 @@
 						}
 										
 						echo application_getMessage($gc);
+					/*
 					} else {
 						echo application_getMessage($items);
 					}
+					*/
 				
 				} else {
 					echo application_getMessage(msg_failed);	

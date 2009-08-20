@@ -492,6 +492,7 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} item
 		 */
 		displayItem: function(item) {
+			console.debug(item);
 			switch (item.itemtype.toLowerCase()) {
 				case "group":
 					if (!this.isgrouploading) {
@@ -512,6 +513,7 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} itemist
 		 */
 		displayItemList: function(itemlist) {
+			console.debug(itemlist);
 			var prnt = itemlist[0];
 			for (var i=1;i<itemlist.length;i++){
 				var itm1 = itemlist[i];
