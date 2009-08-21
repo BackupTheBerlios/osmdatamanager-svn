@@ -130,6 +130,26 @@
 				}
 			}
 			
+			//msg_getgrp
+			if ($action == msg_getgrp) {
+				if (($groupid == -1) && ($groupname != "")) {
+					//$lst1 = $fac->getRootGroups($usr->getUid());
+					$grp = $fac->getGroupByName($usr->getUid(),$groupname);
+					if ($grp != null) {
+						echo application_getMessage($grp);	
+					} else {
+						echo application_getMessage(msg_failed);
+					}
+				} else {
+					$grp = $fac->getGroup($usr->getUid(),$groupid);
+					if ($grp != null) {
+						echo application_getMessage($grp);	
+					} else {
+						echo application_getMessage(msg_failed);
+					}
+				}
+			}
+			
 			//msg_gettree
 			if ($action == msg_gettree) {
 				$lst1 = null;
@@ -260,6 +280,7 @@
 			
 			//msg_getgrpitems
 			if ($action == msg_getgrpitems) {
+				/*
 				$items = array();
 																
 				//get groupitems by groupname
@@ -299,11 +320,13 @@
 					} else {
 						echo application_getMessage($items);
 					}
-					*/
+					*  /
 				
 				} else {
 					echo application_getMessage(msg_failed);	
 				}
+				*/
+				echo application_getMessage(msg_failed);	
 			}
 			
 			//msg_getpublicgrpitems

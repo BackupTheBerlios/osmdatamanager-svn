@@ -36,7 +36,9 @@
 	 //define ("msg_getgrppois","msg.getgrppois");
 	 //define ("msg_getgrpfilesrecursiv","msg.getgrpfilesrecursiv");
 	 //define ("msg_getgrppoisrecursiv","msg.getgrppoisrecursiv");
-	 define ("msg_getgrpitems","msg.getgrpitems");
+	 //define ("msg_getgrpitems","msg.getgrpitems");
+	 define ("msg_getgrp","msg.getgrp");
+	 
 	 define ("msg_getpublicgrpitems","msg.getpublicgrpitems");	
      define ("msg_remgrpitm","msg.remgrpitm");
 	 define ("msg_gettree","msg.gettree");

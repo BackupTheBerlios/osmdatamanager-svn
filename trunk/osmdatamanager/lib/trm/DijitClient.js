@@ -298,7 +298,7 @@ dojo.declare("DijitClient2", Application2, {
 				if (dlg1) {
 					var item = dijit.getEnclosingWidget(node).item; //drag over item
 					if (item) {
-						if (String(item.itemtype).toLowerCase() != "group")
+						if (item.itemtype.toLowerCase() != "group")
 							return;
 						
 						if (item.children) {

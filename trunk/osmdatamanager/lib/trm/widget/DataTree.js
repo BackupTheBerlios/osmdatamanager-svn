@@ -9,6 +9,7 @@ dojo.require("dijit._tree.dndSource");
 
 dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 	selectedItem: {},
+	
 	selectedTreeItem: null,
 	postCreate: function() {
 		this.inherited(arguments);
@@ -29,17 +30,36 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 		}
 	},
 	
+	getItemFromTree: function(item) {
+		var result = {
+			children: []
+		};
+		
+		for (var key in item) {
+			var val = item[key][0];
+			var key1 = String(key);
+			if ((key1.indexOf("_") == -1) && (key1 != "children")) {
+				if ((val != "undefined") && (val != null)) 
+					result[key] = item[key][0];
+			}
+		}
+		
+		if (item.children) {
+			for (var i=0;i<item.children.length;i++) {
+				var chld1 = item.children[i];
+				result.children[i] = this.getItemFromTree(chld1);
+			}
+			//result.children = item.children;
+		}
+		
+		return result;
+	},
 	
 	onClick: function(item, node) {
 		this.selectedItem = item;
 		this.inherited(arguments);
-		this.selectedItem = {};
-		this.selectedTreeItem = item;
-		for (var key in item) {
-			var val = item[key][0];
-			if ((val != "undefined") && (val != null))
-				this.selectedItem[key] = item[key][0];
-		}
+		this.selectedTreeItem = item;			
+		this.selectedItem = this.getItemFromTree(item);
 	},
 	
 	onMouseOver: function(event) {

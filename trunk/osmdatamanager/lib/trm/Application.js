@@ -412,13 +412,13 @@ dojo.declare("Application2", Serverconnection, {
 		},
 		
 		/**
-		 * loads childitems from a group 
+		 * loads a group including all children
 		 * @param {Object} group
 		 * @param {Object} cb
 		 */
-		getGroupItems: function(group, cb){			
+		getGroup: function(group, cb){			
 			var params = {
-				"action": "msg.getgrpitems",
+				"action": "msg.getgrp",
 				"groupid": group.itemid,
 				"groupname": group.itemname
 			}
@@ -427,13 +427,13 @@ dojo.declare("Application2", Serverconnection, {
 		},
 		
 		/**
-		 * loads childitems from a group with the given groupname
+		 * loads a group with given groupname including all children
 		 * @param {Object} groupname
 		 * @param {Object} cb
 		 */
-		getGroupItemsByGroupName: function(groupname, cb){			
+		getGroupByGroupName: function(groupname, cb){			
 			var params = {
-				"action": "msg.getgrpitems",
+				"action": "msg.getgrp",
 				"groupid": -1,
 				"groupname": groupname
 			}
@@ -492,7 +492,6 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} item
 		 */
 		displayItem: function(item) {
-			console.debug(item);
 			switch (item.itemtype.toLowerCase()) {
 				case "group":
 					if (!this.isgrouploading) {
@@ -513,30 +512,35 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} itemist
 		 */
 		displayItemList: function(itemlist) {
-			console.debug(itemlist);
-			var prnt = itemlist[0];
-			for (var i=1;i<itemlist.length;i++){
+			for (var i=0;i<itemlist.length;i++){
 				var itm1 = itemlist[i];
 				this.displayItem(itm1);
 			}
-			
-			if (prnt) {
-				this.centerMap(prnt.lat, prnt.lon, prnt.zoomlevel);		
-			}
 			this.isgrouploading = false;
 		},
-		
+						
 		/**
 		 * display all groupitems from the given group on the map
 		 * @param {Object} group
 		 */
 		displayGroupItems: function(group) {
-			var cb = {
-				target: this,
-				func: this.displayItemList
+			if (! group.haschildren)
+				return;
+									
+			if (group.children.length > 0) {
+				this.docentermap = false;
+				this.displayItemList(group.children);
+				this.centerMap(group.lat, group.lon, group.zoomlevel);		
+				this.docentermap = true;
 			}
-			this.isgrouploading = true;
-			this.getGroupItems(group,cb);
+			else {
+				var cb = {
+					target: this,
+					func: this.displayGroupItems
+				}
+				this.isgrouploading = true;
+				this.getGroup(group, cb);
+			}
 		},
 		
 		/**
@@ -546,10 +550,10 @@ dojo.declare("Application2", Serverconnection, {
 		displayGroupItemsByGroupName: function(groupname) {
 			var cb = {
 				target: this,
-				func: this.displayItemList
+				func: this.displayGroupItems
 			}
 			this.isgrouploading = true;
-			this.getGroupItemsByGroupName(groupname,cb);
+			this.getGroupByGroupName(groupname,cb);
 		}
 
 });
