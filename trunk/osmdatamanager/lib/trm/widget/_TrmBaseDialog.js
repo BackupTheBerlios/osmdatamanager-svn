@@ -18,6 +18,7 @@ dojo.require("dijit.form.RadioButton");
  * dlg_spinZoomlevel
  * dlg_cmbTagname
  * dlg_taLongText
+ * dlg_taLongText_mce => used for tinymce
  * 
  */
 
@@ -103,6 +104,11 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		
 		if (this.dlg_taLongText)
 			this.dlg_taLongText.attr("value","");
+		
+		if (this.dlg_taLongText_mce) {
+			//this.dlg_taLongText.attr("value", "");
+			this.dlg_taLongText_mce.id;
+		}
 		
 		if (this.dlgGrp_cmbTagname) {
 			this.dlg_cmbTagname.setAttribute("value","");
@@ -202,6 +208,12 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			//this.dlg_cmbTagname.setAttribute("value", this.dataitem.tagname);
 			this._setTag(this.dataitem.tagname);
 		}
+		
+		if (this.dlg_taLongText_mce) {
+			if (tinyMCE) {
+				tinyMCE.execCommand('mceSetContent',false,this.dataitem.description);
+			}
+		}
 	},
 	
 	/**
@@ -236,6 +248,13 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		if (this.dlgGrp_cmbTagname) {
 			if (document.getElementById(this.dlgGrp_cmbTagname.id).value.trim() == "")
 				return false;
+		}
+		
+		if (this.dlg_taLongText_mce) {
+			if (tinyMCE) {
+				if (tinyMCE.get(this.dlg_taLongText_mce.id).getContent().trim() == "")
+					return false; 
+			}
 		}
 					
 		return true;	
@@ -302,6 +321,12 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			if (this.dlg_taLongText) {
 				//description = this.dlg_taLongText.attr("value");
 				description = document.getElementById(this.dlg_taLongText.id).value;
+			}
+			
+			if (this.dlg_taLongText_mce) {
+				if (tinyMCE) {
+					description = tinyMCE.get(this.dlg_taLongText_mce.id).getContent();
+				}
 			}
 			
 			var result = {
