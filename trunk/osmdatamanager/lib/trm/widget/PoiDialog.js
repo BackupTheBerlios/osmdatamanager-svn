@@ -75,6 +75,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 		});
 		
 		this.tinymce_loaded = true;
+		this._loadData();
 		//tinyMCE.get('elm1').show();
 	},
 	

@@ -106,8 +106,9 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			this.dlg_taLongText.attr("value","");
 		
 		if (this.dlg_taLongText_mce) {
-			//this.dlg_taLongText.attr("value", "");
-			this.dlg_taLongText_mce.id;
+			if (tinyMCE) {
+				tinyMCE.execCommand('mceSetContent',false,"");
+			}
 		}
 		
 		if (this.dlgGrp_cmbTagname) {
