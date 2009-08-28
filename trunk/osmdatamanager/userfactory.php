@@ -154,6 +154,71 @@
 	}
 	
 	/**
+	 * returns a list of all friend users
+	 * @return 
+	 * @param $aUserid Object
+	 */
+	function getFriendUsers($aUserid) {
+		$friends = array();
+		$items   = array();
+					
+		$qry = "SELECT * FROM `tab_usr_friend` WHERE (itemid = $aUserid)";
+		$result = $this->executeQuery($qry);
+		if ($result != NULL) 
+		{   
+			while ($row = mysql_fetch_row($result))
+			{
+				if ($row != null){
+					$usr1 = new User();
+					$this->parse_UserFriend($usr1,$row,$result);
+					array_push($friends,$usr1);								
+				}
+				
+			}
+			if (count($friends) > 0) {
+				$this->addUsers($friends,$items);
+			}
+							
+			
+		}
+		return $items;
+	}
+	
+	/**
+	 * 
+	 * @return 
+	 * @param $aLinkitemlist Object
+	 * @param $aResultlist Object
+	 */
+	function addUsers($aLinkitemlist, &$aResultlist) {
+		$qry = "SELECT * FROM `tab_usr` WHERE itemid in (";
+		if (count($aLinkitemlist) > 0) {
+			for ($i=0;$i<count($aLinkitemlist);$i++) {
+				$itm1 = $aLinkitemlist[$i];				
+				if ($i==0)
+					$qry = $qry.$itm1->itemid;
+				else
+					$qry = $qry.",".$itm1->itemid;
+			}		
+		}
+		$qry = $qry.")";
+		$result = $this->executeQuery($qry);
+		
+		if ($result != NULL) 
+		{   
+			while ($row = mysql_fetch_row($result))
+			{
+				if ($row != null){
+					$usr = new User();
+					$this->parse_User($usr,$row,$result);
+					array_push($aResultlist, $usr);
+				}
+			}
+		}
+		
+	}
+	
+	/**
 	 * 
 	 * @return 
 	 * @param $userid Object
@@ -403,6 +468,9 @@
 	function registerUser($username, $password, $email)
 	{
 		if (trim($username) == "")
+			return false;
+		
+		if (trim($password) == "")
 			return false;
 		
 		if (! $this->userNameExists(trim($username)))

@@ -298,7 +298,7 @@ dojo.declare("DijitClient2", Application2, {
 				if (dlg1) {
 					var item = dijit.getEnclosingWidget(node).item; //drag over item
 					if (item) {
-						if (item.itemtype.toLowerCase() != "group")
+						if (String(item.itemtype).toLowerCase() != "group")
 							return;
 						
 						if (item.children) {
@@ -447,34 +447,48 @@ dojo.declare("DijitClient2", Application2, {
 					return;
 				}
 				
+				var isvirtual = false;
+				if (String(itm1.isvirtual) == "true")
+					isvirtual = true;
+				
 				switch(itm1.itemtype.toLowerCase()) {
 					case "poi":
 						dijit.byId('itm_loaddata').attr("disabled",false);
-						dijit.byId('itm_edit').attr("disabled",false);
-						dijit.byId('itm_remove').attr("disabled",false);
+						
+						if (! isvirtual) {
+							dijit.byId('itm_edit').attr("disabled", false);
+							dijit.byId('itm_remove').attr("disabled", false);
+						}
+						
 						dijit.byId('itm_manager').attr("disabled",false);
 						//dijit.byId('itm_updatetree').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
 						break;
 					case "group":
 						dijit.byId('itm_loaddata').attr("disabled",false);
-						dijit.byId('itm_edit').attr("disabled",false);
 						//dijit.byId('itm_remove').attr("disabled",false);
 						dijit.byId('itm_manager').attr("disabled",false);
 						dijit.byId('itm_submenu_groups').attr("disabled",false);
 						dijit.byId('itm_createmaingroup').attr("disabled",false);
-						dijit.byId('itm_createsubgroup').attr("disabled",false);
-						dijit.byId('itm_deletegroup').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
 						//dijit.byId('itm_updatetree').attr("disabled",false);
+						if (! isvirtual) {
+							dijit.byId('itm_edit').attr("disabled",false);
+							dijit.byId('itm_deletegroup').attr("disabled",false);	
+							dijit.byId('itm_createsubgroup').attr("disabled",false);	
+						}
+						
 						break;
 					case "file":
 						dijit.byId('itm_loaddata').attr("disabled",false);
-						//dijit.byId('itm_edit').attr("disabled",false);
-						dijit.byId('itm_remove').attr("disabled",false);
 						dijit.byId('itm_manager').attr("disabled",false);
 						//dijit.byId('itm_updatetree').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
+						
+						if (! isvirtual) {
+							dijit.byId('itm_edit').attr("disabled",false);
+							dijit.byId('itm_remove').attr("disabled",false);
+						}
 						break;
 				}
 			}
@@ -556,6 +570,9 @@ dojo.declare("DijitClient2", Application2, {
 						break;
 					case "poi":
 						this.showPoiDialog(itm1);
+						break;
+					case "file":
+						this.showFileDialog(itm1);
 						break;
 				}
 			}
@@ -678,6 +695,12 @@ dojo.declare("DijitClient2", Application2, {
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onZoomlevelClick",this,"_onZoomlevelClick");
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"_cb_createPoi",this,"_updateitem");
 				dojo.connect(dijit.byId("dlg_itemmanager").poidialog,"onUpdatePoi",this,"_updateitem");
+				
+				dojo.connect(dijit.byId("dlg_itemmanager").filedialog,"onGetPoint",this,"_onGetPointClick");
+				dojo.connect(dijit.byId("dlg_itemmanager").filedialog,"onZoomlevelClick",this,"_onZoomlevelClick");
+				dojo.connect(dijit.byId("dlg_itemmanager").filedialog,"_cb_createPoi",this,"_updateitem");
+				dojo.connect(dijit.byId("dlg_itemmanager").filedialog,"onUpdatePoi",this,"_updateitem");
+				
 				dlg1.clientapp = this;
 			}
 			
@@ -756,9 +779,9 @@ dojo.declare("DijitClient2", Application2, {
 		 * hides the poi dialog
 		 */
 		hidePoiDialog: function() {
-			var dlg1 = dijit.byId('dlg_poi');
+			var dlg1 = this.getItemManager();
 			if (dlg1)  {
-				dlg1.hide();
+				dlg1.poidialog.hide();
 			}
 		},
 		
@@ -790,6 +813,64 @@ dojo.declare("DijitClient2", Application2, {
 		 */
 		hideUserDialog: function() {
 			var dlg1 = dijit.byId('dlg_user');
+			if (dlg1)  {
+				dlg1.hide();
+			}
+		},
+		
+		/**
+		 * shows the file dialog
+		 */
+		showFileDialog: function(item) {
+			var dlg1 = this.getItemManager();
+			if (dlg1)  {
+				dlg1.filedialog.prevWidget = null;
+				dlg1.filedialog.setDataItem(item);
+				dlg1.filedialog.show(true);
+			}
+		},
+		
+		/**
+		 * hides the file dialog
+		 */
+		hideFileDialog: function() {
+			var dlg1 = this.getItemManager();
+			if (dlg1)  {
+				dlg1.filedialog.hide();
+			}
+		},
+		
+		/**
+		 * shows the admin dialog
+		 * @param {Object} item
+		 */
+		showAdminDialog: function(item) {
+			this.showLoading();
+			
+			var dlg1 = dijit.byId('dlg_admin');
+			if (!dlg1) {
+				dojo.require("trm.widget.AdminDialog");
+				dlg1 = new trm.widget.AdminDialog({}, "dlg_admin");
+				/*
+				dojo.connect(dlg1,"onGetPoint",this,"_onGetPointClick");
+				dojo.connect(dlg1,"onZoomlevelClick",this,"_onZoomlevelClick");		
+				dojo.connect(dlg1,"onUpdateUser",this,"_cb_updateUser");
+				*/
+			}
+			
+			this.hideLoading();
+			if (dlg1)  {
+				dlg1.application = this;
+				//dlg1.setDataItem(item);
+				dlg1.show();
+			}
+		},
+		
+		/**
+		 * hides the admin dialog
+		 */
+		hideAdminDialog: function() {
+			var dlg1 = dijit.byId('dlg_admin');
 			if (dlg1)  {
 				dlg1.hide();
 			}

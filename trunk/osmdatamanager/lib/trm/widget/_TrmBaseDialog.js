@@ -1,3 +1,21 @@
+/**
+    @license
+    This file is part of osmdatamanager.
+
+    osmdatamanager is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, only GPLv2.
+
+    osmdatamanager is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
 dojo.provide("trm.widget._TrmBaseDialog");
 dojo.require("trm.widget._TrmWidget");
 dojo.require("dijit._Templated");
@@ -18,7 +36,6 @@ dojo.require("dijit.form.RadioButton");
  * dlg_spinZoomlevel
  * dlg_cmbTagname
  * dlg_taLongText
- * dlg_taLongText_mce => used for tinymce
  * 
  */
 
@@ -32,6 +49,8 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	islongtextkey: false,
 	nls: null,
 	onlyshow: false,
+	tinymce_loaded: false,
+	tinymce_enabled: true,
 	postCreate: function() {
 		this.inherited(arguments);
 		this.nls = dojo.i18n.getLocalization("trm.translation", "tt");
@@ -48,7 +67,65 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		this.dlg_cmbTagname = null;
 		this.dlg_taLongText = null;
 		*/
+		this._init_TinyMce();
 	},
+	
+	ontinymceinit: function() {
+		this._loadData();
+	},
+	
+	_init_TinyMce: function() {
+		if (! this.tinymce_enabled)
+			return;
+		
+		if (! this.dlg_taLongText)
+			return;
+		
+		if (this.tinymce_loaded)
+			return;
+		
+		if (! tinyMCE)
+			return;
+		
+		tinyMCE.init({
+			// General options
+			mode : "textareas",
+			theme : "advanced",
+			plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount",
+	
+			// Theme options
+			theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+			theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+			theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+			theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
+			theme_advanced_toolbar_location : "top",
+			theme_advanced_toolbar_align : "left",
+			theme_advanced_statusbar_location : "bottom",
+			theme_advanced_resizing : true,
+	
+			// Example content CSS (should be your site CSS)
+			content_css : "css/content.css",
+			//cleanup_on_startup : false,
+			// Drop lists for link/image/media/template dialogs
+			template_external_list_url : "lists/template_list.js",
+			external_link_list_url : "lists/link_list.js",
+			external_image_list_url : "lists/image_list.js",
+			media_external_list_url : "lists/media_list.js",
+			oninit: dojo.hitch(this,this.ontinymceinit),
+			file_browser_callback : "openSwampyBrowser"
+			
+			// Replace values for the template plugin
+			/*
+			template_replace_values : {
+				username : "Some User",
+				staffid : "991234"
+			}
+			*/
+		});
+		
+		this.tinymce_loaded = true;
+	},
+	
 	
 	/**
 	 * 
@@ -89,7 +166,6 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * resets all fields
 	 */
 	_resetFields: function() {
-		
 		if (this.dlg_tbItemname)
 			this.dlg_tbItemname.attr("value","");
 		
@@ -102,12 +178,13 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		if (this.dlg_spinZoomlevel)
 			this.dlg_spinZoomlevel.attr("value","");
 		
-		if (this.dlg_taLongText)
-			this.dlg_taLongText.attr("value","");
-		
-		if (this.dlg_taLongText_mce) {
-			if (tinyMCE) {
-				tinyMCE.execCommand('mceSetContent',false,"");
+		if (this.dlg_taLongText) {
+			if (this.tinymce_loaded) {
+				if (tinyMCE) {
+					tinyMCE.execCommand('mceSetContent',false,"");
+				}	
+			} else {
+				this.dlg_taLongText.attr("value","");	
 			}
 		}
 		
@@ -181,6 +258,69 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		}
 	},
 	
+	_getProtection: function() {
+		var val = "private";
+		/*
+		if (dijit.byId('dlgcreategroup_rd_private').attr("checked") == true)
+		  val = dijit.byId('dlgcreategroup_rd_private').value;
+		
+		if (dijit.byId('dlgcreategroup_rd_protected').attr("checked") == true)
+		  val = dijit.byId('dlgcreategroup_rd_protected').value;
+		  
+		if (dijit.byId('dlgcreategroup_rd_public').attr("checked") == true)
+		  val = dijit.byId('dlgcreategroup_rd_public').value;
+		*/	   
+		
+		
+		if (this.dlg_rdPrivate) {
+			if (this.dlg_rdPrivate.attr("checked") == true)
+				val = document.getElementById(this.dlg_rdPrivate.id).value;
+		}
+		
+		if (this.dlg_rdFriend) {
+			if (this.dlg_rdFriend.attr("checked") == true)
+				val = document.getElementById(this.dlg_rdFriend.id).value;
+		}
+		
+		if (this.dlg_rdPublic) {
+			if (this.dlg_rdPublic.attr("checked") == true)
+				val = document.getElementById(this.dlg_rdPublic.id).value;
+		}
+		
+		return val;	
+	},
+	
+	_setProtection: function() {		
+		if (this.dlg_rdPrivate) {
+			if (!this.dataitem.protection) {
+				this.dlg_rdPrivate.setAttribute("checked", true);
+				return;
+			}
+		}
+		
+		if (this.dlg_rdPrivate) {
+			if (String(this.dataitem.protection).toLowerCase() == "private") {
+				this.dlg_rdPrivate.setAttribute("checked",true);
+				return;
+			}
+		}
+		
+		if (this.dlg_rdFriend) {
+			if (String(this.dataitem.protection).toLowerCase() == "friend") {
+				this.dlg_rdFriend.setAttribute("checked",true);
+				return;
+			}
+		}
+		
+		if (this.dlg_rdPublic) {
+			if (String(this.dataitem.protection).toLowerCase() == "public") {
+				this.dlg_rdPublic.setAttribute("checked",true);
+				return;
+			}
+		}
+		 
+	},
+	
 	/**
 	 * loads data into the components if a dataitem is set
 	 */
@@ -202,19 +342,23 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		if (this.dlg_spinZoomlevel)
 			this.dlg_spinZoomlevel.attr("value",this.dataitem.zoomlevel);
 		
-		if (this.dlg_taLongText)
-			this.dlg_taLongText.attr("value",this.dataitem.description);
+		if (this.dlg_taLongText) {
+			if (this.tinymce_loaded) {
+				if (tinyMCE) {
+					tinyMCE.execCommand('mceSetContent',false,this.dataitem.description);
+				}
+			}
+			else {
+				this.dlg_taLongText.attr("value", this.dataitem.description);
+			}
+		}	
 		
 		if (this.dlg_cmbTagname) {
 			//this.dlg_cmbTagname.setAttribute("value", this.dataitem.tagname);
 			this._setTag(this.dataitem.tagname);
 		}
 		
-		if (this.dlg_taLongText_mce) {
-			if (tinyMCE) {
-				tinyMCE.execCommand('mceSetContent',false,this.dataitem.description);
-			}
-		}
+		this._setProtection();
 	},
 	
 	/**
@@ -237,27 +381,29 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		}
 		
 		if (this.dlg_spinZoomlevel) {
-			if (document.getElementById(this.dlg_spinZoomlevel.id).value == "")
+			if (document.getElementById(this.dlg_spinZoomlevel.id).value == "") 
 				return false;
+			
 		}
 		
 		if (this.dlg_taLongText) {
-			if (document.getElementById(this.dlg_taLongText.id).value.trim() == "")
-				return false;
+			if (this.tinymce_loaded) {
+				if (tinyMCE) {
+					if (tinyMCE.get(this.dlg_taLongText.id).getContent().trim() == "") 
+						return false;
+				}
+			}
+			else {
+				if (document.getElementById(this.dlg_taLongText.id).value.trim() == "") 
+					return false;
+			}
 		}
 		
 		if (this.dlgGrp_cmbTagname) {
 			if (document.getElementById(this.dlgGrp_cmbTagname.id).value.trim() == "")
 				return false;
 		}
-		
-		if (this.dlg_taLongText_mce) {
-			if (tinyMCE) {
-				if (tinyMCE.get(this.dlg_taLongText_mce.id).getContent().trim() == "")
-					return false; 
-			}
-		}
-					
+							
 		return true;	
 	},
 	
@@ -294,7 +440,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			var description = null;
 			var tagname 	= this.getTagname();
 			var parentid    = -1;
-			var protection  = null;
+			var protection  = this._getProtection();
 			
 			if (this.dataitem)
 				itemid = this.dataitem.itemid;
@@ -321,15 +467,17 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			
 			if (this.dlg_taLongText) {
 				//description = this.dlg_taLongText.attr("value");
-				description = document.getElementById(this.dlg_taLongText.id).value;
-			}
-			
-			if (this.dlg_taLongText_mce) {
-				if (tinyMCE) {
-					description = tinyMCE.get(this.dlg_taLongText_mce.id).getContent();
+				if (this.tinymce_loaded) {
+					if (tinyMCE) {
+						description = tinyMCE.get(this.dlg_taLongText.id).getContent();
+					}	
+				} else {
+					description = document.getElementById(this.dlg_taLongText.id).value;	
 				}
+				
+				
 			}
-			
+						
 			var result = {
 				"itemid": itemid,
 				"parentid": parentid,

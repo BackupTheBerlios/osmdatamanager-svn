@@ -16,44 +16,85 @@
 	
 */
 
-dojo.provide("trm.widget.GroupDialog");
+dojo.provide("trm.widget.FileDialog");
 dojo.require("trm.widget._TrmBaseDialog");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 
-dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
+dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
+	storedata: true,
 	onOkClick: function(data) {
 		
 	},
-	templatePath:    dojo.moduleUrl('trm.widget', 'GroupDialog.html'),
+	templatePath:    dojo.moduleUrl('trm.widget', 'FileDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
 	},
-	
 	_dataOk: function() {
-		//this.inherited(arguments);
-		if (! this.isupdate) {
-			if (this.dlg_tbItemname) {
-				if (this.dlg_tbItemname.attr("value").trim() == "") 
-					return false;
-			}
-			return true;
-		} else {
-			return this.inherited(arguments);
-		}
+		return true;
 	},
+	
+	_updateOk: function(item) {
+		//console.debug(item);
+		if (gl_application) {
+			gl_application._updateitem(item);
+		}
+		this.hide();
+	},
+		
 	_okClick: function(e) {
 		//this.inherited(arguments);
 		var data = this.getData();
 		if (this._dataOk()) {
 			var data = this.getData();
-			this.onOkClick(data);
+						
+			if (this.storedata) {
+					var params = {
+					"action": "msg.updatefile",
+					"itemid": data.itemid,
+					"itemname": data.itemname,
+					"zoomlevel": data.zoomlevel,
+					"lat":data.lat,
+					"lon":data.lon,
+					"tagname":data.tagname
+				}
+				var cb = {
+					target: this,
+					func: this._updateOk
+				}
+				
+				this.callback = cb;
+				this.loadFromServer("filefunctions.php", params,this._cb_standard);
+			}
+			else {
+			
+				this.onOkClick(data);
+			}
 		} else {
 			if (this.nls) {
 		 		alert(this.nls["entervaliddata"]);
 		 	}
 		}
 	},
+	
+	_resetFields: function() {
+		this.inherited(arguments);
+		
+		if (this.dlg_tbFilename)
+			this.dlg_tbFilename.attr("value","");
+	},
+	
+	_loadData: function() {
+		this.inherited(arguments);
+		
+		if (this.dataitem == null)
+			return;
+			
+		if (this.dlg_tbFilename)
+			this.dlg_tbFilename.attr("value",this.dataitem.filename);
+			
+	},
+	
 	show: function(update,root) {
 		this.inherited(arguments);
 		if (this.onlyshow) {
@@ -64,11 +105,9 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
 		if (update) {
 			this.parentitem = null;
 			this._loadData();
-			this.dlgGrp_tblUpdate.setAttribute("class", "table_update");
 		} else {
 			this._resetFields();
 			this.dataitem = null;
-			this.dlgGrp_tblUpdate.setAttribute("class", "table_update_hidden");
 			if (root)
 				this.parentitem = null;
 		}

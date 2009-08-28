@@ -140,7 +140,6 @@
 		 */
 		function addPois($aUserId, $aLinkitemlist, &$aResultlist) {
 			$qry = "SELECT * FROM `tab_poi` WHERE itemid in (";
-			
 			if (count($aLinkitemlist) > 0) {
 				for ($i=0;$i<count($aLinkitemlist);$i++) {
 					$itm1 = $aLinkitemlist[$i];
@@ -160,6 +159,7 @@
 				{
 					if ($row != null){
 						$poi = new Poi();
+						
 						$this->parse_Poi($poi,$row,$result);
 						array_push($aResultlist, $poi);
 					}

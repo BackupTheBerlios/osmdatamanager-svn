@@ -9,9 +9,11 @@ CREATE TABLE `tab_file` (
   `path` varchar(255) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
   `itemname` varchar(255) default NULL,
-  `tagname` varchar(50) default NULL,
-  `icon2` varchar(50) default NULL,
   `valid` int(11) default NULL,
+  `lat` varchar(50) default NULL,
+  `lon` varchar(50) default NULL,
+  `zoomlevel` int(11) default NULL,
+  `tagname` varchar(50) default NULL,
   PRIMARY KEY  (`usrid`,`itemid`)
 ) TYPE=MyISAM AUTO_INCREMENT=1 ;
 
@@ -33,7 +35,6 @@ CREATE TABLE `tab_grp` (
   `lat` varchar(50) default NULL,
   `lon` varchar(50) default NULL,
   `tagname` varchar(50) default NULL,
-  `icon2` varchar(50) default NULL,
   PRIMARY KEY  (`itemid`)
 ) TYPE=MyISAM AUTO_INCREMENT=10 ;
 
@@ -130,7 +131,7 @@ CREATE TABLE `tab_usr` (
 
 INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )
 VALUES (
-'', 'user', 'images/crystal_project/identity.png', NULL , NULL
+'', 'user', 'images/crystal_project/identity.png', 'images/crystal_project/identity.png' , NULL
 );
 
 INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )

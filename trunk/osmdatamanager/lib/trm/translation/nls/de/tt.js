@@ -15,6 +15,7 @@
 	"manager":"Item Manager",
 	"createrootgroup":"Hauptgruppe erstellen",
 	"createsubgroup":"Untergruppe erstellen",
+	"createuser": "Benutzer erstellen",
 	"deletegroup":"Gruppe löschen",
 	"delete":"Löschen",
 	"clearmap":"Karte bereinigen",

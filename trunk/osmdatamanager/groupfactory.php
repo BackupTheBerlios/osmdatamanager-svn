@@ -42,59 +42,7 @@
 		}
 	}
 	
-	/**
-	 * Tracefile
-	 */
-	/*
-	class Tracefile extends GroupItem {
 		
-		var $groupid;
-		var $userid;
-		var $filename;
-		var $description;
-		
-		function Tracefile() {
-			parent::GroupItem("Tracefile");
-			
-			$this->groupid = null;
-			$this->userid = null;
-			$this->filename = null;
-		}
-		*/
-		/*
-		function Tracefile($aGroupId, $aUserId, $aFilename) {
-			parent::GroupItem("Tracefile",$aIconExpanded,$aIconCollapsed);			
-			
-			global $gl_icon_file;
-			
-			if (($aIcon2 == null) || ($aIcon2 == ""))
-				$this->setIcon_Collapsed($gl_icon_file);
-			
-			$this->groupid = $aGroupId;
-			$this->userid = $aUserId;
-			$this->filename = $aFilename;				
-		}
-		*/
-		/*
-		
-		function setCustomData($aDescription) {
-			$this->description = $aDescription;
-		}
-		
-		function getFilename() {
-			return $this->filename;
-		}
-		
-		function setFilename($aFilename) {
-			$this->filename = $aFilename;
-		}
-		
-		function getDescription() {
-			return $this->description;
-		}
-	}
-	*/
-	
 	/**
 	 * GroupContainer
 	 */
@@ -181,6 +129,11 @@
 			} 
 		}	
 		
+		/**
+		 * for debug only
+		 * @return 
+		 * @param $aGroup Object
+		 */
 		function printGroup(&$aGroup) {
 			
 			echo "<br>Gruppe:<br>";
@@ -192,196 +145,7 @@
 			}
 			echo "<br>::: ENDE :::</br>";
 		}
-		
-		
-		/*
-		function getGroupFile($aGroupId, $aFilename) {
-			
-			if ($aFilename == null)
-				return null;
-			
-			$qry = "SELECT * FROM `tab_grp_file` WHERE ((grpid = $aGroupId) AND (filename = '$aFilename'))";
-			$result = $this->executeQuery($qry);
-			
-			if ($result != NULL) 
-			{   
-				$row = mysql_fetch_row($result);
-				if ($row != null){
-					$tracefile = new Tracefile($row[0],$row[1],$row[2]);
-					return $tracefile;
-				}
-			}
-			return null;
-		}
-		*/
-		
-		/**
-		 * 
-		 * @return 
-		 * @param $aFilellist Object
-		 * @param $aNewFiles Object
-		 * @param $aFile Object
-		 * @param $aIcon1 Object
-		 * @param $aIcon2 Object
-		 */
-		/*
-		function setCustomData(&$aFilellist,&$aNewFiles, $aFile, $aIcon1, $aIcon2) {
-			for ($i=0;$i<count($aFilellist);$i++) {
-				$fl1 = $aFilellist[$i];
-				if ($fl1->getFilename() == $aFile->getFilename()) {
-					$fl1->setCustomData($aFile->getDescription());
-					$fl1->setFilename($aFile->getFullFilename());
-					$fl1->setIcon_Expanded($aIcon1);
-					$fl1->setIcon_Collapsed($aIcon2);
-					array_push($aNewFiles, $fl1);
-					return;
-				}
-			}
-		}
-		*/
-		
-		/**
-		 * 
-		 * @return 
-		 * @param $aUserId Object
-		 * @param $aFilellist Object
-		 */		
-		/*
-		function fillFiledata($aUserId, &$aFilellist) {
-			$newfiles = array();
-			$ff = new FileFactory();
-			
-			$qry1 = "SELECT * FROM `tab_file` WHERE (usrid = $aUserId)";
-			$qry1 = $qry1." AND   (`filename` IN (";// '".$aFilename."')";
-						
-			for ($i=0;$i<count($aFilellist);$i++) {
-				$fl1 = $aFilellist[$i];
-				if ($i==0)
-					$qry1=$qry1." '".$fl1->getFilename()."'";
-				else
-					$qry1=$qry1.", '".$fl1->getFilename()."'";
-			}
-			$qry1=$qry1."))";
-			$result = $this->executeQuery($qry1);
-						
-			if ($result != NULL) 
-			{   
-				while ($row = mysql_fetch_row($result))
-				{
-					if ($row != null){
-						$gpxfile = new File($row[0],$row[1],$row[2],$row[3]);
-						$this->setCustomData($aFilellist,$newfiles,$gpxfile,$row[4],$row[5]);
-					}
-				}
-			}
-			
-			if (count($newfiles) > 0) {
-				return $newfiles;
-			} else {
-				return null;
-			}
-			
-		}
-		*/
-		
-		/**
-		 * only for a custom update
-		 * @return 
-		 * @param $aUsrId Object
-		 * @param $aGroupId Object
-		 * @param $aOldFilename Object
-		 * @param $aNewFilename Object
-		 */
-		/*
-		function updateGroupFile($aUsrId,$aGroupId,$aOldFilename,$aNewFilename) {
-			return;
-									
-			$qry1   =  "UPDATE `tab_grp_file` SET ";
-		 	//$qry1 = $qry1."`description`='".$aDescription."' ";
-			$qry1 = $qry1."`filename`='".$aNewFilename."' ";
-			//$qry1 = $qry1."`filename`='".$aNewFilename."' ";
-			$qry1 = $qry1." WHERE   (`usrid` = ".$aUsrId.")";
-			$qry1 = $qry1." AND   (`filename` = '".$aOldFilename."')";
-			//$qry1 = $qry1." AND   (`grpid` = ".$aGroupId.")";
-			
-			//echo $qry1;			
-			if ($this->executeQuery($qry1) == null)
-			{
-				return false;
-			}
-			return true;
-	
-		}
-		*/
-		
-		/**
-		 * getGroupFiles
-		 * @return 
-		 * @param $aUserId Object
-		 * @param $aGroupId Object
-		 */
-		/*
-		function getGroupFiles($aUserId, $aGroupId) {
-									
-			$files = array();
-			
-			$qry = "SELECT * FROM `tab_grp_file` WHERE (grpid = $aGroupId)";
-			$result = $this->executeQuery($qry);
-			if ($result != NULL) 
-			{   
-				while ($row = mysql_fetch_row($result))
-				{
-					if ($row != null){
-						$tracefile = new Tracefile($row[0],$row[1],$row[2]);
-						array_push($files, $tracefile);
-					}
-				}
-				if (count($files) > 0) {
-					$newlst = $this->fillFiledata($aUserId, $files);
-					if ($newlst != null);
-						return $newlst;
-					
-					return $files;
-				} else {
-					return null;
-				}
-			}
-			return null;
-		}
-		
-		function getGroupFiles_Recursiv($aUserId, $aGroupId, &$aFileArray) {			
-			$childs = $this->getChildGroups($aUserId, $aGroupId); 
-			if (count($childs) > 0)
-			{
-				if ($childs != null) {
-					for ($i=0;$i<count($childs);$i++) {
-						$grp1 = $childs[$i];
-						$this->getGroupFiles_Recursiv($aUserId,$grp1->getGroupId(),$aFileArray);
-					}
-				}
-			}
-			
-			
-			$lst1 = $this->getGroupFiles($aUserId, $aGroupId);
-			if ($lst1 != null) {
-				for ($i=0;$i<count($lst1);$i++) {
-					$fl1 = $lst1[$i];
-					array_push($aFileArray,$fl1);
-				}
-			}
-			return true;
-		}
-		
-		function hasGroupPois($aUserId, $aGroupId) {
-			$qry = "SELECT * FROM `tab_grp_poi` WHERE (grpid = $aGroupId) AND (usrid = $aUserId)";
-			$result = $this->executeQuery($qry);
-			if ($result != NULL) 
-			{   
-				return true;
-			}
-			return false;
-		}
-		*/
+				
 		
 		/**
 		 * returns true if the group has child items, otherwise false
@@ -399,135 +163,6 @@
 			return false;
 		}
 		
-		/*
-		function getGroupPois($aUserId, $aGroupId) {
-									
-			$pois = array();
-			
-			$qry = "SELECT * FROM `tab_grp_poi` WHERE (grpid = $aGroupId) AND (usrid = $aUserId)";
-			$result = $this->executeQuery($qry);
-			$pof = new PoiFactory();
-			
-			if ($result != NULL) 
-			{   
-				while ($row = mysql_fetch_row($result))
-				{
-					if ($row != null){
-						$poi = $pof->getPoiById($aUserId, $row[2]);
-						if ($poi != null)	
-							array_push($pois, $poi);
-					}
-				}
-				if (count($pois) > 0)
-					return $pois;
-				else
-					return null;
-			}
-			return null;
-		}
-		
-		function getGroupPois_Recursiv($aUserId, $aGroupId, &$aPoiArray) {			
-			$childs = $this->getChildGroups($aUserId, $aGroupId); 
-			if (count($childs) > 0)
-			{
-				if ($childs != null) {
-					for ($i=0;$i<count($childs);$i++) {
-						$grp1 = $childs[$i];
-						$this->getGroupFiles_Recursiv($aUserId,$grp1->getGroupId(),$aPoiArray);
-					}
-				}
-			}
-			
-			
-			$lst1 = $this->getGroupPois($aUserId, $aGroupId);
-			if ($lst1 != null) {
-				for ($i=0;$i<count($lst1);$i++) {
-					$fl1 = $lst1[$i];
-					array_push($aPoiArray,$fl1);
-				}
-			}
-			return true;
-		}
-		*/
-		
-		//TODO
-		/*
-		function addGroupFile($aGroupId, $aUsrId, $aFilename) {
-			$tracefile = $this->getGroupFile($aGroupId, $aFilename);
-						
-			if ($tracefile == null) {
-				$insquery = "INSERT INTO `tab_grp_file` (`grpid`,`usrid`,`filename`) VALUES ($aGroupId, $aUsrId,'$aFilename')";
-				if ($this->executeQuery($insquery) == null)
-				{
-					return false;
-				}
-				return true;			
-			}
-			return false;
-		}
-		
-		function remGroupFile($aGroupId, $aUsrId, $aFilename) {
-			$delquery = "DELETE FROM `tab_grp_file` WHERE (grpid = $aGroupId) AND (usrid = $aUsrId) AND (filename = '$aFilename')";
-			if ($this->executeQuery($delquery) == null)
-			{
-				return false;
-			}
-			return true;						
-		}
-		*/
-		
-		/*
-		function updateGroupFile($aGroupId, $aUsrId, $aFilename, $aDescription) {
-			$qry1   =  "UPDATE `tab_grp_file` SET ";
-		 	$qry1 = $qry1."`description`='".$aDescription."' ";
-			$qry1 = $qry1." WHERE (`grpid` = ".$aGroupId.")";
-			$qry1 = $qry1." AND   (`usrid` = ".$aUsrId.")";
-			$qry1 = $qry1." AND   (`filename` = '".$aFilename."')";
-						
-			if ($this->executeQuery($qry1) == null)
-			{
-				return false;
-			}
-			return true;
-		}
-		*/
-		
-		/**
-		 * adds a poi to a group
-		 * @return 
-		 * @param $aGroupId Object
-		 * @param $aUsrId Object
-		 * @param $aPoiId Object
-		 */
-		//TODO
-		/*
-		function addGroupPoi($aGroupId, $aUsrId, $aPoiId) {
-			$insquery = "INSERT INTO `tab_grp_poi` (`grpid`,`usrid`,`poiid`) VALUES ($aGroupId, $aUsrId,$aPoiId)";
-			if ($this->executeQuery($insquery) == null)
-			{
-				return false;
-			}
-			return true;						
-		}
-		
-		/**
-		 * removes a poi from a group
-		 * @return 
-		 * @param $aGroupId Object
-		 * @param $aUsrId Object
-		 * @param $aPoiId Object
-		 */
-		/*
-		//TODO
-		function remGroupPoi($aGroupId, $aUsrId, $aPoiId) {
-			$delquery = "DELETE FROM `tab_grp_poi` WHERE (grpid = $aGroupId) AND (usrid = $aUsrId) AND (poiid = $aPoiId)";
-			if ($this->executeQuery($delquery) == null)
-			{
-				return false;
-			}
-			return true;						
-		}
-		*/
 		
 		/**
 		 * adds a groupitem to a group
@@ -632,7 +267,7 @@
 		 * @return array of Groups
 		 * @param $aUserid Object
 		 */
-		function getRootGroups($aUserid) {
+		function getRootGroups($aUserid,$aWithVirtual) {
 			$groups = array();
 			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) AND (parentid IS NULL)) ORDER BY itemname";
 			$result = $this->executeQuery($qry);
@@ -647,26 +282,63 @@
 						
 					}
 				}
-				//$this->addVirtualGroups($aUserid,$groups);
+				
+				if ($aWithVirtual) {
+					$this->addVirtualGroups($aUserid,$groups);
+				}
+				
 				return $groups;
 			}
 			return null;
 		}
 		
 		
+		function updateFriendItems(&$aFriendGroup) {
+			for ($i=0;$i<count($aFriendGroup->children);$i++) {
+				//$itm1 = $aFriendGroup->children[$i];
+				$aFriendGroup->children[$i]->prepareForTree_virtual($aFriendGroup->id);
+				$aFriendGroup->children[$i]->isvirtual = true;
+				//echo $itm1->id;
+			}
+		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUser Object
+		 */
+		function addFriendGroups($aUserid, &$aFriendUser) {
+			$lst1 = $this->getFriendGroups($aFriendUser->itemid);
+			if ($lst1 != null) {
+				$aFriendUser->haschildren = true;	
+				for ($i=0;$i<count($lst1);$i++) {
+					//$lst1[$i]->itemid  =	
+					$lst1[$i]->prepareForTree_virtual($aFriendUser->id);
+					$lst1[$i]->tags = null;
+					$lst1[$i]->isvirtual = true;
+					$this->updateFriendItems($lst1[$i]);
+					$aFriendUser->addChild(&$lst1[$i]);
+					
+				}	
+			}
+		}
+		
 		/**
 		 * 
 		 * @return 
 		 * @param $aGroup Object
 		 */
-		function addUsers(&$aGroup) {
+		function addUsers($aUserid, &$aGroup) {
 			$uf = new UserFactory();
-			$lst1 = $uf->getAllUsers();
+			$lst1 = $uf->getFriendUsers($aUserid);
 			if ($lst1 != null) {
 				$aGroup->haschildren = true;	
 				for ($i=0;$i<count($lst1);$i++) {	
-					$lst1[$i]->prepareForTree($aGroup->itemid);
+					//$lst1[$i]->itemid = $aGroup->itemid."_".$lst1[$i]->itemname;
+					$lst1[$i]->prepareForTree_virtual($aGroup->itemid);
 					$lst1[$i]->tags = null;
+					$lst1[$i]->isvirtual = true;
+					$this->addFriendGroups($aUserid, $lst1[$i]);
 					$aGroup->addChild(&$lst1[$i]);
 				}	
 			}
@@ -682,11 +354,12 @@
 			
 			//Users
 			$grp = new Group();
-			$grp->itemname = "Users";
-			$grp->itemid = "virtual_01";
+			$grp->itemname = "Friends";
+			$grp->itemid = "__Friends";
 			$grp->tagname = "standard";
 			$grp->prepareForTree(-1);
-			$this->addUsers($grp);
+			$grp->isvirtual = true;
+			$this->addUsers($aUserid, $grp);
 			array_push($aList, $grp);	
 		}
 		
@@ -698,7 +371,7 @@
 		 */
 		function getAllGroups($aUserid) {
 			$groups = array();
-			$qry = "SELECT * FROM `tab_grp` WHERE ((usrid = $aUserid) ORDER BY itemname";
+			$qry = "SELECT * FROM `tab_grp` WHERE (usrid = $aUserid) ORDER BY itemname";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
@@ -716,6 +389,83 @@
 			return null;
 		}
 		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserid Object
+		 * @param $aFriendId Object
+		 */
+		function getFriendGroups($aFriendId) {
+			$groups = array();
+			$qry = "SELECT * FROM `tab_grp` WHERE (usrid = $aFriendId) AND (protection = 'friend') ORDER BY itemname";
+			$result = $this->executeQuery($qry);
+			
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$grp = new Group();
+						$this->parse_Group($grp,$row,$result);
+						array_push($groups, $grp);
+						
+					}
+				}
+				return $groups;
+			}
+			return null;
+		}
+		
+		/**
+		 * returns a list of all friendgroups
+		 * @return 
+		 */
+		function getAllFriendGroups($aUserid) {
+			$groups = array();
+			
+			$uf = new UserFactory();
+			$lst1 = $uf->getFriendUsers($aUserid);
+			if ($lst1 != null) {
+				for ($i=0;$i<count($lst1);$i++) {	
+					$lst1[$i]->prepareForTree_virtual("__Friends");
+					$lst2 = $this->getFriendGroups($lst1[$i]->itemid);
+					if ($lst2 != null) {
+						for ($x=0;$x<count($lst2);$x++) {	
+							$lst2[$x]->prepareForTree_virtual($lst1[$i]->id);
+							$this->updateFriendItems($lst2[$x]);
+							array_push($groups, $lst2[$x]);	
+						}
+					}
+				}	
+				return $groups;
+			}
+			return null;
+		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserId Object
+		 */
+		function getPublicGroups($aUserId) {
+			$groups = array();
+			$qry = "SELECT * FROM `tab_grp` WHERE (protection = 'public') AND (itemid <> $aUserId) ORDER BY itemname";
+			$result = $this->executeQuery($qry);
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$grp = new Group();
+						$this->parse_Group($grp,$row,$result);
+						array_push($groups, $grp);
+						
+					}
+				}
+				return $groups;
+			}
+			return null;
+		}
 		
 		/**
 		 * returns all child groups from user with given userid and given parentgroupid
@@ -826,32 +576,7 @@
 			}
 			return $items;
 		}
-		
-		
-		/**
-		 * returns true if group with given userid and groupid has children, otherwise false
-		 * @return 
-		 * @param $aUserid Object
-		 * @param $aGroupId Object
-		 */
-		/*
-		function hasChildren($aUserid, $aGroupId) {
-						
-			if ($this->hasGroupPois($aUserid, $aGroupId))
-				return true;
-						
-			$lst1 = $this->getChildGroups($aUserid, $aGroupId);
-			if ($lst1 != null)
-				return true;
-			
-			$lst1 = $this->getGroupFiles($aUserid, $aGroupId);
-			if ($lst1 != null)
-				return true;
-			
-			return false;
-		}
-		*/
-		
+				
 		function hasChildren($aUserid, $aItemId) {
 			
 			if ($this->hasGroupItems($aUserid, $aItemId))
@@ -863,31 +588,6 @@
 				
 			return false;
 		}
-			
-		/**
-		 * 
-		 * @return 
-		 * @param $aUserId Object
-		 * @param $aTracegroupId Object
-		 */	
-		/*
-		function deletGroupFiles($aUserId, $aTracegroupId) {
-			$delquery = "DELETE FROM `tab_grp_file` WHERE (usrid = $aUserId) AND (grpid = $aTracegroupId)";				
-			$this->executeQuery($delquery);
-		}
-		
-		/**
-		 * 
-		 * @return 
-		 * @param $aUserId Object
-		 * @param $aFilename Object
-		 */
-		/*
-		function deleteGroupFile($aUserId, $aFilename) {
-			$delquery = "DELETE FROM `tab_grp_file` WHERE (usrid = $aUserId) AND (filename = $aFilename)";				
-			$this->executeQuery($delquery);
-		}
-		*/
 		
 		/**
 		 * deletes all child items from the tab_grp_item table
@@ -982,7 +682,10 @@
 			 //$qry1 = $qry1 + "`username`='".$aVal1."' ";
 			 $qry1 = $qry1."`itemname`='".$aGroupname."' ";
 			 $qry1 = $qry1.", `protection`='".$aProtection."' ";
-			 $qry1 = $qry1.", `zoomlevel`= ".$aZoomlevel." ";
+			 
+			 if ($aZoomlevel != "")
+			 	$qry1 = $qry1.", `zoomlevel`= ".$aZoomlevel." ";
+			 
 			 $qry1 = $qry1.", `lat`='".$aLat."' ";
 			 $qry1 = $qry1.", `lon`='".$aLon."' ";
 			 $qry1 = $qry1.", `tagname`='".$aTagName."' ";

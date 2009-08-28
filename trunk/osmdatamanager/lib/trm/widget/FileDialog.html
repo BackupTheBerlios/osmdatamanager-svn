@@ -1,0 +1,53 @@
+<div class="trmFileDialog trmDialog trmHidden" dojoAttachPoint="node">
+	<table>
+	    <tr>
+	      <td><label dojoAttachPoint="dlg_lblFilename">_Dateiname:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbFilename" /></td>
+		</tr>
+		<tr>
+	      <td><label dojoAttachPoint="dlg_lblItemname">_Bezeichnung:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbItemname" /></td>
+		</tr>
+	</table>
+	
+	
+	<hr/>
+	<table>
+		<tr>
+	      <td><label dojoAttachPoint="dlg_lblPosition">_Position: </label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbLat" /></td>
+		  <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbLon" /></td>
+		  <td><button dojoType="dijit.form.Button" dojoAttachEvent="onClick: _getPointClick">...</button></td>	
+	    </tr> 
+		<tr>
+			<td><label dojoAttachPoint="dlg_lblZoomlevel">_Zoomlevel:</label></td>
+			<td><input dojoType="dijit.form.NumberSpinner"
+							    value="14"
+							    class="medium"
+							    constraints="{max:20,min:1,places:0}"
+							    name="dlgcreatgroup_zommlevel"
+							    dojoAttachPoint="dlg_spinZoomlevel" />
+			</td>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnZoomLevelFromMap" dojoAttachEvent="onClick: _zoomLevelClick">_Zoomlevel von Karte</button></td>	
+		</tr>
+		<tr>
+	      <td><label dojoAttachPoint="dlg_lblTagname">_Tagname:</label></td>
+	      <td>
+			<select name="tagname"
+                value=""
+   				dojoAttachPoint="dlg_cmbTagname">
+          	</select>
+		  </td>
+		  <!-- <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgGrp_tbTagname" /></td> -->
+	    </tr>
+
+	</table>
+	
+	<hr/>	
+	<table>
+		<tr class="custombutton1">
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnOk" dojoAttachEvent="onClick: _okClick">_Ok</button></td>
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnCancel" dojoAttachEvent="onClick:_cancelClick">_Abbrechen</button></td>
+		</tr> 
+	</table>
+</div>

@@ -1,6 +1,25 @@
+/**
+    @license
+    This file is part of osmdatamanager.
+
+    osmdatamanager is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, only GPLv2.
+
+    osmdatamanager is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
 dojo.provide("trm.widget.ItemManager");
 dojo.require("trm.widget._TrmWidget");
 dojo.require("trm.widget.PoiDialog");
+dojo.require("trm.widget.FileDialog");
 dojo.require("dijit._Templated");
 dojo.require("dojo.parser");
 dojo.require("dojo.data.ItemFileReadStore");
@@ -256,6 +275,11 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	
 	show: function() {
 		this.inherited(arguments);
+		
+		if (gl_application) {
+			gl_application.updateFileList();
+		}
+		
 		this.loadGpxFiles();
 	},
 	hide:function() {

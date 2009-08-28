@@ -1,3 +1,21 @@
+/**
+    @license
+    This file is part of osmdatamanager.
+
+    osmdatamanager is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, only GPLv2.
+
+    osmdatamanager is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
 dojo.provide("trm.widget.PoiDialog");
 dojo.require("trm.widget._TrmBaseDialog");
 dojo.require("dijit._Templated");
@@ -7,7 +25,6 @@ dojo.require("dojo.parser");
 dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 	storedata: true,  //if set to true the dialog stores poidata by itself using the poimanager
 	templatePath:    dojo.moduleUrl('trm.widget', 'PoiDialog.html'),
-	tinymce_loaded: false,
 	onOkClick: function(data) {
 		
 	},
@@ -31,52 +48,6 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 		}
 		this._resetFields();
 		this.hide();	
-	},
-	
-	_init_TinyMce: function() {
-		if (this.tinymce_loaded)
-			return;
-		
-		if (! tinyMCE)
-			return;
-		
-		tinyMCE.init({
-			// General options
-			mode : "textareas",
-			theme : "advanced",
-			plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount",
-	
-			// Theme options
-			theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-			theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
-			theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
-			theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_statusbar_location : "bottom",
-			theme_advanced_resizing : true,
-	
-			// Example content CSS (should be your site CSS)
-			content_css : "css/content.css",
-	
-			// Drop lists for link/image/media/template dialogs
-			template_external_list_url : "lists/template_list.js",
-			external_link_list_url : "lists/link_list.js",
-			external_image_list_url : "lists/image_list.js",
-			media_external_list_url : "lists/media_list.js",
-			
-			file_browser_callback : "openSwampyBrowser",
-			
-			// Replace values for the template plugin
-			template_replace_values : {
-				username : "Some User",
-				staffid : "991234"
-			}
-		});
-		
-		this.tinymce_loaded = true;
-		this._loadData();
-		//tinyMCE.get('elm1').show();
 	},
 	
 	_okClick: function(e){
@@ -112,9 +83,10 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 		 }
 	  }
 	},
-	
+		
 	show: function(isupdate) {
 		this.inherited(arguments);
+		//this._init_TinyMce();
 		if (this.onlyshow) {
 			if (this.dataitem) {
 				this._setTag(this.dataitem.tagname);
@@ -132,7 +104,7 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 			this._setTag("standard_poi");
 			this.dataitem = null;
 		}
-		this._init_TinyMce();
+		
 	}
 		
 });

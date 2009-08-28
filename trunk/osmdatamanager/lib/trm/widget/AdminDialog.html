@@ -1,0 +1,28 @@
+<div class="trmAdminDialog trmDialog trmHidden" dojoAttachPoint="node">
+	<label dojoAttachPoint="dlgAdmin_lblCrtUser">_Create User</label>
+	<table>
+	    <tr>
+	      <td><label dojoAttachPoint="dlgAdmin_lblUsername">_Benutzername:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlgAdmin_tbUsername" /></td>
+		</tr>
+		<tr>
+	      <td><label dojoAttachPoint="dlgAdmin_lblPassword1">_Password1</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" dojoAttachPoint="dlgAdmin_tbPassword1" /></td>
+		</tr>
+		<tr>
+	      <td><label dojoAttachPoint="dlgAdmin_lblPassword2">_Password2</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="password" dojoAttachPoint="dlgAdmin_tbPassword2" /></td>
+		</tr>
+		<tr>
+		  <td><button dojoType="dijit.form.Button" dojoAttachPoint="dlgAdmin_btnCrtUser" dojoAttachEvent="onClick: _createUserClick">_Create User</button></td>		
+		</tr>
+	</table>
+	
+	
+	<hr/>
+	<table>
+		<tr class="custombutton1">
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnClose" dojoAttachEvent="onClick: _cancelClick">_Close</button></td>
+		</tr> 
+	</table>
+</div>

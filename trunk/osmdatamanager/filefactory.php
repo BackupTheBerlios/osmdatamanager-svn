@@ -210,6 +210,17 @@
 		 * @param $aUsrId Object
 		 */
 		function deleteInvalid($aUsrId) {
+			$lst1 = $this->getInvalidFiles($aUsrId);
+			if ($lst1 != null) {
+				for ($i=0;$i<count($lst1);$i++) {	
+					$fl1 = $lst1[$i];
+					$itemid   = $fl1->itemid; 
+					$itemtype = $fl1->itemtype; 
+					$qry = "DELETE FROM `tab_grp_item` WHERE (usrid = $aUsrId) AND (childid = $itemid)  AND (itemtype = '$itemtype')";
+					$result = $this->executeQuery($qry);					
+				}				
+			} 
+			
 			$qry = "DELETE FROM `tab_file` WHERE (valid = 0) AND (usrid = $aUsrId)";
 			$result = $this->executeQuery($qry);
 		}
@@ -252,6 +263,44 @@
 			return null;
 		}
 		
+		function getFile($aUserid, $aItemId) {
+			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid) AND (itemid = $aItemId) ORDER BY itemname, filename";
+			$result = $this->executeQuery($qry);
+			if ($result != NULL) 
+			{   
+				$row = mysql_fetch_row($result);
+				$fl = new File();
+				$this->parse_File($fl,$row,$result);
+				return $fl;		
+			}
+			return null;	
+		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserid Object
+		 */
+		function getInvalidFiles($aUserid) {
+			$files = array();
+			
+			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid) AND (valid = 0) ORDER BY itemname, filename";
+			$result = $this->executeQuery($qry);
+			if ($result != NULL) 
+			{   
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$fl = new File();
+						$this->parse_File($fl,$row,$result);
+						array_push($files, $fl);
+					}
+				}
+				return $files;
+			}
+			return null;
+		}
+		
 		/**
 		 * 
 		 * @return 
@@ -259,6 +308,7 @@
 		 * @param $aResultlist Object
 		 */
 		function addFiles($aUserId, $aLinkitemlist, &$aResultlist) {
+			
 			$qry = "SELECT * FROM `tab_file` WHERE itemid in (";
 			
 			if (count($aLinkitemlist) > 0) {
@@ -295,12 +345,21 @@
 		 * @param $aFilename Object
 		 * @param $aDescription Object
 		 */
-		function updateFile($aUsrId, $aFilename, $aDescription) {
+		function updateFile($aUsrId, $aItemId, $aItemname, $aLat, $aLon, $aZoomlevel, $aTagname) {
+			if ($aZoomlevel == "")
+				$aZoomlevel = -1;
+			
 			$qry1   =  "UPDATE `tab_file` SET ";
-		 	$qry1 = $qry1."`description`='".$aDescription."' ";
-			//$qry1 = $qry1."`path`='".$aPath."' ";
+		 	$qry1 = $qry1."`itemname`='".$aItemname."' ";
+			$qry1 = $qry1.", `lat`='".$aLat."' ";
+			$qry1 = $qry1.", `lon`='".$aLon."' ";
+			
+			if ($aZoomlevel != "")
+			  $qry1 = $qry1.", `zoomlevel`= ".$aZoomlevel."  ";
+			
+			$qry1 = $qry1.", `tagname`='".$aTagname."' ";
 			$qry1 = $qry1." WHERE   (`usrid` = ".$aUsrId.")";
-			$qry1 = $qry1." AND   (`filename` = '".$aFilename."')";
+			$qry1 = $qry1." AND   (`itemid` = ".$aItemId.")";
 			
 			//echo $qry1;			
 			if ($this->executeQuery($qry1) == null)

@@ -492,7 +492,7 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} item
 		 */
 		displayItem: function(item) {
-			switch (item.itemtype.toLowerCase()) {
+			switch (String(item.itemtype).toLowerCase()) {
 				case "group":
 					if (!this.isgrouploading) {
 						this.displayGroupItems(item);
@@ -524,10 +524,11 @@ dojo.declare("Application2", Serverconnection, {
 		 * @param {Object} group
 		 */
 		displayGroupItems: function(group) {
-			if (! group.haschildren)
+			if (String(group.haschildren) == "false")
 				return;
-									
+								
 			if (group.children.length > 0) {
+				this.isgrouploading = true;
 				this.docentermap = false;
 				this.displayItemList(group.children);
 				this.centerMap(group.lat, group.lon, group.zoomlevel);		
@@ -538,7 +539,6 @@ dojo.declare("Application2", Serverconnection, {
 					target: this,
 					func: this.displayGroupItems
 				}
-				this.isgrouploading = true;
 				this.getGroup(group, cb);
 			}
 		},
@@ -552,7 +552,6 @@ dojo.declare("Application2", Serverconnection, {
 				target: this,
 				func: this.displayGroupItems
 			}
-			this.isgrouploading = true;
 			this.getGroupByGroupName(groupname,cb);
 		}
 

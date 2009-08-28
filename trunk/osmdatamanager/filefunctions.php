@@ -23,8 +23,13 @@
 	$action  		= $_REQUEST['action'];
 	if (isset($action)) {
 		$filename		= $_REQUEST['filename'];	
-		$description    = $_REQUEST['description'];	
-
+		$itemid  		= $_REQUEST['itemid'];	
+		$itemname   	= $_REQUEST['itemname'];	
+		$tagname     	= $_REQUEST['tagname'];	
+		$zoomlevel  	= $_REQUEST['zoomlevel'];
+		$lat 		    = $_REQUEST['lat'];
+		$lon            = $_REQUEST['lon'];
+		
 		global $gl_loglevel;
 	} else {
 		//uncomment for debug
@@ -87,8 +92,13 @@
 			
 			//msg_updatefile
 			if ($action == msg_updatefile) {				
-				if ($ff->updateFile($usr->getUid(), basename($filename), $description)) {
-					echo application_getMessage(msg_updateok);
+				if ($ff->updateFile($usr->getUid(),$itemid,$itemname,$lat,$lon,$zoomlevel,$tagname)) {
+					$fl1 = $ff->getFile($usr->getUid(),$itemid);
+					if ($fl1 != null) {
+						echo application_getMessage($fl1);
+					} else {
+						echo application_getMessage(msg_failed);	
+					}
 				} else {
 					echo application_getMessage(msg_failed);
 				}	

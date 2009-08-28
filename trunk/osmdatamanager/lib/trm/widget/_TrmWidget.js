@@ -1,3 +1,21 @@
+/**
+    @license
+    This file is part of osmdatamanager.
+
+    osmdatamanager is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, only GPLv2.
+
+    osmdatamanager is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
 dojo.provide("trm.widget._TrmWidget");
 dojo.require("dijit._Widget");
 //dojo.require("dijit._Templated");
@@ -8,6 +26,7 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 	senderWidget: null,
 	prevWidget: null,
 	showPrevWidget: true,
+	callback: null,
 	onGetPoint: function(sender) {
 		
 	},
@@ -47,6 +66,20 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 				console.error(e);
 			}
 	},
+	
+	_cb_standard: function(response, ioArgs) {
+		try {		
+			if (response != "msg.failed")
+			{
+				if (this.callback != null) {
+					this.callback.func.apply(this.callback.target, [response, ioArgs]);
+				}
+				
+			}
+		} catch (e)
+		{console.error(e);}
+	},
+	
 	layout: function(node){
 		// summary: Sets the background to the size of the viewport
 		//

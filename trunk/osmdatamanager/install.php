@@ -78,7 +78,8 @@
 					  	if ($df->createDirectory("trf_".$usr->getUid())) {
 					  		echo "user directory created successfully<br/>";
 					  	} else {
-					  		echo "could not create user directory you can do it manually<br/>";
+					  		echo "<b>could not create user directory you can do it manually<br/></b>";
+							echo "please create a directory called: trf_".$usr->getUid()."<br/>";
 					  	}
 					  	
 						$df->logout();

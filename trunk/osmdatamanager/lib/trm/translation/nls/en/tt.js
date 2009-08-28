@@ -15,6 +15,7 @@
 	"manager":"Item Manager",
 	"createrootgroup":"Create Rootgroup",
 	"createsubgroup":"Create Subgroup",
+	"createuser": "Create User",
 	"deletegroup":"Delete Group",
 	"delete":"Delete",
 	"clearmap":"Clear Map",

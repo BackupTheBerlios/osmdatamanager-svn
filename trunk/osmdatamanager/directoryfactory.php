@@ -95,6 +95,15 @@
 			}
 		}
 		
+		function handleError() {
+		    //trigger_error('MY ERROR');
+			//echo "error";
+		    /** usage sample
+		        @handleError();
+		        echo $php_errormsg;
+		    */
+		}
+		
 		/**
 		 * create new ftp directory
 		 * @return true if successful, false otherwise
@@ -111,10 +120,14 @@
 					}
 				}
 			} else {
-				if (mkdir($this->filedir.$aDirname))
+				$rs = @mkdir( $this->filedir.$aDirname, '0777' );
+				@$this->handleError();
+				
+				if ($rs) {
 					return true;
-				else
+				} else {
 					return false;
+				}
 			}
 		}
 		

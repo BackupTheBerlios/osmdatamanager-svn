@@ -93,7 +93,7 @@
 	 
 	 //db types
 	 define ("protection_private","private");
-	 define ("protection_protected","protected");
+	 define ("protection_friend","friend");
 	 define ("protection_public,","public");
 	 		 
 	 /****************************************************
@@ -474,6 +474,7 @@
 			var $name;  //the same value as itemname, used for the tree
 			var $id;    //unique id for the tree
 			var $children;
+			var $isvirtual;
 						
 			function GroupItem($aItemtype)
 			{
@@ -489,6 +490,7 @@
 				$this->tags = null;
 				$this->children = array();
 				$this->id = "";
+				$this->isvirtual = false;
 			}
 			
 			function addChild(&$aItem) {
@@ -512,6 +514,12 @@
 				//echo $this->id;
 			}
 			
+			
+			function prepareForTree_virtual($aParentId) {
+				$this->name = $this->itemname;
+				$this->id = $aParentId."_".$this->itemtype."_".$this->itemname;
+			}
+						
 			/**
 			 * set's a new filename for the expanded icon displayed in the tree
 			 * @return 

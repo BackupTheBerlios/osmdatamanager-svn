@@ -1,4 +1,19 @@
 <?php
+	/*
+    This file is part of osmdatamanager.
+
+    osmdatamanager is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, only GPLv2.
+
+    osmdatamanager is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
+	*/
     
 	class ItemParser extends DatabaseAccess {
 						
@@ -136,6 +151,30 @@
 				}
 			}
 		}
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aItem Object
+		 * @param $aRow Object
+		 * @param $aResult Object
+		 */
+		function parse_UserFriend(&$aItem, $aRow, $aResult) {
+			$this->parseFieldnames($aResult);
+			
+			if ($this->fieldnames == null)
+				return;
+			
+			for ($i=0;$i<count($this->fieldnames);$i++) {
+				$fn1 = $this->fieldnames[$i];
+				switch ($fn1) {
+					case "friendid":
+						$aItem->itemid = $aRow[$i]; 
+						break;
+				}
+			}
+		}
+		
 						
 		/*******************************************************************************************
 		 * 

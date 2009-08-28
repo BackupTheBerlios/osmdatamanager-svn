@@ -36,6 +36,7 @@
 		$grpitmid       = $_REQUEST['grpitmid'];
 		$itemtype       = $_REQUEST['itemtype'];
 		$treedata       = $_REQUEST['treedata'];
+		$options        = $_REQUEST['options'];
 		global $gl_loglevel;
 	} else {
 		//uncomment for debug
@@ -120,7 +121,7 @@
 			if ($action == msg_getgrps) {
 				$lst1 = null;
 				if ($parentgroupid == -1) {
-					$lst1 = $fac->getRootGroups($usr->getUid());
+					$lst1 = $fac->getRootGroups($usr->getUid(),true);
 				}
 				
 				if ($lst1 != null) {
@@ -154,10 +155,21 @@
 			if ($action == msg_gettree) {
 				$lst1 = null;
 				$gc = new GroupContainer("id","name");
+				$opt = "";
+				$withvirtual = true;
+				if (isset($options)) {
+					$opt = $options;
+					if ($opt == "withfriends")
+					  $withvirtual = false;
+				}				
 				
-				if ($parentgroupid == -1) {
-					$lst1 = $fac->getRootGroups($usr->getUid());
-				} 
+				if ($opt == "onlyfriends") {
+					$lst1 = $fac->getAllFriendGroups($usr->getUid());
+				} else {
+					if ($parentgroupid == -1) {
+						$lst1 = $fac->getRootGroups($usr->getUid(),$withvirtual);
+					}
+				} 				
 				
 				if ($lst1 != null)
 				{
@@ -166,8 +178,18 @@
 							$lst1[$i]->prepareForTree(-1);
 							$gc->addGroup($lst1[$i]);
 					}
-				}
-								
+					
+					if ($opt == "withfriends") {
+						$lst2 = $fac->getAllFriendGroups($usr->getUid());
+						if ($lst2 != null) {
+							for ($i=0;$i<count($lst2);$i++) {
+									//$fac->parseChildren($usr->getUid(),$lst1[$i]);							
+									//$lst1[$i]->prepareForTree(-1);
+									$gc->addGroup($lst2[$i]);
+							}			
+						}
+					}
+				}			
 				echo application_getMessage($gc);
 			}
 						
