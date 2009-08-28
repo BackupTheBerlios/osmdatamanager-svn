@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>OSM map with data from MySQL</title>
+	<title>OSM map with data from MySQL, PHP, OPENLAYERS</title>
 	
 	<style type="text/css">		
 		@import "lib/trm/trm.css";
@@ -16,7 +16,7 @@
 			  dojo.require("dijit.form.Button");
 			  dojo.require("dijit.layout.ContentPane");
 			  dojo.require("dijit.layout.BorderContainer");
-				
+			  	
 			  dojo.parser.parse();
 			  init();
 		  });
@@ -38,29 +38,11 @@
 		var gl_application = null;
 		var gl_markermanager = null;
 		var gl_tree = null;
-		
-		//callback after login	
-		function loggedIn(response,ioArgs) {
-				console.debug(response);
-				gl_application.clearMap();
 				
-				if ((response != null) && (response != "msg.loginfailed")) { //you don't have to check this, it's already checked before
-					//gl_application.centerHomebase();
-					//gl_application.getGroupItems("Example Group",gl_application.showData);
-					gl_application.displayGroupItemsByGroupName("SimpleMap");
-					_initTree();
-				}
-				gl_map.updateSize();
+		function loadData() {
+			gl_application.displayGroupItemsByGroupName("Korsika");
+			_initTree();
 		}
-		
-		//login as guest
-		function loadData(){
-		  var cb = {
-		  	func: loggedIn,
-			target: this
-		  }
-		  gl_application.loginUser("guest","guest",cb);
-		}	
 		
 		function _cb_getPoint(e) {
 			var lonlat = gl_map.getLonLatFromViewPortPx(e.xy).transform(gl_map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
@@ -123,26 +105,17 @@
 			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
     		gl_map.addLayer(gl_markers);
 						
-			//var pm = new PoiManager();						
 			//Client Application
-			gl_application = new Application2("osmdatamanager",gl_map);			
-									
-			//Groupmanager
-			//gl_groupmanager = new Groupmanager(gl_application);	
-			//gl_application.initGroupmanager(gl_groupmanager);
+			gl_application = new Application("osmdatamanager",gl_map);			
 			gl_markermanager = new MarkerManager();
 			gl_application.markermanager = gl_markermanager;
-						
-			//check if user is already logged in
-			var cb = {
-				func:this.loggedIn,
-				target:this
-			}
-			gl_application.loginUser("test","test",cb);
-			//gl_application.checkUser(cb);	
+			gl_application.clientname = "Demo2";
+			
+			loadData();
 		}
 		
 		function treeOnDblClick(sender) {
+			console.debug(gl_tree.selectedItem);
 			gl_application.displayItem(gl_tree.selectedItem);
 		}
 		
@@ -155,18 +128,19 @@
 										
 			dojo.require("trm.widget.CustomForestStoreModel");
 			dojo.require("trm.widget.DataTree");			
-			dojo.require("dojo.data.ItemFileWriteStore");
+			//dojo.require("dojo.data.ItemFileWriteStore");
+			dojo.require("dojox.data.AndOrReadStore");
 			dojo.require("dijit.Tree");
 			
-			var store = new dojo.data.ItemFileWriteStore  ({
-				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1",
+			//var store = new dojo.data.ItemFileWriteStore  ({
+			var store = new dojox.data.AndOrReadStore({
+				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1&options=withfriends",
 				clearOnClose: true
 		    });				
 									
 			var treeModel = new trm.widget.CustomForestStoreModel({
 		        store: store,
-				query: {"parentid":  -1,"itemname": "SimpleMap"},
-				rootId: "root"
+				query: {complexQuery: "itemname:'*Demo*' OR itemname:'*Untergruppe' OR itemname:'Wichtig*'"}
 		    });
 						
 			gl_tree = new trm.widget.DataTree({

@@ -1,6 +1,9 @@
 <html>
 <head>
-	<title>OSM map with data from MySQL</title>
+	<meta name="description" content="this is a simple demoapplication for osmdatamanager" />
+	<meta name="keywords" content="osmdatamanager, osm, openstreetmap, php, mysql, dojo, openlayers">
+	
+	<title>OSM map with data from MySQL, PHP, OPENLAYERS</title>
 	
 	<style type="text/css">		
 		@import "lib/trm/trm.css";
@@ -34,29 +37,19 @@
 		var gl_markers = null;
 		var gl_application = null;
 		var gl_markermanager = null;
-		
-		//callback after login	
-		function loggedIn(response,ioArgs) {
-				console.debug(response);
-				gl_application.clearMap();
 				
-				if ((response != null) && (response != "msg.loginfailed")) { //you don't have to check this, it's already checked before
-					//gl_application.centerHomebase();
-					//gl_application.getGroupItems("Example Group",gl_application.showData);
-					gl_application.displayGroupItemsByGroupName("SimpleMap");
-				}
-				gl_map.updateSize();
+		/**
+		 * load data from "Demogroup1" and display it on the map
+		 */
+		function loadData() {
+			gl_application.displayGroupItemsByGroupName("Demogroup1");
 		}
 		
-		//login as guest
-		function loadData(){
-		  var cb = {
-		  	func: loggedIn,
-			target: this
-		  }
-		  gl_application.loginUser("guest","guest",cb);
-		}	
 		
+		/**
+		 * this is the callback after you have clicked on the map
+		 * @param {Object} e
+		 */		
 		function _cb_getPoint(e) {
 			var lonlat = gl_map.getLonLatFromViewPortPx(e.xy).transform(gl_map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
 			var dlg1 = dijit.byId("simpledialog");
@@ -68,6 +61,10 @@
 			}
 		}
 		
+		/**
+		 * this function will be called if you click on the button in the dialog
+		 * -> dojo.connect(dlg1,"onGetPoint",this,"getPoint");
+		 */
 		function getPoint() {
 			var dlg1 = dijit.byId("simpledialog");
 			if (dlg1) {
@@ -81,6 +78,9 @@
 			gl_application.getPointFromMap(cb);
 		}
 		
+		/**
+		 * shows a simple create poi dialog
+		 */
 		function showDialog() {
 			dojo.require("trm.widget.SimpleDialog");
 			var dlg1 = dijit.byId("simpledialog");
@@ -91,7 +91,10 @@
 			
 			dlg1.show();
 		}
-						
+		
+		/**
+		 * init the client application
+		 */			
 		function init() {
 			gl_map = new OpenLayers.Map("map", {
 				controls: [
@@ -117,40 +120,32 @@
 			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
     		gl_map.addLayer(gl_markers);
 						
-			//var pm = new PoiManager();						
-			//Client Application
-			gl_application = new Application2("osmdatamanager",gl_map);			
+			gl_application = new Application("osmdatamanager",gl_map);			
 									
-			//Groupmanager
-			//gl_groupmanager = new Groupmanager(gl_application);	
-			//gl_application.initGroupmanager(gl_groupmanager);
 			gl_markermanager = new MarkerManager();
 			gl_application.markermanager = gl_markermanager;
-						
-			//check if user is already logged in
-			var cb = {
-				func:this.loggedIn,
-				target:this
-			}
-			gl_application.loginUser("test","test",cb);
-			//gl_application.checkUser(cb);	
+			
+			//if you set a clientname you don't have to log in with a username
+			//the mapping between clientname and username is stored in the config.php file
+			gl_application.clientname = "Demo1";  
+			
+			loadData();
 		}
 	</script>
 	
 </head>
 
 <body style="background-color: #dbdbdb;">  
+		
 		<div style="border:solid 1px black;width: 792px;padding:4px;">
-			This is a simple example shows how to use and display your data 
-			   on another website.
-			   You just have to create a ClientApplication object and load data from a group.
-			   You can update this data in OsmDatamanager and it's just up to date on this page.<br>
-			   Here you can see the guest user "Example Group"
+			   <p>This example show's how you can display the data from a group in another website<br/>
+			   	  It loads the data from the group "Demogroup1"<br/>
+			      When you click on the button you can create a POI, this will be inserted in the "Demogroup1" too.</p>
 			   
 			   <button id="1465" dojoType="dijit.form.Button"
 				  onClick="showDialog()"
 				  iconClass="plusIcon">
-				  Click Me!
+				  Where are you from ??
 			  </button>
 			  
 		</div>

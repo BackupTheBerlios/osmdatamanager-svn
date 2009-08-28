@@ -27,7 +27,7 @@ dojo.require("dijit._tree.dndSource");
 
 dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 	selectedItem: {},
-	
+	application: null,
 	selectedTreeItem: null,
 	postCreate: function() {
 		this.inherited(arguments);
@@ -228,8 +228,8 @@ dojo.declare("trm.widget.DataTree", [dijit.Tree], {
 	 */
 	_getIconName: function(tagname, opened) {
 			
-		if (gl_application) {
-			var usr1 = gl_application.getActiveUser();
+		if (this.application) {
+			var usr1 = this.application.getActiveUser();
 			if (usr1) {
 				for (var i = 0; i < usr1.tags.length; i++) {
 					var t1 = usr1.tags[i];

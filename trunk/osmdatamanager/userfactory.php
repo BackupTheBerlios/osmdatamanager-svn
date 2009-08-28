@@ -417,13 +417,11 @@
 	function createExamplePoi($user) {
 		$pof = new PoiFactory();
 		$gf = new Groupfactory();
-		$pof->createPoi($user->getUid(),"Cologne City","<b><a href=\"http://www.koeln.de\" target=\"_blank\">Cologne</a></b><br><a>This is the city of cologne<a>","50.94317428566237","6.958074772076103","14","standard_poi");		
+		$pof->createPoi($user->getUid(),"Cologne City","<b><a href=\"http://www.koeln.de\" target=\"_blank\">Cologne</a></b><br><a>cologne city<a>","50.94317428566237","6.958074772076103","14","standard_poi");		
 	
 		$p1 = $pof->getPoi($user->getUid(),"Cologne City");
 		$g1 = $gf->getGroupByName($user->getUid(),"Example Group");
 		if (($p1 != null) && ($g1 != null)) {
-			//$gf->addGroupPoi($g1->getGroupId(),$user->getUid(),$p1->getPoiId());
-			//($aGroupId, $aUsrId, $aItemid,$aItemType) {
 			$gf->addGroupItem($g1->itemid,$user->itemid,$p1->itemid,$p1->itemtype);
 		}
 	}

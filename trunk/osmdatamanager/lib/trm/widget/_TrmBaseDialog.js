@@ -39,7 +39,6 @@ dojo.require("dijit.form.RadioButton");
  * 
  */
 
-
 dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templated], {
 	widgetsInTemplate: true,
 	//templatePath:    dojo.moduleUrl('trm.widget', 'UserDialog.html'),
@@ -83,7 +82,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		
 		if (this.tinymce_loaded)
 			return;
-		
+			
 		if (! tinyMCE)
 			return;
 		
@@ -113,16 +112,8 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 			media_external_list_url : "lists/media_list.js",
 			oninit: dojo.hitch(this,this.ontinymceinit),
 			file_browser_callback : "openSwampyBrowser"
-			
-			// Replace values for the template plugin
-			/*
-			template_replace_values : {
-				username : "Some User",
-				staffid : "991234"
-			}
-			*/
 		});
-		
+				
 		this.tinymce_loaded = true;
 	},
 	
@@ -243,8 +234,8 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	_loadTags: function() {
 		if (this.dlg_cmbTagname) {
 			this._removeTags();
-			if (gl_application) {
-				var usr1 = gl_application.getActiveUser();
+			if (this.application) {
+				var usr1 = this.application.getActiveUser();
 				if (usr1) {
 					for (var i = 0; i < usr1.tags.length; i++) {
 						var t1 = usr1.tags[i];
@@ -526,7 +517,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * @param {Object} latlon
 	 */
 	setPoint: function(latlon) {
-		this.showPrevWidget = true;
+		//this.showPrevWidget = true;
 		this.dlg_tbLat.attr("value",latlon.lat);
 		this.dlg_tbLon.attr("value",latlon.lon);
 	},
@@ -544,6 +535,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 */
 	show: function() {
 		this.inherited(arguments);
+		
 		if (! this.isupdate) {
 			this._loadTags();
 		}

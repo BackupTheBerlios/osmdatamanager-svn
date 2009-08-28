@@ -16,7 +16,7 @@
 	
 */
 
-dojo.declare("DijitClient2", Application2, {
+dojo.declare("DijitClient", Application, {
         
 		/**
 		 * DijitClient -> connection between dijit and the base application
@@ -170,10 +170,19 @@ dojo.declare("DijitClient2", Application2, {
 					dlg1.hide();
 				}
 			} else {
-				//self.disablePrivatemode();
 				var lat = 50.9350850727913;
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
+				
+				for (var i=(this.opendialogs.length-1);i>-1;i--) {
+					var dlg1 = null;
+					dlg1 = this.opendialogs.pop();
+					console.debug(dlg1);
+					if (dlg1) {
+						dlg1.hide();
+					}
+				}
+				
 				gl_tree.clearNodes();
 			}		
 		},
@@ -195,6 +204,15 @@ dojo.declare("DijitClient2", Application2, {
 				
 				this.clearMap();
 				this.disablePrivatemode();
+				console.debug(this.opendialogs.length);
+				for (var i=(this.opendialogs.length-1);i>-1;i--) {
+					var dlg1 = null;
+					dlg1 = this.opendialogs.pop();
+					console.debug(dlg1);
+					if (dlg1) {
+						dlg1.hide();
+					}
+				}
 				var lat = 50.9350850727913;
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
@@ -204,6 +222,15 @@ dojo.declare("DijitClient2", Application2, {
 			if (response != "msg.loginfailed") {
 				this._cb_LoggedIn(response);
 			} else {
+				console.debug(this.opendialogs.length);
+				for (var i=(this.opendialogs.length-1);i>-1;i--) {
+					var dlg1 = null;
+					dlg1 = this.opendialogs.pop();
+					console.debug(dlg1);
+					if (dlg1) {
+						dlg1.hide();
+					}
+				}
 				var lat = 50.9350850727913;
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
@@ -286,6 +313,10 @@ dojo.declare("DijitClient2", Application2, {
 			return false;
 		},
 		
+		_treeOnDblClick: function(item) {
+			this.displaySelected();
+		},
+		
 		/**
 		 * check if node has already the current dnd_source as child
 		 * @param {Object} node
@@ -299,6 +330,9 @@ dojo.declare("DijitClient2", Application2, {
 					var item = dijit.getEnclosingWidget(node).item; //drag over item
 					if (item) {
 						if (String(item.itemtype).toLowerCase() != "group")
+							return;
+						
+						if (String(item.isvirtual).toLowerCase() == "true")
 							return;
 						
 						if (item.children) {
@@ -420,7 +454,8 @@ dojo.declare("DijitClient2", Application2, {
 				dndController: dijit._tree.dndSource,
 				checkAcceptance: this.dndAccept,
 				checkItemAcceptance: this.treeCheckItemAcceptance
-		    }, "treeThree");
+		    }, "thetree");
+			dojo.connect(gl_tree,"onDblClick",this,"_treeOnDblClick");
 			gl_tree.removeFocus();
 			this.hideLoading();
 		},
@@ -701,6 +736,9 @@ dojo.declare("DijitClient2", Application2, {
 				dojo.connect(dijit.byId("dlg_itemmanager").filedialog,"_cb_createPoi",this,"_updateitem");
 				dojo.connect(dijit.byId("dlg_itemmanager").filedialog,"onUpdatePoi",this,"_updateitem");
 				
+				dlg1.application = this;
+				dlg1.poidialog.application = this;
+				dlg1.filedialog.application = this;
 				dlg1.clientapp = this;
 			}
 			
@@ -731,6 +769,7 @@ dojo.declare("DijitClient2", Application2, {
 				dojo.connect(dlg1,"onOkClick",this,"_dlgGrp_onOkClick");
 				dojo.connect(dlg1,"onGetPoint",this,"_onGetPointClick");
 				dojo.connect(dlg1,"onZoomlevelClick",this,"_onZoomlevelClick");
+				dlg1.application = this;
 			}
 			
 			this.hideLoading();
@@ -769,7 +808,7 @@ dojo.declare("DijitClient2", Application2, {
 		showPoiDialog: function(item) {
 			var dlg1 = this.getItemManager();
 			if (dlg1)  {
-				dlg1.poidialog.prevWidget = null;
+				//dlg1.poidialog.prevWidget = null;
 				dlg1.poidialog.setDataItem(item);
 				dlg1.poidialog.show(true);
 			}
@@ -798,6 +837,7 @@ dojo.declare("DijitClient2", Application2, {
 				dojo.connect(dlg1,"onGetPoint",this,"_onGetPointClick");
 				dojo.connect(dlg1,"onZoomlevelClick",this,"_onZoomlevelClick");		
 				dojo.connect(dlg1,"onUpdateUser",this,"_cb_updateUser");
+				dlg1.application = this;
 			}
 			
 			this.hideLoading();
@@ -851,6 +891,7 @@ dojo.declare("DijitClient2", Application2, {
 			if (!dlg1) {
 				dojo.require("trm.widget.AdminDialog");
 				dlg1 = new trm.widget.AdminDialog({}, "dlg_admin");
+				dlg1.application = this;
 				/*
 				dojo.connect(dlg1,"onGetPoint",this,"_onGetPointClick");
 				dojo.connect(dlg1,"onZoomlevelClick",this,"_onZoomlevelClick");		

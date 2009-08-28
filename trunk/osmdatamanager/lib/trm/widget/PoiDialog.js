@@ -86,7 +86,6 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 		
 	show: function(isupdate) {
 		this.inherited(arguments);
-		//this._init_TinyMce();
 		if (this.onlyshow) {
 			if (this.dataitem) {
 				this._setTag(this.dataitem.tagname);
@@ -104,7 +103,6 @@ dojo.declare("trm.widget.PoiDialog", [trm.widget._TrmBaseDialog], {
 			this._setTag("standard_poi");
 			this.dataitem = null;
 		}
-		
 	}
 		
 });

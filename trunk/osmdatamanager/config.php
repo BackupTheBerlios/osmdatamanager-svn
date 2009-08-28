@@ -43,6 +43,11 @@
 	$gl_baselon = 0;
 	$gl_basezoomlevel = 14;
 	
+	$gl_applicationlogins = array
+	(
+		array('clientname'=>"Example1",	'username'=>"test", 'password'=>"test")
+	);
+	
 	/****************************************************
 	 * END CONFIG SECTION
 	 * **************************************************/

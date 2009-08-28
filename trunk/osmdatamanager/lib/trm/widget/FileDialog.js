@@ -34,10 +34,19 @@ dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
 		return true;
 	},
 	
+	_setTranslations: function() {
+		this.inherited(arguments);
+		
+		if (this.nls) {
+			if (this.dlg_lblFilename) 
+				this.dlg_lblFilename.innerHTML = this.nls["filename"];
+		}
+	},
+	
 	_updateOk: function(item) {
 		//console.debug(item);
-		if (gl_application) {
-			gl_application._updateitem(item);
+		if (this.application) {
+			this.application._updateitem(item);
 		}
 		this.hide();
 	},

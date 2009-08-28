@@ -32,8 +32,8 @@ dojo.declare("trm.widget.SimpleDialog", [trm.widget._TrmBaseDialog], {
 	_cb_crtPoi: function(response, ioArgs) {
 		console.debug(response);
 		
-		if (gl_application) {	
-			gl_application.displayItem(response);
+		if (this.application) {	
+			this.application.displayItem(response);
 			this.hide();
 		}
 	},
@@ -55,7 +55,7 @@ dojo.declare("trm.widget.SimpleDialog", [trm.widget._TrmBaseDialog], {
 			func: this._cb_crtPoi
 		}
 			
-		pm.createPoiInGroup(data.itemname,data.description,data.lat,data.lon,"user",12,"SimpleMap",cb);
+		pm.createPoiInGroup(data.itemname,data.description,data.lat,data.lon,"user",12,"Demogroup1",cb);
 	},
 	show: function() {
 		this.inherited(arguments);

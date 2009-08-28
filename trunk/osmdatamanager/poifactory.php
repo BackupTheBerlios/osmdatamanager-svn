@@ -303,11 +303,8 @@
 			}
 			
 			$delquery2 = "DELETE FROM `tab_grp_item` WHERE (childid = $aPoiId) AND (usrid = $aUsrId)";
-			if ($this->executeQuery($delquery2) == null)
-			{
-				return false;
-			}
-			
+			$this->executeQuery($delquery2);
+						
 			return true;							
 		}
 		

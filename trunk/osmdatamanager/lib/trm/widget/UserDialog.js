@@ -24,7 +24,6 @@ dojo.require("dojo.parser");
 //dojo.requireLocalization("trm.translation", "tt");
 
 dojo.declare("trm.widget.UserDialog", [trm.widget._TrmBaseDialog], {
-	application: null,
 	storedata: true,
 	templatePath:    dojo.moduleUrl('trm.widget', 'UserDialog.html'),
 	postCreate: function() {

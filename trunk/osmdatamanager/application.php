@@ -27,16 +27,10 @@
 	 define ("msg_crtgrp","msg.crtgrp");
 	 define ("msg_delgrp","msg.delgrp");
 	 define ("msg_getgrps","msg.getgrps");
-	 //define ("msg_addgrpfiles","msg.addgrpfiles");
 	 define ("msg_updategrp","msg.updategrp");
 	 define ("msg_addgrpitm","msg.addgrpitm");	
 		 	 
 	 define ("msg_getchildgrps","msg.getchildgrps");
-	 //define ("msg_getgrpfiles","msg.getgrpfiles");
-	 //define ("msg_getgrppois","msg.getgrppois");
-	 //define ("msg_getgrpfilesrecursiv","msg.getgrpfilesrecursiv");
-	 //define ("msg_getgrppoisrecursiv","msg.getgrppoisrecursiv");
-	 //define ("msg_getgrpitems","msg.getgrpitems");
 	 define ("msg_getgrp","msg.getgrp");
 	 
 	 define ("msg_getpublicgrpitems","msg.getpublicgrpitems");	
@@ -49,11 +43,7 @@
 	 define ("msg_getpois","msg.getpois");
 	 define ("msg_getpoi","msg.getpoi");
 	 define ("msg_updatepoi","msg.updatepoi");
-	 //
-	 //define ("msg_addgrppois","msg.addgrppois");	 
-	 //define ("msg_remgrppois","msg.remgrppois");
-	 //define ("msg_remgrpfiles","msg.remgrpfiles");
-	 
+	 // 
 	 	 
 	 //login - out - user
 	 define ("msg_login","msg.login");	 
@@ -104,6 +94,16 @@
 				
 	function application_userisvalid()
 	{
+		global $gl_applicationlogins;
+		$clientname = $_REQUEST['clientname'];
+		if (isset($clientname)) {
+			foreach ($gl_applicationlogins as $app) {
+			    if ($app["clientname"] == $clientname) {
+			    	return true;
+			    }
+			}
+		}
+		
 		if (isset($_SESSION['validuser'])) {
 			return true;
 		}
@@ -131,6 +131,20 @@
 	
 	function application_gevaliduser()
 	{
+		global $gl_applicationlogins;
+		$clientname = $_REQUEST['clientname'];
+		if (isset($clientname)) {
+			foreach ($gl_applicationlogins as $app) {
+			    if ($app["clientname"] == $clientname) {
+			    	$userfactory = new Userfactory();
+					$usr = $userfactory->loginUser($app["username"],$app["password"]);	
+					return $usr;
+			    }
+			}
+			$_SESSION['validuser'] = null;
+			return null;
+		}
+		
 		if (isset($_SESSION['validuser']))
 		{
 			$user = $_SESSION['validuser'];
@@ -359,6 +373,8 @@
 				  	if (mysql_affected_rows() < 1) {
 					  	mysql_close($con1);
 						return null;
+					  } else {
+					  	$result = true;
 					  }
 				  }
 				}
@@ -371,6 +387,7 @@
 				if ($pos === 0) {
 					$this->parseFieldnames($result);
 				}*/
+				
 				return $result;
 			}
 			

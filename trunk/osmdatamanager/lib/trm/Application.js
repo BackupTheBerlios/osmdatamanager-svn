@@ -19,10 +19,12 @@
 /**
  * base class for server connections 
  */
+
+tinyMCE = null;
 dojo.declare("Serverconnection", null, {
         
 		constructor: function(){
-                
+        	this.clientname = "";        
         },
 		
 		/**
@@ -33,6 +35,10 @@ dojo.declare("Serverconnection", null, {
 		 */
 		loadFromServer: function(targetfile, params, callBack){
 			try {
+				if (this.clientname != "") {
+					params["clientname"] = this.clientname;
+				}
+				
 				dojo.xhrPost({ //
 					// The following URL must match that used to test the server.
 					url: targetfile,
@@ -82,8 +88,8 @@ dojo.declare("Serverconnection", null, {
  * base application object does not use any dijit widgets
  * @param {Object} name
  */
-dojo.declare("Application2", Serverconnection, {
-        
+dojo.declare("Application", Serverconnection, {
+        opendialogs: null,
 		constructor: function(name,map){
                 this.name=name;
 				this.activeuser=null;
@@ -92,6 +98,7 @@ dojo.declare("Application2", Serverconnection, {
 				this.docentermap = true; //call centerMap function in displayPoi when true  (used for group loading)
 				this.isgrouploading = false; //to avoid recursiv item loading with several calls
 				this.markermanager = null;
+				this.opendialogs = new Array();
         },	
 		
 		/*******************************************************

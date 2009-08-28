@@ -104,8 +104,8 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	},
 	
 	_getIconname1: function(item) {
-		if (gl_application) {
-			var usr1 = gl_application.getActiveUser();
+		if (this.application) {
+			var usr1 = this.application.getActiveUser();
 			if (usr1) {
 				if (usr1.tags) {
 					for (var i = 0; i < usr1.tags.length; i++) {
@@ -196,7 +196,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		}	
 	},
 	_crtPoiClick: function() {
-		this.poidialog.prevWidget = this;
+		//this.poidialog.prevWidget = this;
 		this.hide();
 		this.poidialog.show();	
 	},
@@ -204,6 +204,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	
 	},
 	_cb_delete: function() {
+		console.debug("_cb_delete");
 		if (this.viewMode.toLowerCase() == "file") {
 			this.loadGpxFiles();
 		}
@@ -276,8 +277,8 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 	show: function() {
 		this.inherited(arguments);
 		
-		if (gl_application) {
-			gl_application.updateFileList();
+		if (this.application) {
+			this.application.updateFileList();
 		}
 		
 		this.loadGpxFiles();

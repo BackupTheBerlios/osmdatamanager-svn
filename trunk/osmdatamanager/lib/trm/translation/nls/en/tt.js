@@ -36,6 +36,8 @@
 	"itemtype": "Typ",
 	"settings": "Settings",
 	"email": "eMail",
+	"filename": "Filename",
 	"info": "Info",
+	"admin": "Admin",
 	"dbl_clk_point": "please double click a point on the map"
 })

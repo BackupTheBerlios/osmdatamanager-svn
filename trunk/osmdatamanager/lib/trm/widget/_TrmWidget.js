@@ -24,9 +24,11 @@ dojo.require("dojo.parser");
 
 dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 	senderWidget: null,
-	prevWidget: null,
-	showPrevWidget: true,
+	//prevWidget: null,
+	//showPrevWidget: true,
 	callback: null,
+	clientane: "",
+	application: null,
 	onGetPoint: function(sender) {
 		
 	},
@@ -45,6 +47,12 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 		 */
 	loadFromServer: function(targetfile, params, callBack){
 			try {
+				if (this.application) {
+					if (this.application.clientname != "") {
+						params["clientname"] = this.application.clientname;
+					}
+				}
+				
 				dojo.xhrPost({ //
 					// The following URL must match that used to test the server.
 					url: targetfile,
@@ -137,7 +145,7 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 		this.onZoomlevelClick(this);
 	},
 	_getPointClick: function() {
-		this.showPrevWidget = false;
+		//this.showPrevWidget = false;
 		this.onGetPoint(this);
 	},
 	_cancelClick: function(e) {
@@ -147,14 +155,34 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 		
 	},
 	show: function() {
+		if (this.application) {
+			if (this.application.opendialogs.length > 0) {
+				var dlg = this.application.opendialogs.pop();
+				dlg.hide();
+			}
+			
+			this.application.opendialogs.push(this);
+		}
+		
 		this._changeCssClass("trmHidden","trmVisible");
 		this._position();
 	},
 	hide: function() {
 		this._changeCssClass("trmVisible","trmHidden");
+		
+		if (this.application) {
+			//this.application.opendialogs.push(this);
+			this.application.opendialogs.pop();
+			if (this.application.opendialogs.length > 0) {
+				var dlg = this.application.opendialogs.pop();
+				dlg.show();
+			}
+		}
+		/*
 		if ((this.prevWidget) && (this.showPrevWidget)) {
 			this.prevWidget.show();
 		}
+		*/
 	}
 	
 	

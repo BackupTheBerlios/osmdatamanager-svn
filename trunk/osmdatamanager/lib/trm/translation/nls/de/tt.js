@@ -36,6 +36,8 @@
 	"itemtype": "Typ",
 	"settings": "Einstellungen",
 	"email": "eMail",
+	"filename": "Dateiname",
 	"info": "Info",
+	"admin": "Admin",
 	"dbl_clk_point": "Bitte machen Sie einen Doppelklick auf einen Punkt"
 })

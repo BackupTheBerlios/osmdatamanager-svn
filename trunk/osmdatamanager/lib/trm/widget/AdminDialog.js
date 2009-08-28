@@ -38,6 +38,9 @@ dojo.declare("trm.widget.AdminDialog", [trm.widget._TrmBaseDialog], {
 		this.inherited(arguments);
 		
 		if (this.nls) {
+			if (this.dlgAdmin_lblCrtUser)
+				this.dlgAdmin_lblCrtUser.innerHTML = this.nls["createuser"];
+				
 			if (this.dlgAdmin_lblUsername) 
 				this.dlgAdmin_lblUsername.innerHTML = this.nls["username"];
 				
@@ -48,16 +51,14 @@ dojo.declare("trm.widget.AdminDialog", [trm.widget._TrmBaseDialog], {
 				this.dlgAdmin_lblPassword2.innerHTML = this.nls["password"];
 				
 			if (this.dlgAdmin_btnCrtUser) 
-				this.dlgAdmin_btnCrtUser.containerNode.innerHTML = this.nls["createuser"];
-				
-			
+				this.dlgAdmin_btnCrtUser.containerNode.innerHTML = this.nls["createuser"];			
 		}
-	}
+	},
 	
 	_updateOk: function(item) {
 		//console.debug(item);
-		if (gl_application) {
-			gl_application._updateitem(item);
+		if (this.application) {
+			this.application._updateitem(item);
 		}
 		this.hide();
 	},

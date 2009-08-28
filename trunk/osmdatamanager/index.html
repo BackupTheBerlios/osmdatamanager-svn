@@ -19,8 +19,7 @@
 	
 	<script type="test/javascript">djConfig = { isDebug: true };</script> 
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false, locale: 'en'"></script>			
-	<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script type="text/javascript" src="tinymce/swampy_browser/sb.js"></script>
+	
 	
 	<script type="text/javascript">	
 		  dojo.require("dojo.parser");
@@ -64,6 +63,9 @@
 	<script src="lib/trm/GroupManager.js"></script>
 	<script src="lib/trm/PoiManager.js"></script>
 	<script src="lib/trm/Markermanager.js"></script>
+	
+	<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+	<script type="text/javascript" src="tinymce/swampy_browser/sb.js"></script>
 	
 	<script src="json2.js"></script>		
 	<script type="text/javascript">
@@ -109,7 +111,7 @@
 						
 			//var pm = new PoiManager();						
 			//Client Application
-			gl_application = new DijitClient2("osmdatamanager",gl_map);			
+			gl_application = new DijitClient("osmdatamanager",gl_map);			
 									
 			//Groupmanager
 			gl_groupmanager = new Groupmanager(gl_application);	
@@ -123,7 +125,6 @@
 				func:gl_application._cb_loginUser,
 				target:gl_application
 			}
-			//gl_application.loginUser("test","test",cb);
 			gl_application.checkUser(cb);				
 		}		
 		
@@ -146,7 +147,6 @@
 		
 		<!-- LEFT MENU (user options or login) -->
 		<div dojoType="dijit.layout.ContentPane" region="left" class="soria" id="mainmenu">
-			<!-- <img src="images/bg_street_small.png"></img> -->
 			<img src="images/logo4a.png" />
 			
 			<div id="mainmenu_content">
@@ -156,11 +156,8 @@
 					<button dojoType="trm.Button.TrmButton" onclick="gl_application.centerHomebase()" field="showhomebase">Heimatort anzeigen</button><br/>
 				</div>
 				
-				<div><!--
-					<div id="treecontainer" >
-					</div>
-					-->
-					<div id="treeThree"></div>
+				<div>
+					<div id="thetree"></div>
 				</div>
 			</div>	
 			
@@ -168,19 +165,14 @@
 				powerd by
 				<a href="http://developer.berlios.de" target="_blank" title="BerliOS Developer"> <img src="http://developer.berlios.de/bslogo.php?group_id=10678" style="margin-left:50px; padding:0px;" width="124px" height="32px" border="0" alt="BerliOS Developer Logo" /></a>
 				<br/>
-				
 				<a href="http://www.openstreetmap.org" target="_blank">Openstreetmap<img src="images/Mag_map-120x120.png" style="cursor:pointer; margin-left:50px; border-style:none;" /></a>
 			</div>
 		</div>						
 	  </div>  
 	
-	<div id="coords"></div>
+	<!-- <div id="coords"></div> -->
 
 	<!-- DIALOGS -->
-	
-	<!-- loading dialog -->
-	<!-- <div dojoType="dijit.Dialog" class="soria" id="dialog_loading" closable="false" title="please wait">loading your gpx traces..</div> -->
-	
 	<div id="dlg_login"></div> 
 	<div id="dlg_itemmanager"></div>
 	<div id="dlg_group"></div> 
@@ -210,11 +202,9 @@
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_delete" field="delete" onClick="">Entfernen</div>
 		<div dojoType="dijit.MenuSeparator"></div>	
 		<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_removeall" field="clearmap" onClick="gl_application.clearMap()">Karte bereinigen</div>
-		<!-- <div dojoType="trm.MenuItem.TrmMenuItem" id="itm_updatetree" field="updatetree" onClick="gl_groupmanager.getRootGroups()">Baum aktualisieren</div>	-->
 		<div dojoType="dijit.MenuSeparator"></div>	
 		
 		<div dojoType="trm.MenuItem.TrmPopupMenuItem" id="itm_submenu_settings" field="settings" label="hallo">
-			<!-- <span id="itm_submenu_settings_txt">_Einstellungen</span> -->
 			<div dojoType="dijit.Menu" id="submenu_settings">
 				<div dojoType="trm.MenuItem.TrmMenuItem" id="itm_usersettings" field="usersettings" onClick="gl_application.showUserDialog()">Benutzereinstellungen</div>
 			</div>
