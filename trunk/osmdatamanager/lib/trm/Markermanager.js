@@ -269,7 +269,6 @@ dojo.declare("MarkerManager", Serverconnection, {
 			var m1 = this.getMarker(latlon);
 			if (! m1) {
 				m1 = this.getMarkerById(markerid);
-				console.debug(m1);
 			}
 			
 			if (m1) {

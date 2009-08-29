@@ -56,7 +56,6 @@ dojo.declare("trm.widget.AdminDialog", [trm.widget._TrmBaseDialog], {
 	},
 	
 	_updateOk: function(item) {
-		//console.debug(item);
 		if (this.application) {
 			this.application._updateitem(item);
 		}
@@ -126,7 +125,6 @@ dojo.declare("trm.widget.AdminDialog", [trm.widget._TrmBaseDialog], {
 		
 		alert("successfully created user " + user.itemname);
 		this._resetFields();
-		//console.debug(user);
 	},
 	
 	_createUserClick: function(e) {

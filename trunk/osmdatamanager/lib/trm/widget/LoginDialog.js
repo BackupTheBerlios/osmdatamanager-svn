@@ -30,25 +30,13 @@ dojo.declare("trm.widget.LoginDialog", [trm.widget._TrmBaseDialog], {
 		this.trmLoginLabelUserNode.textContent=this.nls["username"];
 		this.trmLoginLabelPasswordNode.textContent=this.nls["password"];
 	},
-	/*
-	startup: function() {
+	onLoggedIn: function(user) {
 		
 	},
-	onLoad: function(){
-			// summary: when href is specified we need to reposition the dialog after the data is loaded
-			this._position();
-			this.inherited(arguments);
-	},
-	*/
-	onLoggedIn: function(user) {
-		console.debug(user);
-	},
 	_cb_loginUser: function(response, ioArgs) {
-		console.debug(response);
 		if (response != "msg.loginfailed") {
 			this.onLoggedIn(response);
 		} else {
-			//alert(nls["loginfailed"]);
 			this._resetFields();
 			alert(this.nls["login_failed"]);
 			
@@ -62,8 +50,6 @@ dojo.declare("trm.widget.LoginDialog", [trm.widget._TrmBaseDialog], {
 		this.trmLoginInputPasswordNode.setAttribute("value","");
 	},
 	_okClick: function(e) {
-		console.debug("okclick");
-		
 		var username = this.trmLoginInputUserNode.value;
 		//var password = this.trmLoginInputPasswordNode.value;
 		var password = document.getElementById(this.trmLoginInputPasswordNode.id).value;
@@ -87,9 +73,7 @@ dojo.declare("trm.widget.LoginDialog", [trm.widget._TrmBaseDialog], {
 		this.loadFromServer("userfunctions.php",params,this._cb_loginUser);
 	},
 	show: function() {
-		console.debug("show");
 		this.inherited(arguments);
-		//this._position();
 		this._resetFields();
 		
 		if (this.trmLoginInputUserNode) {

@@ -399,8 +399,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	},
 	
 	_onKeyDown: function(e) {
-		//console.debug("_onKeyDown");
-		
+				
 		if (this.islongtextkey) {
 			this.islongtextkey = false;
 			return;
@@ -517,7 +516,6 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 * @param {Object} latlon
 	 */
 	setPoint: function(latlon) {
-		//this.showPrevWidget = true;
 		this.dlg_tbLat.attr("value",latlon.lat);
 		this.dlg_tbLon.attr("value",latlon.lon);
 	},

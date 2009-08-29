@@ -44,7 +44,6 @@ dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
 	},
 	
 	_updateOk: function(item) {
-		//console.debug(item);
 		if (this.application) {
 			this.application._updateitem(item);
 		}

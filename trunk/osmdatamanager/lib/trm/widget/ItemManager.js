@@ -65,7 +65,6 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		this._setTranslations();
 		
 		//this.popup.targetNodeIds = [this.grid.domNode.id,this.domNode.id];
-		//console.debug(this.popup.targetNodeIds);
 		//this.popup.startup();
 		dojo.subscribe("/dnd/start", null, dojo.hitch(this,this._dndStart));
 		dojo.subscribe("/dnd/cancel", null, dojo.hitch(this,this._dndCancel));
@@ -196,15 +195,31 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		}	
 	},
 	_crtPoiClick: function() {
-		//this.poidialog.prevWidget = this;
 		this.hide();
 		this.poidialog.show();	
 	},
-	_edtPoiClick: function() {
-	
+	_edtClick: function() {
+		if (this.currentItem) {
+			switch(String(this.currentItem.itemtype).toLowerCase()) {
+					case "poi":
+						this.poidialog.setDataItem(this.currentItem);
+						this.poidialog.show(true);
+						break;
+					case "file":
+						this.filedialog.setDataItem(this.currentItem);
+						this.filedialog.show(true);
+						break;
+				}
+		}
+	},
+	_displayClick: function() {
+		if (this.currentItem) {
+			if (this.application) {
+				this.application.displayItem(this.currentItem);	
+			}
+		}
 	},
 	_cb_delete: function() {
-		console.debug("_cb_delete");
 		if (this.viewMode.toLowerCase() == "file") {
 			this.loadGpxFiles();
 		}
@@ -267,7 +282,7 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 			}
 			
 			if (String(this.currentItem.itemtype).toLowerCase() == "poi") {
-				//this.itmEdt.attr("disabled",false);
+				this.itmEdt.attr("disabled",false);
 				this.itmDel.attr("disabled",false);		
 				this.itmShow.attr("disabled",false);
 			}

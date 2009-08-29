@@ -24,8 +24,6 @@ dojo.require("dojo.parser");
 
 dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 	senderWidget: null,
-	//prevWidget: null,
-	//showPrevWidget: true,
 	callback: null,
 	clientane: "",
 	application: null,
@@ -145,7 +143,6 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 		this.onZoomlevelClick(this);
 	},
 	_getPointClick: function() {
-		//this.showPrevWidget = false;
 		this.onGetPoint(this);
 	},
 	_cancelClick: function(e) {
@@ -178,11 +175,6 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 				dlg.show();
 			}
 		}
-		/*
-		if ((this.prevWidget) && (this.showPrevWidget)) {
-			this.prevWidget.show();
-		}
-		*/
 	}
 	
 	

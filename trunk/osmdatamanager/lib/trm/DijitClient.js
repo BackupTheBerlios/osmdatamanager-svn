@@ -177,7 +177,6 @@ dojo.declare("DijitClient", Application, {
 				for (var i=(this.opendialogs.length-1);i>-1;i--) {
 					var dlg1 = null;
 					dlg1 = this.opendialogs.pop();
-					console.debug(dlg1);
 					if (dlg1) {
 						dlg1.hide();
 					}
@@ -204,11 +203,9 @@ dojo.declare("DijitClient", Application, {
 				
 				this.clearMap();
 				this.disablePrivatemode();
-				console.debug(this.opendialogs.length);
 				for (var i=(this.opendialogs.length-1);i>-1;i--) {
 					var dlg1 = null;
 					dlg1 = this.opendialogs.pop();
-					console.debug(dlg1);
 					if (dlg1) {
 						dlg1.hide();
 					}
@@ -222,11 +219,9 @@ dojo.declare("DijitClient", Application, {
 			if (response != "msg.loginfailed") {
 				this._cb_LoggedIn(response);
 			} else {
-				console.debug(this.opendialogs.length);
 				for (var i=(this.opendialogs.length-1);i>-1;i--) {
 					var dlg1 = null;
 					dlg1 = this.opendialogs.pop();
-					console.debug(dlg1);
 					if (dlg1) {
 						dlg1.hide();
 					}
@@ -808,7 +803,6 @@ dojo.declare("DijitClient", Application, {
 		showPoiDialog: function(item) {
 			var dlg1 = this.getItemManager();
 			if (dlg1)  {
-				//dlg1.poidialog.prevWidget = null;
 				dlg1.poidialog.setDataItem(item);
 				dlg1.poidialog.show(true);
 			}
@@ -864,7 +858,6 @@ dojo.declare("DijitClient", Application, {
 		showFileDialog: function(item) {
 			var dlg1 = this.getItemManager();
 			if (dlg1)  {
-				dlg1.filedialog.prevWidget = null;
 				dlg1.filedialog.setDataItem(item);
 				dlg1.filedialog.show(true);
 			}
