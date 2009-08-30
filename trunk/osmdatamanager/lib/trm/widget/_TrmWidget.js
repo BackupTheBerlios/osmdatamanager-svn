@@ -75,6 +75,9 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 	
 	_cb_standard: function(response, ioArgs) {
 		try {		
+			if (response == null)
+					return;
+					
 			if (response != "msg.failed")
 			{
 				if (this.callback != null) {

@@ -44,7 +44,7 @@
 	}
 	
 	if (application_userisvalid()) { 
-		$usr = application_gevaliduser();
+		$usr = application_getvaliduser();
 	  	if ($usr != null) {	
 	  		$df = new DirectoryFactory();
 			$ff = new FileFactory();
@@ -56,13 +56,12 @@
 			if ($action == msg_updatefilelist) {
 				//$ff->updateFiles($usr->getUid());
 				$ff->setInvalid($usr->getUid());
-				
 				$lst1 = $df->listFiles_Dir($usr->getUid(),$gl_filedir,array("gpx","xml"));
 				if ($lst1 != null) {
 					for ($i=0;$i<count($lst1);$i++) {
 						$fn = $lst1[$i];
 						if (! $ff->fileExists($usr->getUid(),basename($fn))) {
-							$path = $gl_ftpprefix.dirname($fn)."/";
+							$path = dirname($fn)."/";
 							$filename = basename($fn);																						
 							$ff->createFile($usr->getUid(),$path,$filename,NULL);
 						} else {

@@ -30,7 +30,7 @@
 	}
 	  
    if (application_userisvalid()) { 
-	  $usr = application_gevaliduser();
+	  $usr = application_getvaliduser();
 	  if ($usr != null) {	
 	  	
 		//msg_getftpfiles

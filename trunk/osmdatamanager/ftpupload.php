@@ -22,7 +22,7 @@
    include_once("JSON.php");
 
 if (application_userisvalid()) {
-	$usr = application_gevaliduser();
+	$usr = application_getvaliduser();
 	if ($usr != null) {	
 		$df = new DirectoryFactory();
 		$df->uploadFiles($usr);

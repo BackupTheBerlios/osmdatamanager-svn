@@ -54,8 +54,10 @@ dojo.declare("trm.widget.ItemManager", [trm.widget._TrmWidget, dijit._Templated]
 		this.grid = new dojox.grid.DataGrid({
 					query: { itemname: '*' },
 					//store: this._store,
-					autoHeight: true,
-					rowsPerPage: 2,
+					autoHeight: false,
+					elasticView: false,
+					height: 300,
+					//rowsPerPage: 2,
 					onCellMouseOver: dojo.hitch(this,this._onCellMouseOver),
 					onCellContextMenu: dojo.hitch(this,this._onCellContextMenu),
 					onStyleRow: dojo.hitch(this,this._onStyleRow),

@@ -59,7 +59,7 @@
 	}
 		
    	if (application_userisvalid()) {
-   		$usr = application_gevaliduser();
+   		$usr = application_getvaliduser();
 		if ($usr != null) {
 			$fac = new Groupfactory();
 			//$json = new json;
@@ -154,6 +154,9 @@
 			//msg_gettree
 			if ($action == msg_gettree) {
 				$lst1 = null;
+				global $gl_parsetags;
+				$gl_parsetags = false;
+				
 				$gc = new GroupContainer("id","name");
 				$opt = "";
 				$withvirtual = true;
@@ -417,6 +420,24 @@
 					echo application_getMessage(msg_ok);
 				else
 					echo application_getMessage(msg_failed);
+			}
+			
+			//msg_gettags
+			if ($action == msg_gettags) {
+				$tc = new TagContainer();
+				$p1 = new ItemParser();
+				
+				$lst1 = $p1->getTags();
+				if ($lst1 != null) {
+					for ($i=0;$i<count($lst1);$i++) {
+						$tag1 = $lst1[$i];
+						$tc->addTag($tag1);
+					}	
+					
+					echo application_getMessage($tc);
+				} else {
+					echo application_getMessage(msg_failed);
+				}
 			}
 			
 			//msg_updategrp

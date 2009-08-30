@@ -21,6 +21,7 @@ dojo.require("trm.widget._TrmBaseDialog");
 dojo.require("dojo.parser");
 
 dojo.declare("trm.widget.SimpleDialog", [trm.widget._TrmBaseDialog], {
+	targetGroup: "Demogroup1",
 	templatePath:    dojo.moduleUrl('trm.widget', 'SimpleDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
@@ -30,7 +31,7 @@ dojo.declare("trm.widget.SimpleDialog", [trm.widget._TrmBaseDialog], {
 	},
 	
 	_cb_crtPoi: function(response, ioArgs) {
-		console.debug(response);
+		//console.debug(response);
 		
 		if (this.application) {	
 			this.application.displayItem(response);
@@ -49,13 +50,15 @@ dojo.declare("trm.widget.SimpleDialog", [trm.widget._TrmBaseDialog], {
 		console.debug(data);
 				
 		var pm = new PoiManager();
+		pm.clientname = this.application.clientname;
+		pm.targetprefix = this.application.targetprefix;
 		//pm.createPoiInGroup: function(poiname, description, lat,lon,tagname,zoomlevel,groupname,cb) {
 		var cb = {
 			target: this,
 			func: this._cb_crtPoi
 		}
 			
-		pm.createPoiInGroup(data.itemname,data.description,data.lat,data.lon,"user",12,"Demogroup1",cb);
+		pm.createPoiInGroup(data.itemname,data.description,data.lat,data.lon,"standard_poi",12,this.targetGroup,cb);
 	},
 	show: function() {
 		this.inherited(arguments);

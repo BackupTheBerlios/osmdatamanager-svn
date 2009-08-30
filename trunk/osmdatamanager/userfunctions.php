@@ -74,7 +74,7 @@
   //msg_chklogin
   if ($action == msg_chklogin)
   {
-  	 $usr = application_gevaliduser();
+  	 $usr = application_getvaliduser();
 	  if ($usr != null)
 	  {
 		echo application_getMessage($usr);

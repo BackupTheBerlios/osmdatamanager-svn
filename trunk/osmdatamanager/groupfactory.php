@@ -217,6 +217,26 @@
 			return null;
 		}
 		
+		
+		/**
+		 * 
+		 * @return 
+		 * @param $aUserId Object
+		 * @param $aGroupName Object
+		 */
+		function getFriendGroupByName($aUserId,$aGroupName) {
+			$lst1 = $this->getAllFriendGroups($aUserId);
+			if ($lst1 != null) {
+				for ($i=0;$i<count($lst1);$i++) {
+					$grp1 = $lst1[$i];
+					if ($grp1->itemname == $aGroupName) {
+						return $grp1;
+					}
+				}	
+			}
+			return null;
+		}
+		
 		/**
 		 * returns group with given userid and given groupname 
 		 * @return 
@@ -235,6 +255,12 @@
 					return $grp;
 				}
 			}
+			
+			$grp1 = $this->getFriendGroupByName($aUserId,$aGroupName);
+			if ($grp1 != null) {
+				return $grp1;
+			}
+			
 			return null;
 		}
 		
@@ -399,7 +425,6 @@
 			$groups = array();
 			$qry = "SELECT * FROM `tab_grp` WHERE (usrid = $aFriendId) AND (protection = 'friend') ORDER BY itemname";
 			$result = $this->executeQuery($qry);
-			
 			if ($result != NULL) 
 			{   
 				while ($row = mysql_fetch_row($result))
@@ -408,7 +433,6 @@
 						$grp = new Group();
 						$this->parse_Group($grp,$row,$result);
 						array_push($groups, $grp);
-						
 					}
 				}
 				return $groups;

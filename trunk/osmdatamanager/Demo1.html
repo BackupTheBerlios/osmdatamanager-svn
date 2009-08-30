@@ -86,6 +86,8 @@
 			var dlg1 = dijit.byId("simpledialog");
 			if (! dlg1) {
 				dlg1 = new trm.widget.SimpleDialog({}, "simpledialog");
+				dlg1.application = gl_application;
+				dlg1.clientname  = "Demo1";
 				dojo.connect(dlg1,"onGetPoint",this,"getPoint");
 			}
 			
@@ -142,12 +144,13 @@
 			   	  It loads the data from the group "Demogroup1"<br/>
 			      When you click on the button you can create a POI, this will be inserted in the "Demogroup1" too.</p>
 			   
-			   <button id="1465" dojoType="dijit.form.Button"
-				  onClick="showDialog()"
-				  iconClass="plusIcon">
+			  <button dojoType="dijit.form.Button" onClick="showDialog()">
 				  Where are you from ??
 			  </button>
 			  
+			  <button dojoType="dijit.form.Button" onClick="loadData()">
+				  Zoom out
+			  </button>
 		</div>
 		
 		<!-- MAIN MAP -->		

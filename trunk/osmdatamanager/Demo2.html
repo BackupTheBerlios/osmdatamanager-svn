@@ -40,7 +40,11 @@
 		var gl_tree = null;
 				
 		function loadData() {
-			gl_application.displayGroupItemsByGroupName("Korsika");
+			//you have to set gl_application.syncload = true;
+			//if you call two functions in a row
+			gl_application.displayGroupItemsByGroupName("Demogroup2");
+			gl_application.loadTags();	
+			
 			_initTree();
 		}
 		
@@ -110,7 +114,7 @@
 			gl_markermanager = new MarkerManager();
 			gl_application.markermanager = gl_markermanager;
 			gl_application.clientname = "Demo2";
-			
+			gl_application.syncload = true;			
 			loadData();
 		}
 		
@@ -134,7 +138,7 @@
 			
 			//var store = new dojo.data.ItemFileWriteStore  ({
 			var store = new dojox.data.AndOrReadStore({
-				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1&options=withfriends",
+				url: "groupfunctions.php?action=msg.gettree&parentgroupid=-1&options=withfriends&clientname=Demo2",
 				clearOnClose: true
 		    });				
 									
@@ -147,7 +151,7 @@
 		        model: treeModel,
 				showRoot: false,
 				betweenThreshold: 5,
-		    }, "treeThree");
+		    }, "theTree");
 			dojo.connect(gl_tree,"onDblClick",this,"treeOnDblClick");
 			gl_tree.removeFocus();
 		}
@@ -160,14 +164,14 @@
 	  <div dojoType="dijit.layout.BorderContainer" style="width:1024px; height:768px;" design="sidebar" id="borderContainer">
 	    			
 		<!-- MAIN MAP -->
-		<div dojoType="dijit.layout.ContentPane" region="center" id="map" style="width:800px;height:768px;">
+		<div dojoType="dijit.layout.ContentPane" region="center" id="map" >
 		</div>
 		
 		<!-- LEFT MENU (user options or login) -->
 		<div dojoType="dijit.layout.ContentPane" region="left" class="soria" id="mainmenu">
 			<div id="mainmenu_content" style="width:200px; height: 300px;">			
 				<div>
-					<div id="treeThree"></div>
+					<div id="theTree"></div>
 				</div>
 			</div>	
 			

@@ -14,9 +14,23 @@
     You should have received a copy of the GNU General Public License
     along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
 	*/
-    
+    include_once("application.php");
+	
+	class TagContainer {
+		
+		var $items;
+				
+		function TagContainer() {
+			$this->items = array();
+		}
+		
+		function addTag(&$aTagData) {
+			array_push($this->items, $aTagData);	
+		}
+	}
+	
 	class ItemParser extends DatabaseAccess {
-						
+								
 		function ItemParser()
 		{
 			parent::DatabaseAccess();
@@ -28,14 +42,43 @@
 		 * 
 		 *******************************************************************************************/
 		
+		function getTags() {
+			$tags = array();
+			
+			$qry = "SELECT * FROM `tab_icon`";
+		
+			$result = $this->executeQuery($qry);
+			if ($result != NULL) 
+			{   
+				$tags = array();
+				while ($row = mysql_fetch_row($result))
+				{
+					if ($row != null){
+						$tag = new TagData($row[1],$row[2],$row[3],$row[4]);
+						array_push($tags, $tag);
+					}
+				}
+			}
+			
+			if (count($tags) > 0)
+				return $tags;	
+			else
+				return null;
+		}
+		
+		
 		function parse_Tags(&$aItem) {
+			global $gl_parsetags;
+			if (! $gl_parsetags)
+				return;
+			
 			
 			if (($aItem->tagname == "") || ($aItem->tagname == null))
 				return;
 			
 			//$qry = "SELECT * FROM `tab_icon` WHERE tagname = '".$aItem->tagname."'";
 			$qry = "SELECT * FROM `tab_icon`";
-			
+		
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
@@ -118,7 +161,7 @@
 				}
 			}
 			
-			if ($aItem->itemtype == "User")
+			if (($aItem->itemtype == "User") || application_ismappeduser())
 				$this->parse_Tags($aItem);
 		}
 		
@@ -152,6 +195,7 @@
 			}
 		}
 		
+				
 		/**
 		 * 
 		 * @return 

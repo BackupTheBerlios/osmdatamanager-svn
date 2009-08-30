@@ -54,7 +54,7 @@
 	}
 		
    	if (application_userisvalid()) {
-   		$usr = application_gevaliduser();
+   		$usr = application_getvaliduser();
 		if ($usr != null) {
 			$pof = new PoiFactory();
 			$js2 = new Services_JSON;

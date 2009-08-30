@@ -2,8 +2,9 @@
 	width:640px;
 }
 
-.trmItemManagerGrid {
-	heigth:400px;	
+.trmItemManager .dojoxGrid {
+	heigth:300px;
+	max-heigth:300px;
 }
 
 /*

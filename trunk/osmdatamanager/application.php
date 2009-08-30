@@ -60,7 +60,11 @@
 	 define ("msg_getfiles","msg.getfiles");
 	 	 	
 	 //ftp
-	 define ("msg_getftpfiles","msg.getftpfiles");
+	 //define ("msg_getftpfiles","msg.getftpfiles");
+	 
+	 //
+	 define ("msg_gettags","msg.gettags");
+	 //
 	 
 	 //return values
 	 define ("msg_crtok","msg.crtok");
@@ -89,6 +93,16 @@
 	 /****************************************************
 	 * END KONSTANTS
 	 ****************************************************/ 
+	
+	/****************************************************
+	 * Globals
+	 ****************************************************/
+	
+	$gl_parsetags = true;
+	
+	/****************************************************
+	 * End Globals
+	 ****************************************************/
 	 
 	session_start();
 				
@@ -96,12 +110,14 @@
 	{
 		global $gl_applicationlogins;
 		$clientname = $_REQUEST['clientname'];
+		
 		if (isset($clientname)) {
 			foreach ($gl_applicationlogins as $app) {
 			    if ($app["clientname"] == $clientname) {
 			    	return true;
 			    }
 			}
+			return false;
 		}
 		
 		if (isset($_SESSION['validuser'])) {
@@ -112,7 +128,7 @@
 	
 	function application_userisadmin()
 	{
-		$usr = application_gevaliduser();
+		$usr = application_getvaliduser();
 		if ($usr != null) {
 			if ($usr->isAdmin()) {
 				return true;
@@ -129,8 +145,7 @@
 		$_SESSION['validuser'] = null;
 	}
 	
-	function application_gevaliduser()
-	{
+	function application_getmappeduser() {
 		global $gl_applicationlogins;
 		$clientname = $_REQUEST['clientname'];
 		if (isset($clientname)) {
@@ -144,6 +159,29 @@
 			$_SESSION['validuser'] = null;
 			return null;
 		}
+		return null;
+	}
+	
+	function application_ismappeduser() {
+		global $gl_applicationlogins;
+		$clientname = $_REQUEST['clientname'];
+		if (isset($clientname)) {
+			foreach ($gl_applicationlogins as $app) {
+			    if ($app["clientname"] == $clientname) {
+			    	return true;
+			    }
+			}
+		}
+		return false;
+	}
+	
+	function application_getvaliduser()
+	{
+		$usr1 = application_getmappeduser();
+		if ($usr1 != null) {
+			$_SESSION['validuser'] = null;
+			return $usr1;	
+		}
 		
 		if (isset($_SESSION['validuser']))
 		{
@@ -153,6 +191,13 @@
 		return null;
 	}
 	
+	function application_getuserdir() {
+		$usr1 = application_getvaliduser();
+		if ($usr1) {
+		  return "trf_".$usr1->itemid."/";	
+		}
+		return "";
+	}
 	
 	function application_loginuser($username, $password)
 	{
@@ -492,7 +537,7 @@
 			var $id;    //unique id for the tree
 			var $children;
 			var $isvirtual;
-						
+									
 			function GroupItem($aItemtype)
 			{
 				parent::MapItem();
@@ -508,6 +553,7 @@
 				$this->children = array();
 				$this->id = "";
 				$this->isvirtual = false;
+				$this->user = null;
 			}
 			
 			function addChild(&$aItem) {

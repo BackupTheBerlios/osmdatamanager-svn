@@ -25,6 +25,8 @@ dojo.declare("Serverconnection", null, {
         
 		constructor: function(){
         	this.clientname = "";        
+			this.syncload = false;
+			this.targetprefix = "";
         },
 		
 		/**
@@ -41,14 +43,14 @@ dojo.declare("Serverconnection", null, {
 				
 				dojo.xhrPost({ //
 					// The following URL must match that used to test the server.
-					url: targetfile,
+					url: this.targetprefix + targetfile,
 					handleAs: "json",
 					content: params,
 					
 					timeout: 5000, // Time in milliseconds
 					// The LOAD function will be called on a successful response.
 					load: dojo.hitch(this,callBack),
-					
+					sync: this.syncload,
 					// The ERROR function will be called in an error case.
 					error: function(response, ioArgs){ //
 						//alert(response);
@@ -69,9 +71,12 @@ dojo.declare("Serverconnection", null, {
 		 * @param {Object} ioArgs
 		 */
 		_cb_standard: function(response, ioArgs) {
-			try {		
+			try {
+				if (response == null)
+					return;
+						
 				if (response != "msg.failed")
-				{
+				{					
 					if (this.callback != null) {
 						this.callback.func.apply(this.callback.target, [response, ioArgs]);
 					}
@@ -90,6 +95,7 @@ dojo.declare("Serverconnection", null, {
  */
 dojo.declare("Application", Serverconnection, {
         opendialogs: null,
+		taglist: null,
 		constructor: function(name,map){
                 this.name=name;
 				this.activeuser=null;
@@ -292,21 +298,66 @@ dojo.declare("Application", Serverconnection, {
 			
 		},
 		
+		_cb_loadTags: function(tags) {
+			console.debug("_cb_loadTags");
+			console.debug(tags);
+			this.taglist = tags;
+		},
+		
+		loadTags: function() {
+			if (this.taglist)
+				return;
+			
+			var params = {
+				"action": "msg.gettags"
+			}
+			var cb = {
+				target: this,
+				func: this._cb_loadTags 
+			}
+			
+			this.callback = cb;
+			this.loadFromServer("groupfunctions.php", params,this. _cb_standard);
+		},
+		
 		/**
 		 * 
 		 * @param {Object} child
 		 */
 		getIconname1: function(child) {
+			
+			if (child.tags != null) {
+				if (child.tags != null) {
+					for (var i = 0; i < child.tags.length; i++) {
+						var tag1 = child.tags[i];
+						if (tag1.tagname == child.tagname) {
+							return this.targetprefix + tag1.icon1;
+						}
+					}	
+				}
+			}
+			
 			if (this.activeuser) {
 				if (this.activeuser.tags != null) {
 					for (var i = 0; i < this.activeuser.tags.length; i++) {
 						var tag1 = this.activeuser.tags[i];
 						if (tag1.tagname == child.tagname) {
-							return tag1.icon1;
+							return this.targetprefix + tag1.icon1;
 						}
 					}	
 				}
 			}
+			console.debug("getIconname1");
+			console.debug(this.taglist);
+			if (this.taglist != null) {
+				for (var i = 0; i < this.taglist.items.length; i++) {
+					var tag1 = this.taglist.items[i];
+					if (tag1.tagname == child.tagname) {
+						return this.targetprefix + tag1.icon1;
+					}
+				}	
+			}
+			
 			return "";
 		},
 		
@@ -461,6 +512,8 @@ dojo.declare("Application", Serverconnection, {
 				  strokeColor: "#ff00ff",
 				  strokeWidth: 3
 				};
+				
+				filename = this.targetprefix + filename;
 				var lgpx = new OpenLayers.Layer.GML(description, filename, {
 														format: OpenLayers.Format.GPX,
 														projection: this.map.displayProjection,
