@@ -127,6 +127,14 @@ CREATE TABLE `tab_usr` (
   PRIMARY KEY  (`itemid`)
 ) TYPE=MyISAM AUTO_INCREMENT=57 ;
 
+DROP TABLE IF EXISTS `tab_usr_friend`;
+CREATE TABLE `tab_usr_friend` (
+  `itemid` int(11) NOT NULL default '0',
+  `friendid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`itemid`,`friendid`)
+) TYPE=MyISAM;
+
+
 # ------------------------------------------------------
 
 INSERT INTO `tab_icon` ( `id` , `tagname` , `icon1` , `icon2` , `icon3` )
