@@ -8,20 +8,7 @@
 	</style>
 	
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false, isDebug: false"></script>
-		<script type="text/javascript">	
-		  dojo.require("dojo.parser");
-          
-		  dojo.addOnLoad(function(){
-			  dojo.registerModulePath("trm","../../trm");		
-			  dojo.require("dijit.form.Button");
-			  dojo.require("dijit.layout.ContentPane");
-			  dojo.require("dijit.layout.BorderContainer");
-			  	
-			  dojo.parser.parse();
-			  init();
-		  });
-	</script>
-	
+			
 	<script src="lib/openlayers/OpenLayers.js"></script>
 	
 	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
@@ -146,17 +133,36 @@
 		        store: store,
 				query: {complexQuery: "itemname:'*Demo*' OR itemname:'*Untergruppe' OR itemname:'Wichtig*'"}
 		    });
-						
+				
+					
 			gl_tree = new trm.widget.DataTree({
 		        model: treeModel,
 				showRoot: false,
-				betweenThreshold: 5,
-		    }, "theTree");
+				betweenThreshold: 5
+		    }, 
+			"theTree");
+			
 			dojo.connect(gl_tree,"onDblClick",this,"treeOnDblClick");
 			gl_tree.removeFocus();
+			
 		}
 		
+		
+		dojo.require("dojo.parser");
+          
+		function _addOnLoad() {
+		  	  dojo.registerModulePath("trm","../../trm");		
+			  dojo.require("dijit.form.Button");
+			  dojo.require("dijit.layout.ContentPane");
+			  dojo.require("dijit.layout.BorderContainer");
+			  	
+			  dojo.parser.parse();
+			  init();
+		}
+		  
+		dojo.addOnLoad(_addOnLoad);
 	</script>
+		
 	
 </head>
 

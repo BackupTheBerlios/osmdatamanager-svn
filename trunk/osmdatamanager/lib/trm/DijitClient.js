@@ -682,32 +682,35 @@ dojo.declare("DijitClient", Application, {
 		showLogin: function() {
 			
 			//dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_LoggedIn");
-			this.showLoading();
-			
-			var dlg1 = dijit.byId('dlg_login');
-			if (! dlg1) {
-				dojo.require("trm.widget.LoginDialog");
-				dlg1 = new trm.widget.LoginDialog({}, "dlg_login");
-				dojo.connect(dijit.byId("dlg_login"),"onLoggedIn",this,"_cb_LoggedIn");		
-			}
-			
-			this.hideLoading();
-						
-			var dlg1 = dijit.byId('dlg_login');
-			if (dlg1)  {
-				if (this.activeuser) {
-					var val1 = dijit.byId('btn_login').attr("label");
-					
-					if (val1 == "Logout [" + this.activeuser.itemname + "]") {
-						var cb = {
-							target: this,
-							func: this._cb_loginUser
-						}
-						this.logoutUser(cb);
-						return;
-					}
+			try {
+				this.showLoading();
+				var dlg1 = dijit.byId('dlg_login');
+				if (!dlg1) {
+					dojo.require("trm.widget.LoginDialog");
+					dlg1 = new trm.widget.LoginDialog({}, "dlg_login");
+					dojo.connect(dijit.byId("dlg_login"), "onLoggedIn", this, "_cb_LoggedIn");
 				}
-				dlg1.show();
+				
+				this.hideLoading();
+				
+				var dlg1 = dijit.byId('dlg_login');
+				if (dlg1) {
+					if (this.activeuser) {
+						var val1 = dijit.byId('btn_login').attr("label");
+						
+						if (val1 == "Logout [" + this.activeuser.itemname + "]") {
+							var cb = {
+								target: this,
+								func: this._cb_loginUser
+							}
+							this.logoutUser(cb);
+							return;
+						}
+					}
+					dlg1.show();
+				}
+			} catch(e) {
+				alert(e);
 			}
 		},
 		

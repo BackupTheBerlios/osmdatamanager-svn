@@ -55,17 +55,7 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		this.nls = dojo.i18n.getLocalization("trm.translation", "tt");
 		this._setTranslations();		
 		dojo.connect(this,"onKeyDown",this,"_onKeyDown");		
-		
 		dojo.connect(this.dlg_taLongText,"onKeyDown",this,"_onLongTextKeyDown");		
-		
-		/*
-		this.dlg_tbItemname = null;
-		this.dlg_tbLat = null;
-		this.dlg_tbLon = null;
-		this.dlg_spinZoomlevel = null;
-		this.dlg_cmbTagname = null;
-		this.dlg_taLongText = null;
-		*/
 		this._init_TinyMce();
 	},
 	
@@ -123,33 +113,37 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	 */
 	_setTranslations: function() {
 		if (this.nls) {
-			
-			if (this.dlg_lblItemname)
-				this.dlg_lblItemname.innerHTML = this.nls["itemname"];
-			
-			if (this.dlg_lblPosition)
-				this.dlg_lblPosition.innerHTML = this.nls["position"];
-			
-			if (this.dlg_lblTagname)
-				this.dlg_lblTagname.innerHTML = this.nls["tagname"];
-			
-			if (this.dlg_lblZoomlevel)
-				this.dlg_lblZoomlevel.innerHTML = this.nls["zoomlevel"];
-			
-			if (this.dlg_lblLongText)
-				this.dlg_lblLongText.innerHTML = this.nls["longtext"];
+			try {			
+				if (this.dlg_lblItemname) 
+					this.dlg_lblItemname.innerHTML = this.nls["itemname"];
+								
+				if (this.dlg_lblPosition)
+					this.dlg_lblPosition.innerHTML = this.nls["position"];
 				
-			if (this.dlg_btnOk)
-				this.dlg_btnOk.containerNode.innerHTML = this.nls["ok"];
+				if (this.dlg_lblTagname)
+					this.dlg_lblTagname.innerHTML = this.nls["tagname"];
 				
-			if (this.dlg_btnCancel)
-				this.dlg_btnCancel.containerNode.innerHTML = this.nls["cancel"];
-			
-			if (this.dlg_btnClose)
-				this.dlg_btnClose.containerNode.innerHTML = this.nls["close"];	
-			
-			if (this.dlg_btnZoomLevelFromMap)
-				this.dlg_btnZoomLevelFromMap.containerNode.innerHTML = this.nls["zoomlevelfrommap"];	
+				if (this.dlg_lblZoomlevel)
+					this.dlg_lblZoomlevel.innerHTML = this.nls["zoomlevel"];
+				
+				if (this.dlg_lblLongText)
+					this.dlg_lblLongText.innerHTML = this.nls["longtext"];
+					
+				if (this.dlg_btnOk)
+					this.dlg_btnOk.containerNode.innerHTML = this.nls["ok"];
+					
+				if (this.dlg_btnCancel)
+					this.dlg_btnCancel.containerNode.innerHTML = this.nls["cancel"];
+				
+				if (this.dlg_btnClose)
+					this.dlg_btnClose.containerNode.innerHTML = this.nls["close"];	
+				
+				if (this.dlg_btnZoomLevelFromMap)
+					this.dlg_btnZoomLevelFromMap.containerNode.innerHTML = this.nls["zoomlevelfrommap"];	
+					
+			} catch(e) {
+				console.error(e);
+			}
 		}
 	},
 	
@@ -251,17 +245,6 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 	
 	_getProtection: function() {
 		var val = "private";
-		/*
-		if (dijit.byId('dlgcreategroup_rd_private').attr("checked") == true)
-		  val = dijit.byId('dlgcreategroup_rd_private').value;
-		
-		if (dijit.byId('dlgcreategroup_rd_protected').attr("checked") == true)
-		  val = dijit.byId('dlgcreategroup_rd_protected').value;
-		  
-		if (dijit.byId('dlgcreategroup_rd_public').attr("checked") == true)
-		  val = dijit.byId('dlgcreategroup_rd_public').value;
-		*/	   
-		
 		
 		if (this.dlg_rdPrivate) {
 			if (this.dlg_rdPrivate.attr("checked") == true)
@@ -519,7 +502,15 @@ dojo.declare("trm.widget._TrmBaseDialog", [trm.widget._TrmWidget, dijit._Templat
 		this.dlg_tbLat.attr("value",latlon.lat);
 		this.dlg_tbLon.attr("value",latlon.lon);
 	},
-	
+	_getCenterClick: function() {
+		if (this.application) {
+			var pt1 = this.application.getMapCenter();
+			if (pt1) {
+				var pt2 = pt1.transform(this.application.map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+				this.setPoint(pt2);
+			}
+		}
+	},
 	/**
 	 * sets zoomlevel data
 	 * @param {Object} zoomlevel

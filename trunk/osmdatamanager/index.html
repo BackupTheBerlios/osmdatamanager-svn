@@ -20,38 +20,6 @@
 	<script type="test/javascript">djConfig = { isDebug: true };</script> 
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false, locale: 'en'"></script>			
 	
-	
-	<script type="text/javascript">	
-		  dojo.require("dojo.parser");
-          
-		  dojo.addOnLoad(function(){
-				dojo.registerModulePath("trm","../../trm");		
-								
-				dojo.require("dijit.layout.ContentPane");
-			  	dojo.require("dijit.layout.BorderContainer");
-				//dojo.require("dijit.Dialog");
-				dojo.require("dojo.dnd.Source"); 
-				
-				//trm widgets
-				dojo.require("trm.translation.tt");
-				dojo.require("trm.Button.TrmButton");
-				dojo.require("trm.MenuItem.TrmMenuItem");
-				dojo.require("trm.MenuItem.TrmPopupMenuItem");
-								
-				dojo.parser.parse();   
-                dojo.fadeOut({ 
-                      node:"overlay",
-                      onEnd: function(){ 
-                             // hide it completely after fadeout
-                             dojo.style("overlay","display","none");
-                      }
-                }).play();
-				init();
-          });
-
-		
-	</script>
-	
 	<!--<script src="http://openlayers.org/api/OpenLayers.js"></script>-->
 	<script src="lib/openlayers/OpenLayers.js"></script>
 	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
@@ -128,6 +96,32 @@
 			gl_application.checkUser(cb);				
 		}		
 		
+		dojo.require("dojo.parser");
+          
+		  dojo.addOnLoad(function(){
+				dojo.registerModulePath("trm","../../trm");		
+								
+				dojo.require("dijit.layout.ContentPane");
+			  	dojo.require("dijit.layout.BorderContainer");
+				//dojo.require("dijit.Dialog");
+				dojo.require("dojo.dnd.Source"); 
+				
+				//trm widgets
+				dojo.require("trm.translation.tt");
+				dojo.require("trm.Button.TrmButton");
+				dojo.require("trm.MenuItem.TrmMenuItem");
+				dojo.require("trm.MenuItem.TrmPopupMenuItem");
+								
+				dojo.parser.parse();   
+                dojo.fadeOut({ 
+                      node:"overlay",
+                      onEnd: function(){ 
+                             // hide it completely after fadeout
+                             dojo.style("overlay","display","none");
+                      }
+                }).play();
+				init();
+          });
 	</script>
 </head>
 

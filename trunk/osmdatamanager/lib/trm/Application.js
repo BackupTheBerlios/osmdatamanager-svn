@@ -470,6 +470,16 @@ dojo.declare("Application", Serverconnection, {
 		},
 		
 		/**
+		 * returns the center point of the map
+		 */
+		getMapCenter: function() {
+			if (this.map) {
+			  return this.map.getCenter();	
+			}
+			return null;
+		},
+			
+		/**
 		 * loads a group including all children
 		 * @param {Object} group
 		 * @param {Object} cb

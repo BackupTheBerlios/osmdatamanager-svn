@@ -27,8 +27,13 @@ dojo.declare("trm.widget.LoginDialog", [trm.widget._TrmBaseDialog], {
 	templatePath:    dojo.moduleUrl('trm.widget', 'LoginDialog.html'),
 	postCreate: function() {
 		this.inherited(arguments);
-		this.trmLoginLabelUserNode.textContent=this.nls["username"];
-		this.trmLoginLabelPasswordNode.textContent=this.nls["password"];
+		
+		try {
+			this.trmLoginLabelUserNode.innerHTML = this.nls["username"];
+			this.trmLoginLabelPasswordNode.innerHTML = this.nls["password"];
+		} catch(e) {
+			console.error(e);
+		}
 	},
 	onLoggedIn: function(user) {
 		

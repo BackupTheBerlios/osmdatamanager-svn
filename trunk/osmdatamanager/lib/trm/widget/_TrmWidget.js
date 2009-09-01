@@ -123,6 +123,9 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 			style.top = Math.floor((viewport.t + (viewport.h - mb.h)/2)) + "px";
 	},
 	_changeCssClass: function(fromclass, toclass) {
+		dojo.removeClass(this.domNode,fromclass);
+		dojo.addClass(this.domNode,toclass);
+		/*
 		var cls = this.domNode.getAttribute("class");
 		if (cls) {
 			var lst1 = cls.split(" ");
@@ -141,6 +144,7 @@ dojo.declare("trm.widget._TrmWidget", [dijit._Widget], {
 			}
 		}
 		this.domNode.setAttribute("class","trmVisible");
+		*/
 	},
 	_zoomLevelClick: function() {
 		this.onZoomlevelClick(this);

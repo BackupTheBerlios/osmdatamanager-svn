@@ -10,6 +10,10 @@
 	position: absolute;
 }
 
+.trmDialog select {
+	min-width:120px;
+}
+
 .trmVisible {
 	display:block;
 	visibility: visible;
