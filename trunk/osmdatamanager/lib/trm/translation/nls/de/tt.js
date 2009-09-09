@@ -39,5 +39,8 @@
 	"filename": "Dateiname",
 	"info": "Info",
 	"admin": "Admin",
+	"private": "Privat",
+	"friend": "Freund",
+	"public": "Öffentlich",
 	"dbl_clk_point": "Bitte machen Sie einen Doppelklick auf einen Punkt"
 })

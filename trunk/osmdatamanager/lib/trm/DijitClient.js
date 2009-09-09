@@ -460,7 +460,7 @@ dojo.declare("DijitClient", Application, {
 		 * @param {Object} sender
 		 */
 		groupTreeOpenmenu: function(sender) {
-			this.disabledAllMenuItems();
+			this.disableAllMenuItems();
 						
 			if (! this.privatemode)
 				return;
@@ -493,6 +493,7 @@ dojo.declare("DijitClient", Application, {
 						dijit.byId('itm_manager').attr("disabled",false);
 						//dijit.byId('itm_updatetree').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
+						dijit.byId('itm_admin').attr("disabled",false);						
 						break;
 					case "group":
 						dijit.byId('itm_loaddata').attr("disabled",false);
@@ -507,14 +508,14 @@ dojo.declare("DijitClient", Application, {
 							dijit.byId('itm_deletegroup').attr("disabled",false);	
 							dijit.byId('itm_createsubgroup').attr("disabled",false);	
 						}
-						
+						dijit.byId('itm_admin').attr("disabled",false);
 						break;
 					case "file":
 						dijit.byId('itm_loaddata').attr("disabled",false);
 						dijit.byId('itm_manager').attr("disabled",false);
 						//dijit.byId('itm_updatetree').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
-						
+						dijit.byId('itm_admin').attr("disabled",false);
 						if (! isvirtual) {
 							dijit.byId('itm_edit').attr("disabled",false);
 							dijit.byId('itm_remove').attr("disabled",false);
@@ -536,13 +537,13 @@ dojo.declare("DijitClient", Application, {
 		 */
 		disablePrivatemode: function() {
 			this.privatemode = false;
-			this.disabledAllMenuItems();
+			this.disableAllMenuItems();
 		},
 		
 		/**
 		 * disables all items in the popup menu
 		 */
-		disabledAllMenuItems: function() {
+		disableAllMenuItems: function() {
 			dijit.byId('itm_loaddata').attr("disabled","disabled");
 			dijit.byId('itm_edit').attr("disabled","disabled");
 			dijit.byId('itm_remove').attr("disabled","disabled");
@@ -558,6 +559,7 @@ dojo.declare("DijitClient", Application, {
 			dijit.byId('itm_removeall').attr("disabled","disabled");
 			//dijit.byId('itm_updatetree').attr("disabled","disabled");
 			dijit.byId('itm_submenu_settings').attr("disabled","disabled");
+			dijit.byId('itm_admin').attr("disabled","disabled");
 		},
 		
 		/**

@@ -30,6 +30,9 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
 		this.inherited(arguments);
 	},
 	
+	/**
+	 * 
+	 */
 	_dataOk: function() {
 		//this.inherited(arguments);
 		if (! this.isupdate) {
@@ -42,6 +45,11 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
 			return this.inherited(arguments);
 		}
 	},
+	
+	/**
+	 * 
+	 * @param {Object} e
+	 */
 	_okClick: function(e) {
 		//this.inherited(arguments);
 		var data = this.getData();
@@ -54,6 +62,30 @@ dojo.declare("trm.widget.GroupDialog", [trm.widget._TrmBaseDialog], {
 		 	}
 		}
 	},
+	
+	/**
+	 * 
+	 */
+	_setTranslations: function() {
+		this.inherited(arguments);
+		
+		if (this.nls) {
+			if (this.dlgcreategroup_lbl_private) 
+				this.dlgcreategroup_lbl_private.innerHTML = this.nls["private"];
+			
+			if (this.dlgcreategroup_lbl_friend) 
+				this.dlgcreategroup_lbl_friend.innerHTML = this.nls["friend"];
+				
+			if (this.dlgcreategroup_lbl_public) 
+				this.dlgcreategroup_lbl_public.innerHTML = this.nls["public"];		
+		}
+	},
+	
+	/**
+	 * 
+	 * @param {Object} update
+	 * @param {Object} root
+	 */
 	show: function(update,root) {
 		this.inherited(arguments);
 		if (this.onlyshow) {
