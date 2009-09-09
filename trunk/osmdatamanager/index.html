@@ -18,7 +18,11 @@
 	</style>
 	
 	<script type="test/javascript">djConfig = { isDebug: true };</script> 
-	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false, locale: 'en'"></script>			
+	
+	<!-- in the first line the language is set to en fix -->
+	<!-- <script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false, locale: 'en'"></script> -->
+	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false"></script>
+				 
 	
 	<!--<script src="http://openlayers.org/api/OpenLayers.js"></script>-->
 	<script src="lib/openlayers/OpenLayers.js"></script>
@@ -163,8 +167,6 @@
 			</div>
 		</div>						
 	  </div>  
-	
-	<!-- <div id="coords"></div> -->
 
 	<!-- DIALOGS -->
 	<div id="dlg_login"></div> 
