@@ -42,5 +42,6 @@
 	"private": "Private",
 	"friend": "Friend",
 	"public": "Public",
+	"hidden": "Hidden",
 	"dbl_clk_point": "please double click a point on the map"
 })

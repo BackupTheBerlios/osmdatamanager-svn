@@ -40,6 +40,9 @@ dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
 		if (this.nls) {
 			if (this.dlg_lblFilename) 
 				this.dlg_lblFilename.innerHTML = this.nls["filename"];
+				
+			if (this.dlg_lblState) 
+				this.dlg_lblState.innerHTML = this.nls["hidden"];
 		}
 	},
 	
@@ -48,6 +51,16 @@ dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
 			this.application._updateitem(item);
 		}
 		this.hide();
+	},
+	
+	_getState: function() {
+		
+		if (this.dlg_cbState) {
+			if (this.dlg_cbState.attr("checked")) {
+				return 1;
+			}
+		}
+		return 0;
 	},
 		
 	_okClick: function(e) {
@@ -64,8 +77,10 @@ dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
 					"zoomlevel": data.zoomlevel,
 					"lat":data.lat,
 					"lon":data.lon,
-					"tagname":data.tagname
+					"tagname":data.tagname,
+					"state": this._getState()
 				}
+				
 				var cb = {
 					target: this,
 					func: this._updateOk
@@ -90,6 +105,11 @@ dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
 		
 		if (this.dlg_tbFilename)
 			this.dlg_tbFilename.attr("value","");
+			
+		if (this.dlg_cbState) {
+			this.dlg_cbState.attr("value", "");
+			this.dlg_cbState.attr("checked", false);
+		}
 	},
 	
 	_loadData: function() {
@@ -101,6 +121,11 @@ dojo.declare("trm.widget.FileDialog", [trm.widget._TrmBaseDialog], {
 		if (this.dlg_tbFilename)
 			this.dlg_tbFilename.attr("value",this.dataitem.filename);
 			
+		if (this.dlg_cbState) {
+			if (this.dataitem.state == 1) {
+				this.dlg_cbState.attr("checked", true);	
+			}
+		}	
 	},
 	
 	show: function(update,root) {

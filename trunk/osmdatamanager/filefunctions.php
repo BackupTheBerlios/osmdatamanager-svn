@@ -29,7 +29,7 @@
 		$zoomlevel  	= $_REQUEST['zoomlevel'];
 		$lat 		    = $_REQUEST['lat'];
 		$lon            = $_REQUEST['lon'];
-		
+		$state          = $_REQUEST['state'];
 		global $gl_loglevel;
 	} else {
 		//uncomment for debug
@@ -91,7 +91,7 @@
 			
 			//msg_updatefile
 			if ($action == msg_updatefile) {				
-				if ($ff->updateFile($usr->getUid(),$itemid,$itemname,$lat,$lon,$zoomlevel,$tagname)) {
+				if ($ff->updateFile($usr->getUid(),$itemid,$itemname,$lat,$lon,$zoomlevel,$tagname,$state)) {
 					$fl1 = $ff->getFile($usr->getUid(),$itemid);
 					if ($fl1 != null) {
 						echo application_getMessage($fl1);

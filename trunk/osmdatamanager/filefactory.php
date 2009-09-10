@@ -28,6 +28,7 @@
 		//var $description;
 		var $path;
 		var $fullfilename;
+		var $state;
 		
 		/*			
 		function File($aUsrId, $aPath, $aFilename, $aDescription) {
@@ -46,6 +47,7 @@
 			$this->filename = "";
 			//$this->description = "";
 			$this->fullfilename = "";
+			$this->state = "";
 		}
 		
 		function getFilename() {
@@ -158,6 +160,9 @@
 					case "path":
 						$aItem->filename = $aRow[$i];
 						break;
+					case "state":
+						$aItem->state    = $aRow[$i];
+						break;
 				}
 			}
 			$aItem->fullfilename = $aItem->path.$aItem->filename;
@@ -246,7 +251,7 @@
 		function getFiles($aUserid) {
 			$files = array();
 			
-			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid) ORDER BY itemname, filename";
+			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid AND (state = 0)) ORDER BY itemname, filename";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
@@ -345,7 +350,7 @@
 		 * @param $aFilename Object
 		 * @param $aDescription Object
 		 */
-		function updateFile($aUsrId, $aItemId, $aItemname, $aLat, $aLon, $aZoomlevel, $aTagname) {
+		function updateFile($aUsrId, $aItemId, $aItemname, $aLat, $aLon, $aZoomlevel, $aTagname, $aState) {
 			if ($aZoomlevel == "")
 				$aZoomlevel = -1;
 			
@@ -356,6 +361,9 @@
 			
 			if ($aZoomlevel != "")
 			  $qry1 = $qry1.", `zoomlevel`= ".$aZoomlevel."  ";
+			
+			if ($aState != "")
+			  $qry1 = $qry1.", `state`= ".$aState."  ";
 			
 			$qry1 = $qry1.", `tagname`='".$aTagname."' ";
 			$qry1 = $qry1." WHERE   (`usrid` = ".$aUsrId.")";

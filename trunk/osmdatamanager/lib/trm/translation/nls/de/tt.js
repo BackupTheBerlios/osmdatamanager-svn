@@ -42,5 +42,6 @@
 	"private": "Privat",
 	"friend": "Freund",
 	"public": "Öffentlich",
+	"hidden": "Versteckt",
 	"dbl_clk_point": "Bitte machen Sie einen Doppelklick auf einen Punkt"
 })

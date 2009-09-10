@@ -370,6 +370,44 @@
 			}
 		}
 		
+		
+		/**
+		 * adds a list of all files into a virtual group
+		 * @return 
+		 * @param $aUserid Object
+		 * @param $aGroup Object
+		 */
+		function addFiles($aUserid, &$aGroup) {
+			/*
+			$uf = new UserFactory();
+			$lst1 = $uf->getFriendUsers($aUserid);
+			if ($lst1 != null) {
+				$aGroup->haschildren = true;	
+				for ($i=0;$i<count($lst1);$i++) {	
+					//$lst1[$i]->itemid = $aGroup->itemid."_".$lst1[$i]->itemname;
+					$lst1[$i]->prepareForTree_virtual($aGroup->itemid);
+					$lst1[$i]->tags = null;
+					$lst1[$i]->isvirtual = true;
+					$this->addFriendGroups($aUserid, $lst1[$i]);
+					$aGroup->addChild(&$lst1[$i]);
+				}	
+			}
+			*/
+			$ff = new FileFactory();
+			$lst1 = $ff->getFiles($aUserid);
+			if ($lst1 != null) {
+				//$fc = new FileContainer();
+				$aGroup->haschildren = true;
+				for ($i=0;$i<count($lst1);$i++) {
+					$lst1[$i]->prepareForTree($aGroup->itemid);
+					$lst1[$i]->tags = null;
+					$lst1[$i]->isvirtual = false;
+					$aGroup->addChild(&$lst1[$i]);
+				}
+				
+			}
+		}
+		
 		/**
 		 * 
 		 * @return 
@@ -386,6 +424,16 @@
 			$grp->prepareForTree(-1);
 			$grp->isvirtual = true;
 			$this->addUsers($aUserid, $grp);
+			array_push($aList, $grp);	
+			
+			//Files
+			$grp = new Group();
+			$grp->itemname = "Files";
+			$grp->itemid = "__Files";
+			$grp->tagname = "standard";
+			$grp->prepareForTree(-1);
+			$grp->isvirtual = false;
+			$this->addFiles($aUserid, $grp);
 			array_push($aList, $grp);	
 		}
 		

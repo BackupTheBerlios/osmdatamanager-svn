@@ -14,6 +14,7 @@ CREATE TABLE `tab_file` (
   `lon` varchar(50) default NULL,
   `zoomlevel` int(11) default NULL,
   `tagname` varchar(50) default NULL,
+  `state` int(11) default NULL,
   PRIMARY KEY  (`usrid`,`itemid`)
 ) TYPE=MyISAM AUTO_INCREMENT=1 ;
 
