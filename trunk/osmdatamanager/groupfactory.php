@@ -394,7 +394,7 @@
 			}
 			*/
 			$ff = new FileFactory();
-			$lst1 = $ff->getFiles($aUserid);
+			$lst1 = $ff->getFiles($aUserid,1);
 			if ($lst1 != null) {
 				//$fc = new FileContainer();
 				$aGroup->haschildren = true;

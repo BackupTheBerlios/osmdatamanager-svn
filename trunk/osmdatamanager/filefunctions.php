@@ -74,7 +74,7 @@
 					
 			//$files = array();
 			if ($action == msg_getfiles) {
-				$lst1 = $ff->getFiles($usr->getUid());
+				$lst1 = $ff->getFiles($usr->getUid(),0);
 				if ($lst1 != null) {
 					$fc = new FileContainer();
 					for ($i=0;$i<count($lst1);$i++) {

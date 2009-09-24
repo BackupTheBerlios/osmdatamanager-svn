@@ -248,10 +248,10 @@
 		 * @return 
 		 * @param $aUserid Object
 		 */
-		function getFiles($aUserid) {
+		function getFiles($aUserid, $aState) {
 			$files = array();
 			
-			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid AND (state = 0)) ORDER BY itemname, filename";
+			$qry = "SELECT * FROM `tab_file` WHERE (usrid = $aUserid AND (state = $aState)) ORDER BY itemname, filename";
 			$result = $this->executeQuery($qry);
 			if ($result != NULL) 
 			{   
@@ -389,7 +389,7 @@
 			if ($aFilename == "")
 				return false;
 			
-			$insquery = "INSERT INTO `tab_file` (`usrid`,`path`,`filename`,`itemname`,`valid`) VALUES ($aUserId, '$aPath', '$aFilename','$aDescription',1)";
+			$insquery = "INSERT INTO `tab_file` (`usrid`,`path`,`filename`,`itemname`,`valid`,`state`) VALUES ($aUserId, '$aPath', '$aFilename','$aDescription',1,1)";
 			if ($this->executeQuery($insquery) == null)
 			{
 				return false;
@@ -439,7 +439,7 @@
 		function updateFiles($aUserId) {
 			echo "a";
 			return;
-			$lst1 = $this->getFiles($aUserId);
+			$lst1 = $this->getFiles($aUserId,0);
 			foreach ($lst1 as $fl1) {
 				$full = $fl1->getFilename();
 				$fn = basename($full);
