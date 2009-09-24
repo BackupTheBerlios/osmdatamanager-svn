@@ -1,0 +1,29 @@
+<div class="trmDialog trmHidden" dojoAttachPoint="node">
+	<table>
+	    <tr>
+	      <td><label dojoAttachPoint="dlg_lblSearchtext">_Searchtext:</label></td>
+	      <td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="dlg_tbSearchtext" /></td>
+		  <td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnSearch" dojoAttachEvent="onClick:_searchClick">_Search</button></td>
+		</tr>
+		<tr>
+			<td colspan="3">e.g. Eiffelturm, Paris</td>
+		</tr>
+	</table>
+	
+	<hr/>	
+	
+	<label dojoAttachPoint="dlg_lblHitcount"></label><br/>
+	
+	<!-- <button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnClear" dojoAttachEvent="onClick:_clearStore">clear</button> -->
+	
+	<div dojoAttachPoint="dlg_gridResult">
+	</div>
+	
+	<hr/>
+	
+	<table>
+		<tr class="custombutton1">
+			<td><button dojoType="dijit.form.Button" dojoAttachPoint="dlg_btnClose" dojoAttachEvent="onClick:_cancelClick">_Close</button></td>
+		</tr> 
+	</table>
+</div>

@@ -183,6 +183,7 @@ dojo.declare("DijitClient", Application, {
 				}
 				
 				gl_tree.clearNodes();
+				this.disablePrivatemode();
 			}		
 		},
 		
@@ -229,6 +230,7 @@ dojo.declare("DijitClient", Application, {
 				var lat = 50.9350850727913;
 				var lon = 6.95356597872225;
 				this.centerMap(lat, lon, 6);
+				this.disablePrivatemode();
 			}
 		},
 		
@@ -529,7 +531,9 @@ dojo.declare("DijitClient", Application, {
 		 * enables private mode
 		 */
 		enablePrivatemode: function() {
-			this.privatemode = true;	
+			this.privatemode = true;
+			dijit.byId('btn_search').attr("disabled",false);
+			dijit.byId('btn_homebase').attr("disabled",false);	
 		},
 		
 		/**
@@ -537,6 +541,9 @@ dojo.declare("DijitClient", Application, {
 		 */
 		disablePrivatemode: function() {
 			this.privatemode = false;
+			dijit.byId('btn_search').attr("disabled","disabled");
+			dijit.byId('btn_homebase').attr("disabled","disabled");
+			console.debug("dpm");
 			this.disableAllMenuItems();
 		},
 		
@@ -821,6 +828,35 @@ dojo.declare("DijitClient", Application, {
 			if (dlg1)  {
 				dlg1.poidialog.hide();
 			}
+		},
+		
+		/**
+		 * shows the search dialog
+		 */
+		showSearchDialog: function() {
+			this.showLoading();
+			
+			var dlg1 = dijit.byId('dlg_search');			
+			if (! dlg1) {
+				dojo.require("trm.widget.OsmSearchDialog");
+				dlg1 = new trm.widget.OsmSearchDialog({}, 'dlg_search');	
+				dlg1.application = this;
+			}
+			
+			this.hideLoading();
+			if (dlg1) {
+			  dlg1.show();
+			}	
+		},
+		
+		/**
+		 * hides the search dialog
+		 */
+		hideSearchDialog: function() {
+			var dlg1 = dijit.byId('dlg_search');
+			if (dlg1) {
+				dlg1.hide();
+			}	
 		},
 		
 		/**

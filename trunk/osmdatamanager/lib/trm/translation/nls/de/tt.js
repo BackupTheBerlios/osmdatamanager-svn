@@ -43,5 +43,8 @@
 	"friend": "Freund",
 	"public": "Öffentlich",
 	"hidden": "Versteckt",
+	"searchtext": "Suchtext",
+	"search": "Suchen",
+	"nearby": "in der Nähe von",
 	"dbl_clk_point": "Bitte machen Sie einen Doppelklick auf einen Punkt"
 })

@@ -43,5 +43,8 @@
 	"friend": "Friend",
 	"public": "Public",
 	"hidden": "Hidden",
+	"searchtext": "Searchtext",
+	"search": "Search",
+	"nearby": "near by",
 	"dbl_clk_point": "please double click a point on the map"
 })

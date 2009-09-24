@@ -7,6 +7,7 @@
 	
 	<style type="text/css">		
 		@import "lib/trm/trm.css";
+		@import "lib/dojo/dojox/grid/resources/Grid.css";
 	</style>
 	
 	<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad:false, isDebug: false"></script>
@@ -31,6 +32,7 @@
 	<script src="lib/trm/Application.js"></script>	
 	<script src="lib/trm/PoiManager.js"></script>
 	<script src="lib/trm/Markermanager.js"></script>
+	<script src="lib/trm/OsmSearcher.js"></script>
 	
 	<script type="text/javascript">
 				
@@ -96,6 +98,22 @@
 		}
 		
 		/**
+		 * shows the search dialog
+		 */
+		function showSearch() {
+			dojo.require("trm.widget.OsmSearchDialog");
+			var dlg1 = dijit.byId("searchdialog");
+			if (! dlg1) {
+				dlg1 = new trm.widget.OsmSearchDialog({}, "searchdialog");
+				dlg1.application = gl_application;
+				dlg1.clientname  = "Demo1";
+				//dojo.connect(dlg1,"onGetPoint",this,"getPoint");
+			}
+			
+			dlg1.show();
+		}
+		
+		/**
 		 * init the client application
 		 */			
 		function init() {
@@ -149,6 +167,10 @@
 				  Where are you from ??
 			  </button>
 			  
+			  <button dojoType="dijit.form.Button" onClick="showSearch()">
+				  Search
+			  </button>
+			  
 			  <button dojoType="dijit.form.Button" onClick="loadData()">
 				  Zoom out
 			  </button>
@@ -159,5 +181,6 @@
 		</div>
 		
 		<div id="simpledialog"></div>
+		<div id="searchdialog"></div>
 </body>
 </html>

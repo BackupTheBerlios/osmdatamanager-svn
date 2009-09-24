@@ -543,6 +543,17 @@ dojo.declare("Application", Serverconnection, {
 			return null;
 		},
 		
+		createPoi: function(lat,lon,zoomlevel,infotext,id) {
+			if (this.markermanager) {
+				var mm = this.markermanager;
+				var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
+				mm.addPoiMarker(lonLat, gl_markers, infotext, "",id);
+				if (this.docentermap) 
+					this.centerMap(lat, lon, zoomlevel);
+			}				
+		},
+		
+		
 		/**
 		 * displays a poi on the map
 		 * @param {Object} poi
