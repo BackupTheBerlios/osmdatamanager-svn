@@ -26,7 +26,7 @@ dojo.declare("trm.DijitClient", trm.Application, {
 		 * @param {Object} name
 		 * @param {Object} map
 		 */
-		constructor: function(name,map){
+		constructor: function(name,map,markerlayer){
 			this.nls = dojo.i18n.getLocalization("trm.translation", "tt");			
 			this.senderdialog = null;        
 			this.privatemode  = false;

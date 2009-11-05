@@ -99,7 +99,8 @@ dojo.declare("trm.Serverconnection", null, {
 dojo.declare("trm.Application", trm.Serverconnection, {
         opendialogs: null,
 		taglist: null,
-		constructor: function(name,map){
+		markerlayer: null,
+		constructor: function(name,map,markerlayer){
                 this.name=name;
 				this.activeuser=null;
 				this.callback=null;
@@ -108,6 +109,7 @@ dojo.declare("trm.Application", trm.Serverconnection, {
 				this.isgrouploading = false; //to avoid recursiv item loading with several calls
 				this.markermanager = null;
 				this.opendialogs = new Array();
+				this.markerlayer = markerlayer;
         },	
 		
 		/*******************************************************
@@ -296,8 +298,8 @@ dojo.declare("trm.Application", trm.Serverconnection, {
 				}
 			}
 					
-			gl_markers = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
-	    	this.map.addLayer(gl_markers);
+			this.markerlayer = new OpenLayers.Layer.Markers( "Markers",{projection: new OpenLayers.Projection("EPSG:4326")});
+	    	this.map.addLayer(this.markerlayer);
 			
 		},
 		
@@ -400,7 +402,7 @@ dojo.declare("trm.Application", trm.Serverconnection, {
 			if (usr != null)
 			{				
 				if ((usr.lat != null) && (usr.lon != "")) {
-					//this.createPoi(usr.location_lat, usr.location_lon, usr.abouthtml,gl_markers,"");
+					//this.createPoi(usr.location_lat, usr.location_lon, usr.abouthtml,this.markerlayer,"");
 					//this.centerMap(usr.lat, usr.lon, usr.zoomlevel);
 					this.displayPoi(usr);
 				}
@@ -550,7 +552,7 @@ dojo.declare("trm.Application", trm.Serverconnection, {
 			if (this.markermanager) {
 				var mm = this.markermanager;
 				var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
-				mm.addPoiMarker(lonLat, gl_markers, infotext, "",id);
+				mm.addPoiMarker(lonLat, this.markerlayer, infotext, "",id);
 				if (this.docentermap) 
 					this.centerMap(lat, lon, zoomlevel);
 			}				
@@ -565,7 +567,7 @@ dojo.declare("trm.Application", trm.Serverconnection, {
 			if (this.markermanager) {
 				var mm = this.markermanager;
 				var lonLat = new OpenLayers.LonLat(poi.lon, poi.lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());
-				mm.addPoiMarker(lonLat, gl_markers, poi.description, this.getIconname1(poi),poi.itemid);
+				mm.addPoiMarker(lonLat, this.markerlayer, poi.description, this.getIconname1(poi),poi.itemid);
 				if (this.docentermap) 
 					this.centerMap(poi.lat, poi.lon, poi.zoomlevel);
 			}
