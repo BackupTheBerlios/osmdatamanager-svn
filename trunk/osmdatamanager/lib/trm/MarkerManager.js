@@ -23,7 +23,9 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 		/**
 		 * Markermanager constructor
 		 */
-		constructor: function(){
+		map: null,
+		constructor: function(openlayersmap){
+			this.map = openlayersmap;
      		this.markerlist = new Array();
 			
 			this.AutoSizeAnchoredBubble = OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, {
@@ -168,7 +170,7 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 							this.popup = this.createPopup(this.closeBox);
 							//this.popup.closeOnMove = true;
 							//this.popup.setOpacity(0.8);
-							gl_map.addPopup(this.popup);
+							this.map.addPopup(this.popup);
 						//this.popup.show();
 						}
 						else {
@@ -288,7 +290,7 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 		 */
 		/*
 		addItem: function(item, layer, iconname) {
-			var lonLat = new OpenLayers.LonLat(poi.lon, poi.lat).transform(new OpenLayers.Projection("EPSG:4326"), gl_map.getProjectionObject());	
+			var lonLat = new OpenLayers.LonLat(poi.lon, poi.lat).transform(new OpenLayers.Projection("EPSG:4326"), this.map.getProjectionObject());	
 			this.addPoiMarker(lonLat, layer, poi.description,iconname));
 			
 		}
