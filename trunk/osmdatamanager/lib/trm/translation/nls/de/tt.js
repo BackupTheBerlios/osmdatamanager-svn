@@ -46,5 +46,7 @@
 	"searchtext": "Suchtext",
 	"search": "Suchen",
 	"nearby": "in der Nähe von",
+	"export": "Export",
+	"download": "Download",
 	"dbl_clk_point": "Bitte machen Sie einen Doppelklick auf einen Punkt"
 })

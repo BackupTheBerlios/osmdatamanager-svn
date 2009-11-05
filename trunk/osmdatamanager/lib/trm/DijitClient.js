@@ -16,7 +16,10 @@
 	
 */
 
-dojo.declare("DijitClient", Application, {
+dojo.provide("trm.DijitClient");
+dojo.require("trm.Application");
+
+dojo.declare("trm.DijitClient", trm.Application, {
         
 		/**
 		 * DijitClient -> connection between dijit and the base application
@@ -315,6 +318,17 @@ dojo.declare("DijitClient", Application, {
 		},
 		
 		/**
+		 * starts the download of a file object
+		 * @param {Object} file
+		 */
+		_startDownload: function(file) {
+			console.debug(file);
+			//window.location.href = "http://domain.blabla/download.zip";
+			//window.open(file.fullfilename);
+			var wnd1 = window.open("download.php?filename="+file.fullfilename);
+		},
+		
+		/**
 		 * check if node has already the current dnd_source as child
 		 * @param {Object} node
 		 * @param {Object} source
@@ -470,6 +484,7 @@ dojo.declare("DijitClient", Application, {
 			dijit.byId('itm_submenu_groups').attr("disabled",false);
 			dijit.byId('itm_createmaingroup').attr("disabled",false);
 			dijit.byId('itm_submenu_settings').attr("disabled",false);
+			dijit.byId('itm_submenu_export').attr("disabled",false);
 			
 			var itm1 = this.getSelectedItem();
 			if (itm1) {
@@ -518,6 +533,7 @@ dojo.declare("DijitClient", Application, {
 						//dijit.byId('itm_updatetree').attr("disabled",false);
 						dijit.byId('itm_removeall').attr("disabled",false);
 						dijit.byId('itm_admin').attr("disabled",false);
+						dijit.byId('itm_download').attr("disabled",false);
 						if (! isvirtual) {
 							dijit.byId('itm_edit').attr("disabled",false);
 							dijit.byId('itm_remove').attr("disabled",false);
@@ -543,7 +559,6 @@ dojo.declare("DijitClient", Application, {
 			this.privatemode = false;
 			dijit.byId('btn_search').attr("disabled","disabled");
 			dijit.byId('btn_homebase').attr("disabled","disabled");
-			console.debug("dpm");
 			this.disableAllMenuItems();
 		},
 		
@@ -566,7 +581,9 @@ dojo.declare("DijitClient", Application, {
 			dijit.byId('itm_removeall').attr("disabled","disabled");
 			//dijit.byId('itm_updatetree').attr("disabled","disabled");
 			dijit.byId('itm_submenu_settings').attr("disabled","disabled");
+			dijit.byId('itm_submenu_export').attr("disabled","disabled");
 			dijit.byId('itm_admin').attr("disabled","disabled");
+			dijit.byId('itm_download').attr("disabled","disabled");
 		},
 		
 		/**
@@ -668,6 +685,20 @@ dojo.declare("DijitClient", Application, {
 			var itm1 = this.getSelectedItem();
 			if (itm1) {
 				this.displayItem(itm1);
+			}
+		},
+		
+		/**
+		 * starts a download
+		 */
+		startDownload: function() {
+			var itm1 = this.getSelectedItem();
+			if (itm1) {
+				switch(itm1.itemtype.toLowerCase()) {
+					case "file":
+						this._startDownload(itm1);
+						break;
+				}
 			}
 		},
 		

@@ -46,5 +46,7 @@
 	"searchtext": "Searchtext",
 	"search": "Search",
 	"nearby": "near by",
+	"export": "Export",
+	"download": "Download",
 	"dbl_clk_point": "please double click a point on the map"
 })

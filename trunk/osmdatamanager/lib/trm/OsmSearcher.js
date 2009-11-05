@@ -1,7 +1,7 @@
 dojo.require("dojox.xml.parser");
 dojo.require("dojox.dtl.filter.strings");
 
-dojo.declare("OsmSearcher", Application, {
+dojo.declare("OsmSearcher", null, {
 
 		constructor: function(){
 			this.callback = null;

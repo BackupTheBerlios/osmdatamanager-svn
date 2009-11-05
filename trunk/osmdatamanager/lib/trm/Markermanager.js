@@ -15,8 +15,10 @@
     along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
 	
 */
+dojo.provide("trm.MarkerManager");
+dojo.require("trm.Serverconnection");
 
-dojo.declare("MarkerManager", Serverconnection, {
+dojo.declare("trm.MarkerManager", trm.Serverconnection, {
         
 		/**
 		 * Markermanager constructor

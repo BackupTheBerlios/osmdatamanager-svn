@@ -15,8 +15,10 @@
     along with osmdatamanager.  If not, see <http://www.gnu.org/licenses/>.
 	
 */
+dojo.provide("trm.PoiManager");
+dojo.require("trm.Serverconnection");
 
-dojo.declare("PoiManager", Serverconnection, {
+dojo.declare("trm.PoiManager", trm.Serverconnection, {
         
 		/**
 		 * PoiManager constructor

@@ -16,7 +16,10 @@
 	
 */
 
-dojo.declare("Groupmanager", Serverconnection, {
+dojo.provide("trm.Groupmanager");
+dojo.require("trm.Serverconnection");
+
+dojo.declare("trm.Groupmanager", trm.Serverconnection, {
         
 		/**
 		 * groupmanager constructor

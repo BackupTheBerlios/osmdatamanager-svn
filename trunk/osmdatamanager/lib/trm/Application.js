@@ -16,12 +16,15 @@
 	
 */
 
+dojo.provide("trm.Serverconnection");
+dojo.provide("trm.Application");
+
 /**
  * base class for server connections 
  */
 
 tinyMCE = null;
-dojo.declare("Serverconnection", null, {
+dojo.declare("trm.Serverconnection", null, {
         
 		constructor: function(){
         	this.clientname = "";        
@@ -93,7 +96,7 @@ dojo.declare("Serverconnection", null, {
  * base application object does not use any dijit widgets
  * @param {Object} name
  */
-dojo.declare("Application", Serverconnection, {
+dojo.declare("trm.Application", trm.Serverconnection, {
         opendialogs: null,
 		taglist: null,
 		constructor: function(name,map){
