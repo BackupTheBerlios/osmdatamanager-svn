@@ -26,7 +26,9 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 		map: null,
 		constructor: function(openlayersmap){
 			this.map = openlayersmap;
-     		this.markerlist = new Array();
+     		console.debug(this.map);
+			console.debug(openlayersmap);
+			this.markerlist = new Array();
 			
 			this.AutoSizeAnchoredBubble = OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, {
 		            'autoSize': true
@@ -158,6 +160,7 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 						var marker = new OpenLayers.Marker(latlon, ico);
 						marker.feature = feature;
 						marker.markerid = markerid;
+						marker.map = this.map;
 					}
 					else {
 						var marker = new OpenLayers.Marker(latlon);
@@ -170,7 +173,7 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 							this.popup = this.createPopup(this.closeBox);
 							//this.popup.closeOnMove = true;
 							//this.popup.setOpacity(0.8);
-							this.map.addPopup(this.popup);
+							evt.object.map.addPopup(this.popup);
 						//this.popup.show();
 						}
 						else {
