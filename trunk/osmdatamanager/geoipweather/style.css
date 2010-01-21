@@ -1,0 +1,798 @@
+/* --------------------------------------------- */
+/*  Global                                       */
+/* --------------------------------------------- */
+
+body {
+	margin:0;
+	padding:0;
+}
+#gormsby-main {
+	padding-bottom:20px;
+}
+body, div, p, td, th {
+	font-family:arial,helvetica,sans-serif;
+	font-size:9pt;
+}
+body {
+	background-color:#FFFFFF;
+	color:#333333;
+	margin:0;
+	padding:0;
+}
+a {
+	color:#D76C0D;
+}
+a:hover {
+	text-decoration:underline;
+}
+p {
+	margin-top:0;
+}
+fieldset div {
+	margin:10px;
+	padding:5px 3px 5px 0;
+	width:100%;
+}
+fieldset div .gormsby-table {
+	margin:0;
+	padding:0;
+}
+fieldset {
+	-moz-border-radius-bottomleft:3px;
+	-moz-border-radius-bottomright:3px;
+	-moz-border-radius-topleft:3px;
+	-moz-border-radius-topright:3px;
+	border:2px solid #CCCCCC;
+	width:95%;
+}
+fieldset legend {
+	color:#000000;
+}
+h1 {
+	color:#555555;
+	font-size:14pt;
+	margin:12px 0 15px;
+	padding:0;
+}
+h1 select {
+	color:#666666;
+}
+h2 {
+	font-size:11pt;
+	margin:18px 0 5px;
+	padding:0;
+}
+h3 {
+	font-size:10pt;
+	margin:18px 0 5px;
+	padding:0;
+}
+h4 {
+	font-size:10pt;
+	margin:8px 0 3px;
+	padding:0 0 4px;
+}
+h5 {
+	font-size:10pt;
+	margin:18px 0 -8px;
+	padding:0;
+}
+p {
+    margin-top:0;
+}
+ul {
+    margin:0;
+    padding:0 0 12px 26px;
+}
+hr {
+    background-color:#DCDCDC;
+    border:medium none;
+    height:1px;
+    width:100%;
+}
+form {
+    margin:0;
+    padding:0;
+}
+select, input {
+    font-family:verdana,arial,sans-serif;
+    font-size:8pt;
+}
+iframe {
+    border:1px solid #999999;
+}
+
+/* --------------------------------------------- */
+/*  Header                                       */
+/* --------------------------------------------- */
+
+#gormsby-header {
+    clear:both;
+    float:left;
+    margin:0;
+    overflow:hidden;
+    padding:0;
+    width:100%;
+}
+
+#gormsby-content {
+    padding:10px 0px 12px 10px;
+}
+
+/* name and logo image */
+#gormsby-logo {
+    float:left;
+    height:76px;
+    overflow:hidden;
+}
+#gormsby-logo h1 {
+    clear:none;
+    color:#555555;
+    float:left;
+    font-size:14pt;
+    padding:0;
+}
+#gormsby-logo img {
+    border:medium none;
+    float:left;
+    padding-left:10px;
+    padding-top:7px;
+}
+
+/* version, login and site link */
+#gormsby-userStatus {
+    color:#999999;
+    float:right;
+    font-size:8pt;
+    line-height:11pt;
+    margin:0;
+    padding:15px 15px 0 0;
+    text-align:right;
+    width:275px;
+}
+#gormsby-userStatus a {
+    font-weight:bold;
+}
+
+/* --------------------------------------------- */
+/*  Main nav                                     */
+/* --------------------------------------------- */
+
+#gormsby-header #gormsby-nav {
+    background:#F7F7F7 url(/img/gormsby-nav-bg.gif) repeat-x scroll 0;
+    clear:both;
+    height:27px;
+    margin:0;
+    padding:0;
+}
+#gormsby-header #gormsby-nav-left, #gormsby-header #gormsby-nav-right {
+    height:27px;
+    width:15px;
+}
+#gormsby-header #gormsby-nav-left {
+    background:transparent url(/img/gormsby-nav-div.gif) no-repeat scroll right center;
+    float:left;
+}
+#gormsby-header #gormsby-nav-right {
+    float:right;
+}
+#gormsby-header #gormsby-nav ul {
+    list-style-type:none;
+    margin:0 0 0 5px;
+    padding:0;
+}
+#gormsby-header #gormsby-nav ul li {
+    background:transparent url(/img/gormsby-nav-div.gif) no-repeat scroll right center;
+    color:#FFFFFF;
+    float:left;
+    font-size:11pt;
+    margin:0;
+    padding:4px 2px 5px 0;
+}
+#gormsby-header #gormsby-nav ul li a, #gormsby-header #gormsby-nav ul li a:visited {
+    color:#333333;
+    font-size:10pt;
+    font-weight:bold;
+    margin:0;
+    padding:4px 13px;
+    text-decoration:none;
+}
+#gormsby-header #gormsby-nav ul li a:hover, #gormsby-header #gormsby-nav ul li a:active {
+    background:transparent url(/img/gormsby-nav-bg-over.gif) repeat-x scroll right center;
+    text-decoration:underline;
+}
+#gormsby-header #gormsby-nav ul li.currentlink a, #gormsby-header #gormsby-nav ul li.currentlink a:visited, #gormsby-header #gormsby-nav ul li.currentlink a:active, #gormsby-header #gormsby-nav ul li.currentlink a:hover {
+    background:transparent url(/img/gormsby-nav-bg-on.gif) repeat-x scroll right center;
+    color:#FFFFFF;
+}
+
+/* Subnav */
+#gormsby-subnav {
+    background:#F7F7F7 url(/img/gormsby-subnav-bg.gif) repeat-x scroll 0;
+    clear:both;
+    height:28px;
+    margin:0;
+    padding:0;
+    width:100%;
+}
+#gormsby-subnav .subnav-community {
+    background:#F7F7F7 url(/img/gormsby-subnav-bg.gif) repeat-x scroll 100px 50%;
+}
+#gormsby-subnav ul {
+    list-style-type:none;
+    margin:0 0 0 13px;
+    padding:0;
+}
+#gormsby-subnav ul li {
+    background:transparent url(/img/gormsby-subnav-div.gif) no-repeat scroll right center;
+    color:#FFFFFF;
+    float:left;
+    font-size:11pt;
+    margin:9px 0 0 0;
+    padding:0 1px 2px 0;
+}
+#gormsby-subnav ul li a, #gormsby-subnav ul li a:visited {
+    font-family:verdana,sans-serif;
+    font-size:8pt;
+    font-weight:bold;
+    margin:0;
+    padding:3px 15px;
+    text-decoration:none;
+}
+#gormsby-subnav ul li a:hover, #gormsby-subnav ul li a:active {
+    background-color:#E3E3E3;
+    text-decoration:underline;
+}
+#gormsby-subnav ul li.current {
+}
+#gormsby-subnav ul li.current a, #gormsby-subnav ul li.current a:visited {
+    background-color:#F9F9F9;
+    border-color:#cecece;
+    border-style:solid;
+    margin:0;
+    padding:3px 15px 4px 15px;
+    border: 0;
+}
+#gormsby-subnav ul li.current a:hover, #gormsby-subnav ul li.current a:active {
+    background-color:#F9F9F9;
+    text-decoration:underline;
+    border: 0;
+}
+
+/* --------------------------------------------- */
+/*  Logviewer tabs                               */
+/* --------------------------------------------- */
+
+#logviewer td {
+    font-family:verdana,sans-serif;
+    font-size:8pt;
+}
+#logviewer .gormsby-tab, .gormsby-tab-active {
+    background-color:#DDDDDD;
+    border:1px solid #CCCCCC;
+    padding:4px 1em;
+    white-space:nowrap;
+}
+#logviewer .gormsby-tab-active {
+    background-color:#FFFFFF;
+    border-bottom:1px solid #FFFFFF;
+}
+#logviewer .gormsby-spacer, .gormsby-stretch {
+    border-bottom:1px solid #CCCCCC;
+}
+#logviewer .gormsby-tab a, #logviewer .gormsby-tab-active a {
+    color:#000000;
+    font-weight:bold;
+    text-decoration:none;
+}
+#logviewer .gormsby-tab a:hover, #logviewer .gormsby-tab-active a:hover {
+    text-decoration:underline;
+}
+
+/* --------------------------------------------- */
+/*  Titles                                       */
+/* --------------------------------------------- */
+
+#gormsby-main #gormsby-title {
+    font-size:12pt;
+    font-weight:bold;
+    padding-bottom:1em;
+}
+
+/* --------------------------------------------- */
+/*  Breadcrumbs                                  */
+/* --------------------------------------------- */
+
+#gormsby-main #gormsby-breadcrumbs {
+    font-family:verdana,sans-serif;
+    font-size:8pt;
+    padding-top:2px;
+    white-space:nowrap;
+}
+#gormsby-main #gormsby-breadcrumbs a {
+    color:#000000;
+    text-decoration:none;
+}
+#gormsby-main #gormsby-breadcrumbs a:hover {
+    color:#000000;
+    text-decoration:underline;
+}
+
+/* --------------------------------------------- */
+/*  Sidebar                                      */
+/* --------------------------------------------- */
+
+#gormsby-main {
+    background:#FFFFFF url(/img/gormsby-body-bg.gif) repeat-x scroll center top;
+    clear:both;
+    display:block;
+    float:left;
+    margin:0;
+    padding:0;
+    position:relative;
+    width:100%;
+}
+#gormsby-sidebar-container {
+    float:left;
+    font-size:9pt;
+    margin:0;
+    overflow:hidden;
+    padding:0;
+    width:200px;
+}
+#gormsby-sidebar-box {
+    margin:0;
+    overflow:hidden;
+    padding:0;
+    width:200px;
+    background-color: #f9f9f9;
+}
+#gormsby-sidebar {
+    background:transparent url(/img/gormsby-tertnav-top.gif) no-repeat scroll right top;
+    margin-bottom:12px;
+    padding-top:0;
+}
+#gormsby-sidebar ul {
+    -moz-border-radius-bottomleft:0;
+    -moz-border-radius-bottomright:5px;
+    -moz-border-radius-topleft:0;
+    -moz-border-radius-topright:0;
+    border-bottom:1px solid #E6E6E6;
+    border-right:1px solid #E6E6E6;
+    list-style-type:none;
+    margin:0 5px 0 0;
+    padding:8px 22px 15px;
+}
+#gormsby-sidebar ul li {
+    border-bottom:1px solid #e6e6e6;
+    padding:0;
+    border-top:1px solid #f9f9f9;
+}
+#gormsby-sidebar ul li a {
+    color:#777;
+    display:block;
+    padding:4px 0 4px 10px;
+    text-decoration:none;
+}
+#gormsby-sidebar ul li a:link, #gormsby-sidebar ul li a:visited {
+    color:#444444;
+    text-decoration:none;
+}
+#gormsby-sidebar ul li a:hover {
+    text-decoration:underline;
+}
+#gormsby-sidebar ul li.currentlink {
+    background:transparent url(/img/gormsby-tertnav-arrow.gif) no-repeat scroll left center;
+    font-weight:bold;
+}
+#gormsby-sidebar ul.subitems {
+    background-color:#f9f9f9;
+    border-top: 1.0px solid #f9f9f9;
+    border-bottom: 1.0px solid #f9f9f9;
+    border-right:0;
+    list-style-type:none;
+    padding:0 0 0 10px;
+    margin:1px 0 1px 0;
+}
+#gormsby-sidebar ul.subitems li {
+    border-top:1px solid #e6e6e6;
+    border-bottom: 1.0px solid #f9f9f9;
+    padding:0;
+}
+#gormsby-sidebar ul.subitems li.category {
+    border-top: 1.0px solid #f9f9f9;
+    color:#777;
+    font-weight:bold;
+    padding:4px 0;
+}
+#gormsby-sidebar ul.subitems li a {
+    color:#777;
+    display:block;
+    padding:4px 0 4px 10px;
+    text-decoration:none;
+}
+#gormsby-sidebar ul.subitems li a:hover {
+    text-decoration:underline;
+}
+#gormsby-sidebar ul.subitems li.currentlink a, #gormsby-sidebar ul.subitems li.currentlink a:visited, #gormsby-sidebar ul.subitems li.currentlink a:hover {
+    background:transparent url(/img/gormsby-tertnav-arrow.gif) no-repeat scroll left center;
+    color:#555555;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+/* --------------------------------------------- */
+/*  Tasks                                        */
+/* --------------------------------------------- */
+
+#gormsby-runningtask {
+    margin-left:1em;
+}
+
+/* --------------------------------------------- */
+/*  Back link                                    */
+/* --------------------------------------------- */
+
+a.gormsby-link-back {
+    font-size:9pt;
+}
+a.gormsby-link-back span {
+    font-size:10pt;
+}
+
+/* --------------------------------------------- */
+/*  Edit & Delete links                          */
+/* --------------------------------------------- */
+
+a.gormsby-link-edit, a.gormsby-link-delete {
+    display:block;
+    font-size:8pt;
+    margin:3px 5px 6px 0;
+    padding-left:19px;
+}
+a.gormsby-link-edit {
+    background:transparent url(/img/edit-16x16.gif) no-repeat scroll left center;
+}
+a.gormsby-link-delete {
+    background:transparent url(/img/delete-16x16.gif) no-repeat scroll left center;
+}
+
+/* --------------------------------------------- */
+/*  Hoizontal Rule                               */
+/* --------------------------------------------- */
+
+.gormsby-horizontalRule {
+    background-color:#DCDCDC;
+    height:1px;
+    margin:20px 0 10px;
+    overflow:hidden;
+    padding:0;
+}
+
+/* --------------------------------------------- */
+/*  Older styles                                 */
+/* --------------------------------------------- */
+
+pre, tt {
+    font-family:courier new,monospace;
+    font-size:10pt;
+}
+
+/* Messages - errors, success and info */
+.gormsby-error table, .gormsby-info table, .gormsby-success table {
+    border:1px solid #CCCCCC;
+}
+.gormsby-error td, .gormsby-info td, .gormsby-success td {
+    padding:3px;
+    vertical-align:top;
+}
+.gormsby-error-text, .gormsby-error .gormsby-icon-label, .gormsby-error-text a, .gormsby-error .gormsby-icon-label a {
+    color:#FF0000;
+}
+.gormsby-success-text, .gormsby-success .gormsby-icon-label, .gormsby-success-text a, .gormsby-success .gormsby-icon-label a {
+    color:#009900;
+}
+.gormsby-info-text, .gormsby-info .gormsby-icon-label, .gormsby-info-text a, .gormsby-info .gormsby-icon-label a {
+    color:#330066;
+}
+
+/* tables */
+.gormsby-table {
+    border-color:#CCCCCC;
+    border-style:solid;
+    border-width:1px 1px 0;
+}
+.gormsby-table .c1, fieldset .c1 {
+    width:30%;
+}
+.gormsby-table th, .gormsby-table td, .gormsby-option-table th, .gormsby-option-table td {
+    padding:6px;
+}
+.gormsby-table th th, .gormsby-table td td {
+    padding:0;
+}
+.gormsby-table td.icon {
+    padding:0 5px 0 3px;
+}
+.gormsby-table th {
+    background-color:#EEEEEE;
+    border-bottom:1px solid #CCCCCC;
+    font-family:verdana,arial,helvetica,sans-serif;
+    font-size:8pt;
+    font-weight:bold;
+    text-align:left;
+}
+.gormsby-table th table th {
+    border-bottom:medium none;
+    border-right:medium none;
+}
+.gormsby-table th table th a {
+    color:#000000;
+    text-decoration:none;
+}
+.gormsby-table tr td {
+    border-bottom:1px solid #E3E3E3;
+}
+.gormsby-table td {
+    font-family:arial,helvetica,sans-serif;
+    font-size:10pt;
+}
+.gormsby-table .gormsby-odd td {
+    background-color:#FFFFFF;
+}
+.gormsby-table .gormsby-even td {
+    background-color:#FBFBFB;
+}
+.gormsby-table tfoot td {
+    background-color:#EEEEEE;
+    border-bottom:1px solid #CCCCCC;
+    font-family:verdana,arial,helvetica,sans-serif;
+    font-size:8pt;
+}
+.gormsby-table td td {
+    border-width:0;
+}
+.gormsby-table input, .gormsby-table select, .gormsby-option-table input, .gormsby-option-table select {
+    font-family:verdana,arial,helvetica,sans-serif;
+    font-size:8pt;
+}
+.gormsby-description, .gormsby-description a, .gormsby-table .gormsby-date, .gormsby-description input, .gormsby-description select {
+    font-family:arial,helvetica,sans-serif;
+    font-size:8pt;
+}
+.gormsby-label, .gormsby-option-table label {
+    font-weight:bold;
+    padding-right:10px;
+    white-space:nowrap;
+}
+.gormsby-label {
+    padding-right:20px;
+    vertical-align:top;
+}
+.gormsby-buttons .gormsby-icon {
+    padding:3px;
+}
+.gormsby-buttons .gormsby-icon-label {
+    font-family:verdana,arial,helvetica,sans-serif;
+    font-size:8pt;
+    padding:3px 1em 3px 3px;
+    white-space:nowrap;
+}
+
+/* --------------------------------------------- */
+/*  Calendar styles                              */
+/* --------------------------------------------- */
+
+table.calBgColor {
+    padding:0;
+}
+td.cal {
+    background-color:#FFFFFF;
+    color:#000000;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+    padding:0;
+}
+select.month {
+    background:transparent none repeat scroll 0;
+    color:#000000;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+    width:85px;
+}
+input.year {
+    background:transparent none repeat scroll 0;
+    color:#000000;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+    width:30px;
+}
+td.calDaysColor {
+    background-color:#000000;
+    color:#FFFFFF;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+}
+td.calWeekend {
+    background-color:#D3D3D3;
+    color:#FFFFFF;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+}
+td.calBgColor {
+    background-color:#FFFFCC;
+    color:#FFFFFF;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+}
+.calBorderColor {
+    background-color:#A9A9A9;
+    color:#FFFFFF;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+}
+td.calHighlightColor {
+    background-color:#FFFFCC;
+    color:#FFFFFF;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+}
+a.cal {
+    background:transparent none repeat scroll 0;
+    color:#000000;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+    text-decoration:none;
+}
+a.cal:hover {
+    background:transparent none repeat scroll 0;
+    color:#FF0000;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+    text-decoration:none;
+}
+.calDisabled {
+    background:transparent none repeat scroll 0;
+    color:#808080;
+    font-family:Arial,Helvetica,Sans-serif;
+    font-size:11px;
+    text-decoration:none;
+}
+
+/* --------------------------------------------- */
+/*  Quote original styles                        */
+/* --------------------------------------------- */
+
+.gormsby-quoteheader {
+    font-weight:bold;
+    margin-left:15px;
+    width:90%;
+}
+.gormsby-quote {
+    background-color:#FAFAFA;
+    border:1px solid #D1D7DC;
+    color:#444444;
+    margin-left:15px;
+    width:90%;
+}
+.success {
+    -moz-border-radius-bottomleft:3px;
+    -moz-border-radius-bottomright:3px;
+    -moz-border-radius-topleft:3px;
+    -moz-border-radius-topright:3px;
+    background-color:#CDF6CD;
+    background-image:url(/img/success-16x16.gif);
+    background-position:5px;
+    background-repeat:no-repeat;
+    border:1px solid #029B00;
+    color:#006600;
+    font-weight:bold;
+    margin-bottom:20px;
+    margin-top:10px;
+    padding:5px 5px 5px 28px;
+}
+.error {
+    -moz-border-radius-bottomleft:3px;
+    -moz-border-radius-bottomright:3px;
+    -moz-border-radius-topleft:3px;
+    -moz-border-radius-topright:3px;
+    background-color:#EDB9B1;
+    background-image:url(/img/error-16x16.gif);
+    background-position:5px;
+    background-repeat:no-repeat;
+    border:1px solid #BB8888;
+    color:#990000;
+    font-weight:bold;
+    margin-bottom:20px;
+    margin-top:10px;
+    padding:5px 5px 5px 28px;
+}
+.warning {
+    -moz-border-radius-bottomleft:3px;
+    -moz-border-radius-bottomright:3px;
+    -moz-border-radius-topleft:3px;
+    -moz-border-radius-topright:3px;
+    background-color:#FFE9B2;
+    background-image:url(/img/icon_warning-small.gif);
+    background-position:5px;
+    background-repeat:no-repeat;
+    border:1px solid #D9B04C;
+    color:#915A15;
+    font-weight:bold;
+    margin-bottom:20px;
+    margin-top:10px;
+    padding:5px 5px 5px 28px;
+}
+
+/* --------------------------------------------- */
+/*  Footer                                       */
+/* --------------------------------------------- */
+
+#gormsby-footer {
+    border-top:1px solid #DCDCDC;
+    clear:both;
+    color:#666666;
+    font-size:8pt;
+    margin:10px 0 0;
+    padding:5px 0 40px;
+    width:100%;
+}
+.gormsby-footer-nav {
+    float:left;
+    padding-left:5px;
+}
+.gormsby-footer-nav a {
+    padding:0 5px;
+}
+.gormsby-footer-copyright {
+    float:right;
+    padding-right:12px;
+}
+#footer {
+    background-image:url(/img/page-background_new.gif);
+    background-repeat:repeat-y;
+    height:30px;
+    margin-top:-30px;
+    position:relative;
+    width:100%;
+}
+#footer_padding {
+    padding-left:165px;
+    text-align:center;
+}
+#footer_content {
+    background-color:#F9F9F9;
+    border-color:#E6E6E6 rgb(179, 211, 244);
+    border-style:solid solid none;
+    border-width:1px 1px medium;
+    font-size:8pt;
+    height:29px;
+    margin:0 auto;
+    padding:0;
+    width:500px;
+}
+#footer_content span {
+    display:block;
+    padding:7px;
+}
+
+.gormsby-current {
+    font-weight : bold;
+    text-decoration : none;
+}
+
+/* --------------------------------------------- */
+/*  Main content                                 */
+/* --------------------------------------------- */
+
+#gormsby-main-content {
+	-moz-border-radius-bottomleft:4px;
+	-moz-border-radius-bottomright:4px;
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	background:#F5F5F5 url(/img/gormsby-body-contentbox-bg.gif) repeat-x scroll center top;
+	border:1px solid #DCDCDC;
+	/*margin:15px 0 20px 0;*/
+	padding:18px 20px;
+    width: 95%;
+}

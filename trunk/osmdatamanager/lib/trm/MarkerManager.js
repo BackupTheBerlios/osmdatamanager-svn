@@ -26,9 +26,8 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 		map: null,
 		constructor: function(openlayersmap){
 			this.map = openlayersmap;
-     		console.debug(this.map);
-			console.debug(openlayersmap);
 			this.markerlist = new Array();
+			this.targetprefix = "";
 			
 			this.AutoSizeAnchoredBubble = OpenLayers.Class(OpenLayers.Popup.AnchoredBubble, {
 		            'autoSize': true
@@ -74,7 +73,7 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 		},
 		
 		/**
-		 * 
+		 * returns a openlayers feature with given latlon
 		 * @param {Object} latlon
 		 */
 		getFeature: function(latlon) {
@@ -135,6 +134,22 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 		},
 		
 		/**
+		 * updates the given popupContentHTML, e.g. extend img resources with a target prefix
+		 * @param {String} popupContentHTML
+		 * @return the updated content;
+		 */
+		updateContent: function(popupContentHTML) {
+			
+			console.debug(popupContentHTML.data.popupContentHTML);
+			console.debug(dojo.query('IMG',popupContentHTML.data.popupContentHTML));
+			
+			if (this.targetprefix != "") {
+				
+			}
+			return popupContentHTML;
+		},
+		
+		/**
 		 * 
 		 * @param {Object} latlon
 		 * @param {Object} popupClass
@@ -151,8 +166,8 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 					feature.popupClass = popupClass;
 					feature.data.popupContentHTML = popupContentHTML;
 					//feature.data.overflow = (overflow) ? "auto" : "hidden";
-					
-					//var marker = feature.createMarker();
+					console.debug(this.targetprefix);
+					feature.targetprefix = this.targetprefix;
 					
 					if ((iconurl != null) && (iconurl != "")) {
 						var ico = new OpenLayers.Icon(iconurl, new OpenLayers.Size(16, 16), new OpenLayers.Pixel(0, -16));
@@ -171,10 +186,16 @@ dojo.declare("trm.MarkerManager", trm.Serverconnection, {
 					var markerClick = function(evt){
 						if (this.popup == null) {
 							this.popup = this.createPopup(this.closeBox);
-							//this.popup.closeOnMove = true;
-							//this.popup.setOpacity(0.8);
+							
+							
 							evt.object.map.addPopup(this.popup);
-						//this.popup.show();
+							
+							//add the targetprefix to img elements
+							var l1 = dojo.query('img',this.popup.contentDiv);
+							for (var i=0;i<l1.length;i++) {
+								var node = l1[i];
+								node.setAttribute("src",this.targetprefix + node.getAttribute("src"));
+							}							
 						}
 						else {
 							this.popup.toggle();
